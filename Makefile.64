@@ -1,0 +1,587 @@
+pkg_config = ../pkg-config.sh
+pkg_config_path = /mingw/lib/pkgconfig
+flags = -march=corei7 -mfpmath=sse -msse3 -mthreads -DWINVER=0x0500
+cppflags = -I/mingw/include -I/mingw/x86_64-w64-mingw32/include
+cflags = -O2 -fno-strict-aliasing $(cppflags)
+ldflags = -L/mingw/lib -L/mingw/x86_64-w64-mingw32/lib
+cc = 'gcc $(flags)'
+cxx = 'g++ $(flags)'
+configure = PKG_CONFIG=$(pkg_config) PKG_CONFIG_PATH=$(pkg_config_path) \
+	CC=$(cc) CXX=$(cxx) \
+	CPPFLAGS='$(cppflags)' CFLAGS='$(cflags)' LDFLAGS='$(ldflags)' \
+	configure --prefix=/mingw/ --enable-debug=no --host=x86_64-w64-mingw32 \
+	--enable-shared --disable-static
+
+libiconvver = 1.14
+zlibver = 1.2.8
+autoconfver = 2.69
+automake113ver = 1.13.4
+automakever = 1.14
+libxml2ver = 2.9.1
+libffiver = 3.0.13
+pythonver = 2.7.3
+glibver = 2.36.4
+gettextver = 0.18.2.1
+pkgconfigver = 0.28
+libpngver = 1.6.6
+freetypever = 2.5.0.1
+fontconfigver = 2.10.95
+pixmanver = 0.30.2
+cairover = 1.10.2
+atkver = 2.8.0
+pangover = 1.34.1
+gdk_pixbufver = 2.28.2
+hicolor_icon_themever = 0.12
+gtk2ver = 2.24.20
+freeglutver = 2.8.1
+gslver = 1.16
+sqlitever = 3080100
+curlver = 7.34.0
+cmakever = 2.8.12.1
+openmpiver = 1.6.2
+girver = 1.32.1
+gtk3ver = 3.6.4
+
+libiconvdir = libiconv-$(libiconvver)/
+libiconvtar = libiconv-$(libiconvver).tar.gz
+libiconvmak = $(libiconvdir)Makefile
+libiconvdll = /mingw/bin/libiconv-2.dll
+
+zlibdir = zlib-$(zlibver)/
+zlibtar = zlib-$(zlibver).tar.xz
+zlibdll = /mingw/bin/libz.dll
+
+autoconfdir = autoconf-$(autoconfver)/
+autoconftar = autoconf-$(autoconfver).tar.xz
+autoconfmak = $(autoconfdir)Makefile
+autoconfexe = /mingw/bin/autoconf
+
+automake113dir = automake-$(automake113ver)/
+automake113tar = automake-$(automake113ver).tar.xz
+automake113mak = $(automake113dir)Makefile
+automake113exe = /mingw/bin/automake-1.13
+
+automakedir = automake-$(automakever)/
+automaketar = automake-$(automakever).tar.xz
+automakemak = $(automakedir)Makefile
+automakeexe = /mingw/bin/automake
+
+libxml2dir = libxml2-$(libxml2ver)/
+libxml2tar = libxml2-$(libxml2ver).tar.gz
+libxml2mak = $(libxml2dir)Makefile
+libxml2dll = /mingw/bin/libxml2-2.dll
+
+libffidir = libffi-$(libffiver)/
+libffitar = libffi-$(libffiver).tar.gz
+libffimak = $(libffidir)Makefile
+libffidll = /mingw/bin/libffi-6.dll
+
+pythondir = Python-$(pythonver)/
+pythontar = Python-$(pythonver).tar.xz
+pythonmak = $(pythondir)Makefile
+pythonexe = /mingw/bin/python.exe
+
+glibdir = glib-$(glibver)/
+glibtar = glib-$(glibver).tar.xz
+glibmak = $(glibdir)Makefile
+glibdll = /mingw/bin/libglib-2.0-0.dll
+
+gettextdir = gettext-$(gettextver)/
+gettexttar = gettext-$(gettextver).tar.gz
+gettextmak = $(gettextdir)Makefile
+gettextdll = /mingw/bin/libintl-8.dll
+
+pkgconfigdir = pkg-config-$(pkgconfigver)/
+pkgconfigtar = pkg-config-$(pkgconfigver).tar.gz
+pkgconfigmak = $(pkgconfigdir)Makefile
+pkgconfigexe = /mingw/bin/pkg-config.exe
+
+libpngdir = libpng-$(libpngver)/
+libpngtar = libpng-$(libpngver).tar.xz
+libpngmak = $(libpngdir)Makefile
+libpngdll = /mingw/bin/libpng16-16.dll
+
+freetypedir = freetype-$(freetypever)/
+freetypetar = freetype-$(freetypever).tar.bz2
+freetypemak = $(freetypedir)config.mk
+freetypedll = /mingw/bin/libfreetype-6.dll
+
+fontconfigdir = fontconfig-$(fontconfigver)/
+fontconfigtar = fontconfig-$(fontconfigver).tar.bz2
+fontconfigmak = $(fontconfigdir)Makefile
+fontconfigdll = /mingw/bin/libfontconfig-1.dll
+
+pixmandir = pixman-$(pixmanver)/
+pixmantar = pixman-$(pixmanver).tar.gz
+pixmanmak = $(pixmandir)Makefile
+pixmandll = /mingw/bin/libpixman-1-0.dll
+
+cairodir = cairo-$(cairover)/
+cairotar = cairo-$(cairover).tar.gz
+cairomak = $(cairodir)Makefile
+cairodll = /mingw/bin/libcairo-2.dll
+
+atkdir = atk-$(atkver)/
+atktar = atk-$(atkver).tar.xz
+atkmak = $(atkdir)Makefile
+atkdll = /mingw/bin/libatk-1.0-0.dll
+
+pangodir = pango-$(pangover)/
+pangotar = pango-$(pangover).tar.xz
+pangomak = $(pangodir)Makefile
+pangodll = /mingw/bin/libpango-1.0-0.dll
+
+gdk_pixbufdir = gdk-pixbuf-$(gdk_pixbufver)/
+gdk_pixbuftar = gdk-pixbuf-$(gdk_pixbufver).tar.xz
+gdk_pixbufmak = $(gdk_pixbufdir)Makefile
+gdk_pixbufdll = /mingw/bin/libgdk_pixbuf-2.0-0.dll
+
+hicolor_icon_themedir = hicolor-icon-theme-$(hicolor_icon_themever)/
+hicolor_icon_themetar = hicolor-icon-theme-$(hicolor_icon_themever).tar.gz
+hicolor_icon_thememak = $(hicolor_icon_themedir)Makefile
+hicolor_icon_themedll = /mingw/share/icons/hicolor
+
+gtk2dir = gtk+-$(gtk2ver)/
+gtk2tar = gtk+-$(gtk2ver).tar.xz
+gtk2mak = $(gtk2dir)Makefile
+gtk2dll = /mingw/bin/libgtk-win32-2.0-0.dll
+
+freeglutdir = freeglut-$(freeglutver)/
+freegluttar = freeglut-$(freeglutver).tar.gz
+freeglutmak = $(freeglutdir)Makefile
+freeglutdll = /mingw/bin/libglut-0.dll
+
+gsldir = gsl-$(gslver)/
+gsltar = gsl-$(gslver).tar.gz
+gslmak = $(gsldir)Makefile
+gsldll = /mingw/bin/libgsl-0.dll
+
+sqlitedir = sqlite-autoconf-$(sqlitever)/
+sqlitetar = sqlite-autoconf-$(sqlitever).tar.gz
+sqlitemak = $(sqlitedir)Makefile
+sqliteexe = /mingw/bin/sqlite3.exe
+
+curldir = curl-$(curlver)/
+curltar = curl-$(curlver).tar.bz2
+curlmak = $(curldir)Makefile
+curlexe = /mingw/bin/curl.exe
+
+cmakedir = cmake-$(cmakever)/
+cmaketar = cmake-$(cmakever).zip
+cmakemak = $(cmakedir)bootstrap
+cmakeexe = /mingw/bin/cmake.exe
+
+openmpidir = openmpi-$(openmpiver)/
+openmpitar = openmpi-$(openmpiver).tar.bz2
+openmpimak = $(openmpidir)Makefile
+openmpidll = /mingw/bin/libopenmpi.dll
+
+girdir = gobject-introspection-$(girver)/
+girtar = gobject-introspection-$(girver).tar.xz
+girmak = $(girdir)Makefile
+girdll = /mingw/bin/g-ir-compiler
+
+gtk3dir = gtk+-$(gtk3ver)/
+gtk3tar = gtk+-$(gtk3ver).tar.xz
+gtk3mak = $(gtk3dir)Makefile
+gtk3dll = /mingw/bin/libgtk-3-0.dll
+
+dll = \
+	$(libiconvdll) \
+	$(zlibdll) \
+	$(autoconfexe) \
+	$(automake113exe) \
+	$(automakeexe) \
+	$(libxml2dll) \
+	$(libffidll) \
+	$(pythonexe) \
+	$(glibdll) \
+	$(gettextdll) \
+	$(pkgconfigexe) \
+	$(libpngdll) \
+	$(freetypedll) \
+	$(fontconfigdll) \
+	$(pixmandll) \
+	$(cairodll) \
+	$(atkdll) \
+	$(pangodll) \
+	$(gdk_pixbufdll) \
+	$(hicolor_icon_themedll) \
+	$(gtk2dll) \
+	$(freeglutdll) \
+	$(gsldll) \
+	$(sqliteexe) \
+	$(curlexe) \
+	$(cmakeexe) \
+	$(openmpidll) \
+	$(gtk3dll) \
+	$(girdll) \
+
+all: $(dll)
+
+start:
+	mingw-get install msys-unzip msys-wget binutils msys-m4 msys-perl \
+		msys-patch msys-flex msys-bison msys-vim
+	cp /bin/find.exe /mingw/bin
+	cp /c/Windows/SysWOW64/gdi32.dll /mingw/bin/libgdi32.dll
+	cp /c/Windows/SysWOW64/msimg32.dll /mingw/bin/libmsimg32.dll
+	cp /c/Windows/SysWOW64/ws2_32.dll /mingw/bin/libws2_32.dll
+	cp /c/Windows/SysWOW64/ole32.dll /mingw/bin/libole32.dll
+	cp /c/Windows/SysWOW64/winmm.dll /mingw/bin/libwinmm.dll
+	cp /c/Windows/SysWOW64/shlwapi.dll /mingw/bin/libshlwapi.dll
+	cp /c/Windows/SysWOW64/opengl32.dll /mingw/bin/libopengl32.dll
+	cp /c/Windows/SysWOW64/comdlg32.dll /mingw/bin/libcomdlg32.dll
+	cp /c/Windows/SysWOW64/comctl32.dll /mingw/bin/libcomctl32.dll
+	cp /c/Windows/SysWOW64/imm32.dll /mingw/bin/libimm32.dll
+	cp /c/Windows/SysWOW64/shell32.dll /mingw/bin/libshell32.dll
+	cp /c/Windows/SysWOW64/msimg32.dll /mingw/bin/libmsimg32.dll
+	cp /c/Windows/SysWOW64/dnsapi.dll /mingw/bin/libdnsapi.dll
+	cd /mingw; \
+	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/pkg-config_0.23-2_win64.zip; \
+	unzip pkg-config_0.23-2_win64.zip; \
+	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/glib/2.26/glib_2.26.1-1_win64.zip; \
+	unzip glib_2.26.1-1_win64.zip; \
+	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime_0.18.1.1-2_win64.zip; \
+	unzip gettext-runtime_0.18.1.1-2_win64.zip; \
+	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime-dev_0.18.1.1-2_win64.zip; \
+	unzip gettext-runtime-dev_0.18.1.1-2_win64.zip; \
+	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-tools-dev_0.18.1.1-2_win64.zip; \
+	unzip gettext-tools-dev_0.18.1.1-2_win64.zip; \
+	wget -c -q 'http://sourceforge.net/projects/mingw-w64/files/Toolchains targetting Win64/Personal Builds/rubenvb/gcc-4.8-release/x86_64-w64-mingw32-gcc-4.8.0-win64_rubenvb.7z'; \
+	7z x x86_64-w64-mingw32-gcc-4.8.0-win64_rubenvb.7z; \
+	mv mingw64/bin/* bin; \
+	rmdir mingw64/bin; \
+	mv mingw64/include/* include; \
+	rmdir mingw64/include; \
+	mv mingw64/lib/* lib; \
+	rmdir mingw64/lib; \
+	mv mingw64/libexec/* libexec; \
+	rmdir mingw64/libexec; \
+	mv mingw64/share/info/* share/info; \
+	rmdir mingw64/share/info; \
+	mv mingw64/share/man/man1/* share/man/man1; \
+	rmdir mingw64/share/man/man1; \
+	mv mingw64/share/man/* share/man; \
+	rmdir mingw64/share/man; \
+	mv mingw64/share/* share; \
+	rmdir mingw64/share; \
+	mv mingw64/* .; \
+	rmdir mingw64
+#	cp /mingw/bin/x86_64-w64-mingw32-strip.exe strip.exe
+#	cp x86_64-w64-mingw32/lib/libgcc_s_sjlj-1.dll bin/w64gcc_s_sjlj-1.dll
+#	perl stdc++64.pl
+
+$(libiconvtar):
+	wget -c -q http://ftp.gnu.org/pub/gnu/libiconv/$(libiconvtar)
+
+$(libiconvmak): $(libiconvtar)
+	tar xzf $(libiconvtar)
+	cd $(libiconvdir); $(configure) # && perl ../libiconv64.pl
+
+$(libiconvdll): $(libiconvmak)
+	cd $(libiconvdir); make clean; make && make install-strip
+
+$(zlibtar):
+	wget -c -q http://sourceforge.net/projects/libpng/files/zlib/$(zlibver)/$(zlibtar)
+
+$(zlibdll): $(zlibtar)
+	tar xJf $(zlibtar)
+	cd $(zlibdir); \
+	cp contrib/amd64/amd64-match.S match.S; \
+	perl ../zlib64testing.pl; \
+	make -f win32/Makefile.gcc && \
+	INCLUDE_PATH=/mingw/include LIBRARY_PATH=/mingw/lib BINARY_PATH=/mingw/bin \
+		make install -f win32/Makefile.gcc SHARED_MODE=1
+	cp /mingw/bin/zlib1.dll /mingw/bin/libz.dll
+
+$(autoconftar):
+	wget -c -q http://ftp.gnu.org/pub/gnu/autoconf/$(autoconftar)
+
+$(autoconfmak): $(autoconftar)
+	tar xJf $(autoconftar)
+	cd $(autoconfdir); $(configure)
+
+$(autoconfexe): $(autoconfmak)
+	cd $(autoconfdir); make clean; make && make install-strip
+
+$(automake113tar):
+	wget -c -q http://ftp.gnu.org/pub/gnu/automake/$(automake113tar)
+
+$(automake113mak): $(automake113tar)
+	tar xJf $(automake113tar)
+	cd $(automake113dir); $(configure)
+
+$(automake113exe): $(autoconfexe) $(automake113mak)
+	cd $(automake113dir); make clean; make && make install-strip
+
+$(automaketar):
+	wget -c -q http://ftp.gnu.org/pub/gnu/automake/$(automaketar)
+
+$(automakemak): $(automaketar) $(automake113exe)
+	tar xJf $(automaketar)
+	cd $(automakedir); $(configure)
+
+$(automakeexe): $(autoconfexe) $(automakemak)
+	cd $(automakedir); make clean; make && make install-strip
+
+$(libxml2tar):
+	wget -c -q http://xmlsoft.org/sources/$(libxml2tar)
+
+$(libxml2mak): $(zlibdll) $(libiconvdll) $(libxml2tar)
+	tar xzf $(libxml2tar)
+	cd $(libxml2dir); $(configure); perl ../libxml.pl
+
+$(libxml2dll): $(libxml2mak)
+	cd $(libxml2dir); make clean; make && make install-strip
+
+$(libffitar):
+	wget -c -q ftp://sourceware.org/pub/libffi/$(libffitar)
+
+$(libffimak): $(libffitar)
+	tar xzf $(libffitar)
+	cd $(libffidir); $(configure)
+
+$(libffidll): $(libffimak)
+	cd $(libffidir); make clean; make && make install-strip
+
+$(pythontar):
+	wget -c -q http://python.org/ftp/python/2.7.3/Python-2.7.3.tar.xz
+
+$(pythonmak): $(libffidll) $(pythontar)
+	tar xJf $(pythontar)
+	cd $(pythondir); patch -p1 -i ../Python-2.7.3-2_mingw_x64.diff; \
+	$(configure) --with-system-ffi
+
+$(pythonexe): $(pythonmak)
+	cd $(pythondir); make clean; make; make install
+
+$(glibtar):
+	wget -c -q http://ftp.gnome.org/pub/gnome/sources/glib/2.36/$(glibtar)
+
+$(glibmak): $(libiconvdll) $(zlibdll) $(libffidll) $(pythonexe) $(glibtar) \
+		$(automake113exe)
+	tar xJf $(glibtar)
+	cd $(glibdir); $(configure) --with-threads=win32; \
+	cp ../glib-64-gdatetime.c glib/tests/gdatetime.c
+
+$(glibdll): $(glibmak)
+	cd $(glibdir); make clean; make && make install-strip
+
+$(gettexttar):
+	wget -c -q http://ftp.gnu.org/pub/gnu/gettext/$(gettexttar)
+
+$(gettextmak): $(libiconvdll) $(glibdll) $(gettexttar)
+	tar xzf $(gettexttar)
+	cd $(gettextdir); $(configure) --enable-threads=win32; \
+
+#	cd gettext-tools/woe32dll; \
+#	cat gettextlib-exports.c | grep -v rpl_opt > gettextlib-exports.c.new; \
+#	mv gettextlib-exports.c.new gettextlib-exports.c
+
+$(gettextdll): #$(gettextmak)
+	cd $(gettextdir); make clean; make && make install-strip
+
+$(pkgconfigtar):
+	wget -c -q http://pkgconfig.freedesktop.org/releases/$(pkgconfigtar)
+
+$(pkgconfigmak): $(glibdll) $(pkgconfigtar)
+	tar xzf $(pkgconfigtar)
+	cd $(pkgconfigdir); $(configure)
+
+$(pkgconfigexe): $(pkgconfigmak)
+	cd $(pkgconfigdir); \
+	make clean; make; rm /mingw/bin/*pkg-config.exe; make install-strip
+
+$(libpngtar):
+	wget -c -q http://sourceforge.net/projects/libpng/files/libpng16/older-releases/$(libpngver)/$(libpngtar)
+
+$(libpngmak): $(zlibdll) $(libpngtar)
+	tar xJf $(libpngtar)
+	cd $(libpngdir); $(configure)
+
+$(libpngdll): $(libpngmak)
+	cd $(libpngdir); make clean; make && make install-strip
+
+$(freetypetar):
+	wget -c -q http://sourceforge.net/projects/freetype/files/freetype2/2.5.0/$(freetypetar)
+
+$(freetypemak): $(zlibdll) $(freetypetar)
+	tar xjf $(freetypetar)
+	cd $(freetypedir); $(configure)
+
+$(freetypedll): $(freetypemak)
+	cd $(freetypedir); make && make install
+
+$(fontconfigtar):
+	wget -c -q http://fontconfig.freedesktop.org/release/$(fontconfigtar)
+
+$(fontconfigmak): $(freetypedll) $(libxml2dll) $(fontconfigtar)
+	tar xjf $(fontconfigtar)
+	cd $(fontconfigdir); $(configure) --enable-libxml2
+
+$(fontconfigdll): $(fontconfigmak)
+	cd $(fontconfigdir); make && make install-strip
+
+$(pixmantar):
+	wget -c -q http://www.cairographics.org/releases/$(pixmantar)
+
+$(pixmanmak): $(pixmantar)
+	tar xzf $(pixmantar)
+	cd $(pixmandir); $(configure)
+
+$(pixmandll): $(pixmanmak)
+	cd $(pixmandir); make clean; make && make install-strip
+
+$(cairotar):
+	wget -c -q http://www.cairographics.org/releases/$(cairotar)
+
+$(cairomak): $(glibdll) $(libpngdll) $(fontconfigdll) $(pixmandll) $(cairotar)
+	tar xzf $(cairotar)
+	cd $(cairodir); perl ../cairo.pl; \
+	$(configure) --enable-win32=yes --enable-win32-font=yes --enable-pthread=no
+
+$(cairodll): $(cairomak)
+	cd $(cairodir); make clean; make && make install-strip
+
+$(atktar):
+	wget -c -q http://ftp.gnome.org/pub/gnome/sources/atk/2.8/$(atktar)
+
+$(atkmak): $(glibdll) $(atktar)
+	tar xJf $(atktar)
+	cd $(atkdir); $(configure)
+
+$(atkdll): $(atkmak)
+	cd $(atkdir); make clean; make && make install-strip
+
+$(pangotar):
+	wget -c -q http://ftp.gnome.org/pub/gnome/sources/pango/1.34/$(pangotar)
+
+$(pangomak): $(cairodll) $(pangotar)
+	tar xJf $(pangotar)
+	cd $(pangodir); $(configure)
+
+$(pangodll): $(pangomak)
+	cd $(pangodir); make clean; make && make install-strip
+
+$(gdk_pixbuftar):
+	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gdk-pixbuf/2.28/$(gdk_pixbuftar)
+
+$(gdk_pixbufmak): $(glibdll) $(libpngdll) $(gdk_pixbuftar)
+	tar xJf $(gdk_pixbuftar)
+	cd $(gdk_pixbufdir); $(configure)
+
+$(gdk_pixbufdll): $(gdk_pixbufmak)
+	cd $(gdk_pixbufdir); make clean; make && make install-strip
+
+$(hicolor_icon_themetar):
+	wget -c -q http://icon-theme.freedesktop.org/releases/$(hicolor_icon_themetar)
+
+$(hicolor_icon_thememak): $(hicolor_icon_themetar)
+	tar xzf $(hicolor_icon_themetar)
+	cd $(hicolor_icon_themedir); $(configure)
+
+$(hicolor_icon_themedll): $(hicolor_icon_thememak)
+	cd $(hicolor_icon_themedir); make install
+
+$(gtk2tar):
+	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/$(gtk2tar)
+
+$(gtk2mak): $(cairodll) $(atkdll) $(pangodll) $(gdk_pixbufdll) $(gtk2tar)
+	tar xJf $(gtk2tar)
+	cd $(gtk2dir); \
+	$(configure) --with-included-immodules=ime --with-gdktarget=win32 && \
+	perl ../gtk+64.pl; \
+	cd gdk/win32; grep -v INITGUID gdkdnd-win32.c > gdkdnd-win32.c.new; \
+	mv gdkdnd-win32.c.new gdkdnd-win32.c; \
+
+#	cp ../gtk-launch.c gtk; \
+#	echo "#define _SSIZE_T_DEFINED 1" >> config.h; \
+
+$(gtk2dll): $(gtk2mak)
+	cd $(gtk2dir); make clean; make && make install-strip
+
+$(freegluttar):
+	wget -c -q http://sourceforge.net/projects/freeglut/files/freeglut/$(freeglutver)/$(freegluttar)
+
+$(freeglutmak): $(zlibdll) $(freegluttar)
+	tar xzf $(freegluttar)
+	cd $(freeglutdir); $(configure)
+	
+$(freeglutdll): $(freeglutmak)
+	cd $(freeglutdir); make clean; make && make install-strip
+
+$(gsltar):
+	wget -c -q http://ftp.gnu.org/pub/gnu/gsl/$(gsltar)
+
+$(gslmak): $(zlibdll) $(gsltar)
+	tar xzf $(gsltar)
+	cd $(gsldir); $(configure)
+
+$(gsldll): $(gslmak)
+	cd $(gsldir); make clean; make && make install-strip
+
+$(sqlitetar):
+	wget -c -q http://www.sqlite.org/2013/$(sqlitetar)
+
+$(sqlitemak): $(sqlitetar)
+	tar xzf $(sqlitetar)
+	cd $(sqlitedir); $(configure)
+
+$(sqliteexe): $(sqlitemak)
+	cd $(sqlitedir); make && make install-strip
+
+$(curltar):
+	wget -c -q http://curl.haxx.se/download/$(curltar)
+
+$(curlmak): $(curltar)
+	tar xjf $(curltar);
+	cd $(curldir); aclocal; autoconf; PKG_CONFIG=$(pkg_config) \
+		PKG_CONFIG_PATH=$(pkg_config_path) CC=$(cc) CXX=$(cxx) \
+		CPPFLAGS='$(cppflags)' CFLAGS='$(cflags)' LDFLAGS='$(ldflags)' \
+		configure --prefix=/mingw/ --disable-debug --enable-optimize \
+	   	--host=x86_64-w64-mingw32 --enable-shared --disable-static
+
+$(curlexe): $(curlmak)
+	cd $(curldir); make clean; make && make install-strip
+
+$(cmaketar):
+	wget -c -q http://www.cmake.org/files/v2.8/$(cmaketar)
+
+$(cmakemak):
+	unzip $(cmaketar)
+	cd $(cmakedir); bootstrap --prefix=/mingw; make install
+
+$(openmpitar):
+	wget -c -q http://www.openmpi.org/software/ompi/v1.6/downloads/$(openmpitar)
+
+$(openmpimak): $(cmakeexe) $(openmpitar)
+	tar xjf $(openmpitar)
+	cd $(openmpidir); $(configure)
+
+$(openmpidll): $(openmpimak)
+	cd $(openmpidir); make && make install-strip
+
+$(girtar):
+	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gobject-introspection/1.32/$(girtar)
+
+$(girmak): $(glibdll) $(pythonexe) $(girtar)
+	tar xJf $(girtar)
+	cd $(girdir); $(configure)
+
+$(girdll): $(girmak)
+	cd $(girdir); make clean; make && make install-strip
+
+$(gtk3tar):
+	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gtk+/3.6/$(gtk3tar)
+
+$(gtk3mak): $(cairodll) $(atkdll) $(pangodll) $(gdk_pixbufdll) $(gtk3tar)
+	tar xJf $(gtk3tar)
+	cd $(gtk3dir); \
+	$(configure) --enable-win32-backend --with-included-immodules=ime && \
+	cp ../gtk-launch.c gtk; \
+	cd gdk/win32; grep -v INITGUID gdkdnd-win32.c > gdkdnd-win32.c.new; \
+	mv gdkdnd-win32.c.new gdkdnd-win32.c; \
+#	perl ../gtk+.pl; \
+
+$(gtk3dll): $(gtk3mak)
+	cd $(gtk3dir); make clean; make && make install-strip
