@@ -19,6 +19,7 @@ zlibver = 1.2.8
 autoconfver = 2.69
 libtoolver = 2.4.2
 automakever = 1.14.1
+m4ver = 1.4.17
 expatver = 2.1.0
 libxmlver = 2.9.1
 libffiver = 3.0.13
@@ -70,6 +71,11 @@ automakedir = automake-$(automakever)/
 automaketar = automake-$(automakever).tar.xz
 automakemak = $(automakedir)Makefile
 automakeexe = /mingw/bin/automake
+
+m4dir = m4-$(m4ver)/
+m4tar = m4-$(m4ver).tar.xz
+m4mak = $(m4dir)Makefile
+m4exe = /mingw/bin/m4.exe
 
 expatdir = expat-$(expatver)/
 expattar = expat-$(expatver).tar.gz
@@ -215,6 +221,7 @@ dll = \
 	$(autoconfexe) \
 	$(libtoolexe) \
 	$(automakeexe) \
+	$(m4exe) \
 	$(expatdll) \
 	$(libxmldll) \
 	$(libffidll) \
@@ -244,11 +251,8 @@ dll = \
 all: $(dll)
 
 start:
-	mingw-get install msys-unzip msys-wget msys-m4 msys-perl msys-patch \
-		msys-flex msys-bison
-	cp /c/Windows/SysWOW64/gdi32.dll /mingw/bin/libgdi32.dll
-	cp /c/Windows/SysWOW64/msimg32.dll /mingw/bin/libmsimg32.dll
-	cp /c/Windows/SysWOW64/shell32.dll /mingw/bin/libshell32.dll
+	mingw-get install msys-unzip msys-wget msys-perl msys-patch msys-flex \
+		msys-bison msys-m4 msys-vim
 	cd /mingw; \
 	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/pkg-config_0.23-2_win64.zip; \
 	unzip pkg-config_0.23-2_win64.zip; \
@@ -263,14 +267,15 @@ start:
 
 $(gcctar):
 	wget -c -q "http://sourceforge.net/projects/mingw-w64/files/Toolchains targetting Win64/Personal Builds/mingw-builds/$(gccver)/threads-win32/seh/$(gcctar)"
-	rm $(gccexe)
 
 $(gccexe): $(gcctar)
 	7z x $(gcctar)
-	cd mingw64; tar cf /mingw/temp.tar *
-	rm -rf mingw64
-	cd /mingw; tar xf temp.tar; rm temp.tar
+	-cd mingw64; tar cf /mingw/temp.tar *
+	cd /mingw; tar xf temp.tar;
 	touch $(gccexe)
+	rm /mingw/temp.tar
+	rm -rf mingw64
+	rm -rf /mingw/opt
 
 $(libiconvtar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/libiconv/$(libiconvtar)
@@ -300,7 +305,12 @@ $(autoconftar):
 
 $(autoconfmak): $(gccexe) $(autoconftar)
 	tar xJf $(autoconftar)
-	cd $(autoconfdir); $(configure)
+	cd $(autoconfdir); \
+	unzip -j ../MSYS2-packages-master.zip \
+		MSYS2-packages-master/autoconf/*.patch -d .; \
+	patch -p1 <autoconf-2.69-fix-texinfo.patch; \
+	patch -p1 <autoconf-2.69-msys2.patch; \
+	$(configure)
 
 $(autoconfexe): $(autoconfmak)
 	cd $(autoconfdir); make clean; make && make install-strip
@@ -310,7 +320,14 @@ $(libtooltar):
 
 $(libtoolmak): $(gccexe) $(libtooltar)
 	tar xJf $(libtooltar)
-	cd $(libtooldir); $(configure)
+	cd $(libtooldir); \
+	unzip -j ../MSYS2-packages-master.zip \
+		MSYS2-packages-master/libtool/*.patch -d .; \
+	patch -p1 <2.4-cygwin-mingw-Create-UAC-manifest-files.patch; \
+	patch -p1 <2.4-pass-ldflags.patch; \
+	patch -p1 <libtool-2.4.2-msys2.patch; \
+	patch -p1 <libtool-2.4.2-include-process-h.patch; \
+	$(configure)
 
 $(libtoolexe): $(libtoolmak)
 	cd $(libtooldir); make clean; make && make install-strip
@@ -320,10 +337,30 @@ $(automaketar):
 
 $(automakemak): $(gccexe) $(autoconfexe) $(libtoolexe) $(automaketar)
 	tar xJf $(automaketar)
-	cd $(automakedir); $(configure)
+	cd $(automakedir); \
+	unzip -j ../MSYS2-packages-master.zip \
+		MSYS2-packages-master/automake-1.14/*.patch -d .; \
+	patch -p2 <automake1.14-documentation.patch; \
+	patch -p1 <automake-1.14-msys2.patch; \
+	$(configure)
 
 $(automakeexe): $(automakemak)
 	cd $(automakedir); make clean; make && make install-strip
+
+$(m4tar):
+	wget -c -q http://ftp.gnu.org/pub/gnu/m4/$(m4tar)
+
+$(m4mak): $(gccexe) $(automakeexe) $(m4tar)
+	tar xJf $(m4tar)
+	cd $(m4dir); \
+	unzip -j ../MSYS2-packages-master.zip \
+		MSYS2-packages-master/m4/*.patch -d .; \
+	patch -p1 <m4-1.4.17-msys2.patch; \
+	$(configure) ac_cv_header_spawn_h=no
+
+$(m4exe): $(m4mak)
+	cd $(m4dir); make clean; make && make install-strip
+	mingw-get remove msys-m4
 
 $(expattar):
 	wget -c -q http://sourceforge.net/projects/expat/files/expat/$(expatver)/$(expattar)
