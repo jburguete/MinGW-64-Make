@@ -291,7 +291,7 @@ $(autoconfmak): $(gccexe) $(autoconftar)
 	$(configure)
 
 $(autoconfexe): $(autoconfmak)
-	cd $(autoconfdir); make clean; make && make install-strip
+	cd $(autoconfdir); make && make install-strip; make clean
 
 $(libtooltar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/libtool/$(libtooltar)
@@ -308,7 +308,7 @@ $(libtoolmak): $(gccexe) $(libtooltar)
 	$(configure)
 
 $(libtoolexe): $(libtoolmak)
-	cd $(libtooldir); make clean; make && make install-strip
+	cd $(libtooldir); make && make install-strip; make clean
 
 $(automaketar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/automake/$(automaketar)
@@ -323,7 +323,7 @@ $(automakemak): $(gccexe) $(autoconfexe) $(libtoolexe) $(automaketar)
 	$(configure)
 
 $(automakeexe): $(automakemak)
-	cd $(automakedir); make clean; make && make install-strip
+	cd $(automakedir); make && make install-strip; make clean
 
 $(m4tar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/m4/$(m4tar)
@@ -337,7 +337,7 @@ $(m4mak): $(gccexe) $(automakeexe) $(m4tar)
 	$(configure) ac_cv_header_spawn_h=no
 
 $(m4exe): $(m4mak)
-	cd $(m4dir); make clean; make && make install-strip
+	cd $(m4dir); make && make install-strip; make clean
 	mingw-get remove msys-m4
 
 $(libiconvtar):
@@ -348,7 +348,7 @@ $(libiconvmak): $(gccexe) $(libiconvtar)
 	cd $(libiconvdir); $(configure)
 
 $(libiconvdll): $(libiconvmak)
-	cd $(libiconvdir); make clean; make && make install-strip
+	cd $(libiconvdir); make && make install-strip; make clean
 
 $(zlibtar):
 	wget -c -q http://sourceforge.net/projects/libpng/files/zlib/$(zlibver)/$(zlibtar)
@@ -371,7 +371,7 @@ $(expatmak): $(gccexe) $(automakeexe) $(expattar)
 	cd $(expatdir); autoreconf -if; $(configure)
 
 $(expatdll): $(expatmak)
-	cd $(expatdir); make clean; make && make install
+	cd $(expatdir); make && make install; make clean
 
 $(libxmltar):
 	wget -c -q http://xmlsoft.org/sources/$(libxmltar)
@@ -381,7 +381,7 @@ $(libxmlmak): $(gccexe) $(zlibdll) $(libiconvdll) $(automakeexe) $(libxmltar)
 	cd $(libxmldir); autoreconf -if; $(configure); perl ../libxml.pl
 
 $(libxmldll): $(libxmlmak)
-	cd $(libxmldir); make clean; make && make install-strip
+	cd $(libxmldir); make && make install-strip; make clean
 
 $(libffitar):
 	wget -c -q ftp://sourceware.org/pub/libffi/$(libffitar)
@@ -391,7 +391,7 @@ $(libffimak): $(gccexe) $(automakeexe) $(libffitar)
 	cd $(libffidir); autoreconf -if; $(configure)
 
 $(libffidll): $(libffimak)
-	cd $(libffidir); make clean; make && make install-strip
+	cd $(libffidir); make && make install-strip; make clean
 
 $(termcaptar):
 	wget -c -q http://ftp.gnu.org/gnu/termcap/$(termcaptar)
@@ -401,7 +401,7 @@ $(termcapmak): $(gccexe) $(automakeexe) $(termcaptar)
 	cd $(termcapdir); autoreconf -if; $(configure)
 
 $(termcapdll): $(termcapmak)
-	cd $(termcapdir); make clean; make && make install
+	cd $(termcapdir); make && make install; make clean
 
 $(readlinetar):
 	wget -c -q http://ftp.gnu.org/gnu/readline/$(readlinetar)
@@ -422,7 +422,7 @@ $(readlinemak): $(gccexe) $(readlinetar)
 	$(configure)
 
 $(readlinedll): $(readlinemak)
-	cd $(readlinedir); make clean; make && make install
+	cd $(readlinedir); make && make install; make clean
 
 $(pythontar):
 	wget -c -q http://www.python.org/ftp/python/$(pythonver)/$(pythontar)
@@ -498,7 +498,7 @@ $(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(libffidll) $(pythondll) \
 	cp ../glib-64-gdatetime.c glib/tests/gdatetime.c
 
 $(glibdll): $(glibmak)
-	cd $(glibdir); make clean; make && make install-strip
+	cd $(glibdir); make && make install-strip; make clean
 
 $(gettexttar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/gettext/$(gettexttar)
@@ -510,7 +510,7 @@ $(gettextmak): $(gccexe) $(automakeexe) $(libiconvdll) $(libxmldll) $(glibdll) \
 	$(configure) --enable-threads=windows --disable-java;
 
 $(gettextdll): $(gettextmak)
-	cd $(gettextdir); make clean; make && make install-strip
+	cd $(gettextdir); make && make install-strip; make clean
 
 $(pkgconfigtar):
 	wget -c -q http://pkgconfig.freedesktop.org/releases/$(pkgconfigtar)
@@ -531,7 +531,7 @@ $(libpngmak): $(gccexe) $(automakeexe) $(zlibdll) $(libpngtar)
 	cd $(libpngdir); autoreconf -if; $(configure)
 
 $(libpngdll): $(libpngmak)
-	cd $(libpngdir); make clean; make && make install-strip
+	cd $(libpngdir); make && make install-strip; make clean
 
 $(freetypetar):
 	wget -c -q http://sourceforge.net/projects/freetype/files/freetype2/2.5.2/$(freetypetar)
@@ -553,7 +553,7 @@ $(fontconfigmak): $(gccexe) $(automakeexe) $(zlibdll) $(libpngdll) \
 	$(configure) --enable-libxml2 --disable-docs
 
 $(fontconfigdll): $(fontconfigmak)
-	cd $(fontconfigdir); make clean; make && make install-strip
+	cd $(fontconfigdir); make && make install-strip; make clean
 
 $(pixmantar):
 	wget -c -q http://www.cairographics.org/releases/$(pixmantar)
@@ -563,7 +563,7 @@ $(pixmanmak): $(gccexe) $(automakeexe) $(pixmantar)
 	cd $(pixmandir); autoreconf -if; $(configure)
 
 $(pixmandll): $(pixmanmak)
-	cd $(pixmandir); make clean; make && make install-strip
+	cd $(pixmandir); make && make install-strip; make clean
 
 $(cairotar):
 	wget -c -q http://www.cairographics.org/releases/$(cairotar)
@@ -575,7 +575,7 @@ $(cairomak): $(gccexe) $(automakeexe) $(zlibdll) $(glibdll) $(libpngdll) \
 	$(configure) --enable-win32=yes --enable-win32-font=yes
 
 $(cairodll): $(cairomak)
-	cd $(cairodir); make clean; make && make install-strip
+	cd $(cairodir); make && make install-strip; make clean
 
 $(atktar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/atk/2.10/$(atktar)
@@ -585,7 +585,7 @@ $(atkmak): $(gccexe) $(glibdll) $(atktar)
 	cd $(atkdir); $(configure)
 
 $(atkdll): $(atkmak)
-	cd $(atkdir); make clean; make && make install-strip
+	cd $(atkdir); make && make install-strip; make clean
 
 $(pangotar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/pango/1.34/$(pangotar)
@@ -596,7 +596,7 @@ $(pangomak): $(gccexe) $(glibdll) $(freetypedll) $(fontconfigdll) $(cairodll) \
 	cd $(pangodir); $(configure)
 
 $(pangodll): $(pangomak)
-	cd $(pangodir); make clean; make && make install-strip
+	cd $(pangodir); make && make install-strip; make clean
 
 $(gdk_pixbuftar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gdk-pixbuf/2.30/$(gdk_pixbuftar)
@@ -607,7 +607,7 @@ $(gdk_pixbufmak): $(gccexe) $(automakeexe) $(glibdll) $(libpngdll) \
 	cd $(gdk_pixbufdir); autoreconf -if; $(configure)
 
 $(gdk_pixbufdll): $(gdk_pixbufmak)
-	cd $(gdk_pixbufdir); make clean; make && make install-strip
+	cd $(gdk_pixbufdir); make && make install-strip; make clean
 
 $(hicolor_icon_themetar):
 	wget -c -q http://icon-theme.freedesktop.org/releases/$(hicolor_icon_themetar)
@@ -631,7 +631,7 @@ $(gtk2mak): $(gccexe) $(zlibdll) $(freetypedll) $(fontconfigdll) $(glibdll) \
 	perl ../gtk+64.pl
 
 $(gtk2dll): $(gtk2mak)
-	cd $(gtk2dir); make clean; make && make install-strip
+	cd $(gtk2dir); make && make install-strip; make clean
 
 $(freegluttar):
 	wget -c -q http://sourceforge.net/projects/freeglut/files/freeglut/$(freeglutver)/$(freegluttar)
@@ -641,7 +641,7 @@ $(freeglutmak): $(gccexe) $(automakeexe) $(freegluttar)
 	cd $(freeglutdir); autoreconf -if; $(configure)
 	
 $(freeglutdll): $(freeglutmak)
-	cd $(freeglutdir); make clean; make && make install-strip
+	cd $(freeglutdir); make && make install-strip; make clean
 
 $(gsltar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/gsl/$(gsltar)
@@ -651,7 +651,7 @@ $(gslmak): $(gccexe) $(automakeexe) $(gsltar)
 	cd $(gsldir); autoreconf -if; $(configure)
 
 $(gsldll): $(gslmak)
-	cd $(gsldir); make clean; make && make install-strip
+	cd $(gsldir); make && make install-strip; make clean
 
 $(sqlitetar):
 	wget -c -q http://www.sqlite.org/2013/$(sqlitetar)
@@ -709,7 +709,7 @@ $(gtk3mak): $(gccexe) $(cairodll) $(atkdll) $(pangodll) $(gdk_pixbufdll) \
 	mv gdkdnd-win32.c.new gdkdnd-win32.c;
 
 $(gtk3dll): $(gtk3mak)
-	cd $(gtk3dir); make clean; make && make install-strip
+	cd $(gtk3dir); make && make install-strip; make clean
 
 $(mpidll):
 	cp -r '/c/Program Files/Microsoft HPC Pack 2012/Inc/'* /mingw/include
