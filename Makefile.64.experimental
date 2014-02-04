@@ -14,12 +14,12 @@ configure = PKG_CONFIG=$(pkg_config) PKG_CONFIG_PATH=$(pkg_config_path) \
 		--enable-shared --disable-static
 
 gccver = 4.8.2
-libiconvver = 1.14
-zlibver = 1.2.8
 autoconfver = 2.69
 libtoolver = 2.4.2
 automakever = 1.14.1
 m4ver = 1.4.17
+libiconvver = 1.14
+zlibver = 1.2.8
 expatver = 2.1.0
 libxmlver = 2.9.1
 libffiver = 3.0.13
@@ -48,15 +48,6 @@ gtk3ver = 3.6.4
 gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev2.7z
 gccexe = /mingw/bin/gcc.exe
 
-libiconvdir = libiconv-$(libiconvver)/
-libiconvtar = libiconv-$(libiconvver).tar.gz
-libiconvmak = $(libiconvdir)Makefile
-libiconvdll = /mingw/bin/libiconv-2.dll
-
-zlibdir = zlib-$(zlibver)/
-zlibtar = zlib-$(zlibver).tar.xz
-zlibdll = /mingw/bin/libz.dll
-
 autoconfdir = autoconf-$(autoconfver)/
 autoconftar = autoconf-$(autoconfver).tar.xz
 autoconfmak = $(autoconfdir)Makefile
@@ -76,6 +67,15 @@ m4dir = m4-$(m4ver)/
 m4tar = m4-$(m4ver).tar.xz
 m4mak = $(m4dir)Makefile
 m4exe = /mingw/bin/m4.exe
+
+libiconvdir = libiconv-$(libiconvver)/
+libiconvtar = libiconv-$(libiconvver).tar.gz
+libiconvmak = $(libiconvdir)Makefile
+libiconvdll = /mingw/bin/libiconv-2.dll
+
+zlibdir = zlib-$(zlibver)/
+zlibtar = zlib-$(zlibver).tar.xz
+zlibdll = /mingw/bin/libz.dll
 
 expatdir = expat-$(expatver)/
 expattar = expat-$(expatver).tar.gz
@@ -216,12 +216,12 @@ mpidll = /mingw/bin/msmpi.dll
 
 dll = \
 	$(gccexe) \
-	$(libiconvdll) \
-	$(zlibdll) \
 	$(autoconfexe) \
 	$(libtoolexe) \
 	$(automakeexe) \
 	$(m4exe) \
+	$(libiconvdll) \
+	$(zlibdll) \
 	$(expatdll) \
 	$(libxmldll) \
 	$(libffidll) \
@@ -251,6 +251,7 @@ dll = \
 all: $(dll)
 
 start:
+	echo "C:/MinGW /mingw" > /etc/fstab
 	mingw-get install msys-unzip msys-wget msys-perl msys-patch msys-flex \
 		msys-bison msys-m4 msys-vim
 	cd /mingw; \
@@ -276,29 +277,6 @@ $(gccexe): $(gcctar)
 	rm /mingw/temp.tar
 	rm -rf mingw64
 	rm -rf /mingw/opt
-
-$(libiconvtar):
-	wget -c -q http://ftp.gnu.org/pub/gnu/libiconv/$(libiconvtar)
-
-$(libiconvmak): $(gccexe) $(libiconvtar)
-	tar xzf $(libiconvtar)
-	cd $(libiconvdir); $(configure)
-
-$(libiconvdll): $(libiconvmak)
-	cd $(libiconvdir); make clean; make && make install-strip
-
-$(zlibtar):
-	wget -c -q http://sourceforge.net/projects/libpng/files/zlib/$(zlibver)/$(zlibtar)
-
-$(zlibdll): $(gccexe) $(zlibtar)
-	tar xJf $(zlibtar)
-	cd $(zlibdir); \
-	cp contrib/amd64/amd64-match.S match.S; \
-	perl ../zlib64testing.pl; \
-	make -f win32/Makefile.gcc && \
-	INCLUDE_PATH=/mingw/include LIBRARY_PATH=/mingw/lib BINARY_PATH=/mingw/bin \
-		make install -f win32/Makefile.gcc SHARED_MODE=1
-	cp /mingw/bin/zlib1.dll /mingw/bin/libz.dll
 
 $(autoconftar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/autoconf/$(autoconftar)
@@ -361,6 +339,29 @@ $(m4mak): $(gccexe) $(automakeexe) $(m4tar)
 $(m4exe): $(m4mak)
 	cd $(m4dir); make clean; make && make install-strip
 	mingw-get remove msys-m4
+
+$(libiconvtar):
+	wget -c -q http://ftp.gnu.org/pub/gnu/libiconv/$(libiconvtar)
+
+$(libiconvmak): $(gccexe) $(libiconvtar)
+	tar xzf $(libiconvtar)
+	cd $(libiconvdir); $(configure)
+
+$(libiconvdll): $(libiconvmak)
+	cd $(libiconvdir); make clean; make && make install-strip
+
+$(zlibtar):
+	wget -c -q http://sourceforge.net/projects/libpng/files/zlib/$(zlibver)/$(zlibtar)
+
+$(zlibdll): $(gccexe) $(zlibtar)
+	tar xJf $(zlibtar)
+	cd $(zlibdir); \
+	cp contrib/amd64/amd64-match.S match.S; \
+	perl ../zlib64testing.pl; \
+	make -f win32/Makefile.gcc && \
+	INCLUDE_PATH=/mingw/include LIBRARY_PATH=/mingw/lib BINARY_PATH=/mingw/bin \
+		make install -f win32/Makefile.gcc SHARED_MODE=1
+	cp /mingw/bin/zlib1.dll /mingw/bin/libz.dll
 
 $(expattar):
 	wget -c -q http://sourceforge.net/projects/expat/files/expat/$(expatver)/$(expattar)
