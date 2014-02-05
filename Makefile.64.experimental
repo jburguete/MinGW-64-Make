@@ -17,7 +17,7 @@ gccver = 4.8.2
 autoconfver = 2.69
 libtoolver = 2.4.2
 automakever = 1.14.1
-m4ver = 1.4.17
+#m4ver = 1.4.17
 libiconvver = 1.14
 zlibver = 1.2.8
 expatver = 2.1.0
@@ -53,20 +53,20 @@ autoconftar = autoconf-$(autoconfver).tar.xz
 autoconfmak = $(autoconfdir)Makefile
 autoconfexe = /mingw/bin/autoconf
 
-libtooldir = libtool-$(libtoolver)/
-libtooltar = libtool-$(libtoolver).tar.xz
-libtoolmak = $(libtooldir)Makefile
-libtoolexe = /mingw/bin/libtool
-
 automakedir = automake-$(automakever)/
 automaketar = automake-$(automakever).tar.xz
 automakemak = $(automakedir)Makefile
 automakeexe = /mingw/bin/automake
 
-m4dir = m4-$(m4ver)/
-m4tar = m4-$(m4ver).tar.xz
-m4mak = $(m4dir)Makefile
-m4exe = /mingw/bin/m4.exe
+libtooldir = libtool-$(libtoolver)/
+libtooltar = libtool-$(libtoolver).tar.xz
+libtoolmak = $(libtooldir)Makefile
+libtoolexe = /mingw/bin/libtool
+
+#m4dir = m4-$(m4ver)/
+#m4tar = m4-$(m4ver).tar.xz
+#m4mak = $(m4dir)Makefile
+#m4exe = /mingw/bin/m4.exe
 
 libiconvdir = libiconv-$(libiconvver)/
 libiconvtar = libiconv-$(libiconvver).tar.gz
@@ -217,9 +217,8 @@ mpidll = /mingw/bin/msmpi.dll
 dll = \
 	$(gccexe) \
 	$(autoconfexe) \
-	$(libtoolexe) \
 	$(automakeexe) \
-	$(m4exe) \
+	$(libtoolexe) \
 	$(libiconvdll) \
 	$(zlibdll) \
 	$(expatdll) \
@@ -247,6 +246,7 @@ dll = \
 	$(gtk3dll) \
 	$(mpidll) \
 	$(girdll) \
+	$(m4exe) \
 
 all: $(dll)
 
@@ -291,12 +291,27 @@ $(autoconfmak): $(gccexe) $(autoconftar)
 	$(configure)
 
 $(autoconfexe): $(autoconfmak)
-	cd $(autoconfdir); make && make install-strip; make clean
+	cd $(autoconfdir); make && make install-strip && make clean
+
+$(automaketar):
+	wget -c -q http://ftp.gnu.org/pub/gnu/automake/$(automaketar)
+
+$(automakemak): $(gccexe) $(autoconfexe) $(automaketar)
+	tar xJf $(automaketar)
+	cd $(automakedir); \
+	unzip -j ../MSYS2-packages-master.zip \
+		MSYS2-packages-master/automake1.14/*.patch -d .; \
+	patch -p2 <automake1.14-documentation.patch; \
+	patch -p1 <automake-1.14-msys2.patch; \
+	$(configure)
+
+$(automakeexe): $(automakemak)
+	cd $(automakedir); make && make install-strip && make clean
 
 $(libtooltar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/libtool/$(libtooltar)
 
-$(libtoolmak): $(gccexe) $(libtooltar)
+$(libtoolmak): $(gccexe) $(automakeexe) $(libtooltar)
 	tar xJf $(libtooltar)
 	cd $(libtooldir); \
 	unzip -j ../MSYS2-packages-master.zip \
@@ -308,37 +323,23 @@ $(libtoolmak): $(gccexe) $(libtooltar)
 	$(configure)
 
 $(libtoolexe): $(libtoolmak)
-	cd $(libtooldir); make && make install-strip; make clean
+	cd $(libtooldir); make && make install-strip && make clean
 
-$(automaketar):
-	wget -c -q http://ftp.gnu.org/pub/gnu/automake/$(automaketar)
+#$(m4tar):
+#	wget -c -q http://ftp.gnu.org/pub/gnu/m4/$(m4tar)
 
-$(automakemak): $(gccexe) $(autoconfexe) $(libtoolexe) $(automaketar)
-	tar xJf $(automaketar)
-	cd $(automakedir); \
-	unzip -j ../MSYS2-packages-master.zip \
-		MSYS2-packages-master/automake-1.14/*.patch -d .; \
-	patch -p2 <automake1.14-documentation.patch; \
-	patch -p1 <automake-1.14-msys2.patch; \
-	$(configure)
+#$(m4mak): $(gccexe) $(automakeexe) $(m4tar)
+#	tar xJf $(m4tar)
+#	cd $(m4dir); \
+#	unzip -j ../MSYS2-packages-master.zip \
+#		MSYS2-packages-master/m4/*.patch -d .; \
+#	patch -p1 <m4-1.4.17-msys2.patch; \
+#	$(configure) ac_cv_header_spawn_h=no
 
-$(automakeexe): $(automakemak)
-	cd $(automakedir); make && make install-strip; make clean
-
-$(m4tar):
-	wget -c -q http://ftp.gnu.org/pub/gnu/m4/$(m4tar)
-
-$(m4mak): $(gccexe) $(automakeexe) $(m4tar)
-	tar xJf $(m4tar)
-	cd $(m4dir); \
-	unzip -j ../MSYS2-packages-master.zip \
-		MSYS2-packages-master/m4/*.patch -d .; \
-	patch -p1 <m4-1.4.17-msys2.patch; \
-	$(configure) ac_cv_header_spawn_h=no
-
-$(m4exe): $(m4mak)
-	cd $(m4dir); make && make install-strip; make clean
-	mingw-get remove msys-m4
+#$(m4exe): $(m4mak)
+#	cd $(m4dir); make && make install-strip && make clean
+#	mingw-get remove msys-m4
+#	rm -rf $(autoconfdir) $(libtooldir) $(automakedir)
 
 $(libiconvtar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/libiconv/$(libiconvtar)
@@ -348,7 +349,7 @@ $(libiconvmak): $(gccexe) $(libiconvtar)
 	cd $(libiconvdir); $(configure)
 
 $(libiconvdll): $(libiconvmak)
-	cd $(libiconvdir); make && make install-strip; make clean
+	cd $(libiconvdir); make && make install-strip && make clean
 
 $(zlibtar):
 	wget -c -q http://sourceforge.net/projects/libpng/files/zlib/$(zlibver)/$(zlibtar)
@@ -371,17 +372,44 @@ $(expatmak): $(gccexe) $(automakeexe) $(expattar)
 	cd $(expatdir); autoreconf -if; $(configure)
 
 $(expatdll): $(expatmak)
-	cd $(expatdir); make && make install; make clean
+	cd $(expatdir); make && make install && make clean
 
 $(libxmltar):
 	wget -c -q http://xmlsoft.org/sources/$(libxmltar)
 
 $(libxmlmak): $(gccexe) $(zlibdll) $(libiconvdll) $(automakeexe) $(libxmltar)
 	tar xzf $(libxmltar)
-	cd $(libxmldir); autoreconf -if; $(configure); perl ../libxml.pl
+	cd $(libxmldir); \
+	unzip -j ../MINGW-packages-master.zip \
+		MINGW-packages-master/mingw-w64-libxml2/*.patch -d .; \
+	patch -p1 <libxml2-2.9.0-largefile.patch; \
+	patch -p1 <libxml2-2.9.0-man_fixes.patch; \
+	patch -p1 <libxml2-2.9.0-open.gz.patch; \
+	patch -p1 <0004-detect-ws2tcpip.mingw.patch; \
+	patch -p1 <0005-fix-char-cast-warning.mingw.patch; \
+	patch -p1 <0006-fix-unused-var-warning.mingw.patch; \
+	patch -p1 <0007-fix-stat-redefinition.mingw.patch; \
+	patch -p1 <0008-include-winsock2.h-before-windows.h.mingw.patch; \
+	patch -p1 <0009-use-wstat-appropriate-for-mingw-w64.mingw.patch; \
+	patch -p1 <0010-mingw-w64-defines-lots-of-errnos.mingw.patch; \
+	patch -p1 <0011-more-winsock-inclusion-order-fixes.mingw.patch; \
+	patch -p1 <0012-socklen-is-signed-on-mingw-w64.mingw.patch; \
+	patch -p1 <0013-fix-field-type-signedness.all.patch; \
+	patch -p1 <0014-fix-prototype-warning.all.patch; \
+	patch -p1 <0015-fix-unused-parameters-warning.all.patch; \
+	patch -p1 <0016-WARNING-to-be-fixed.all.patch; \
+	patch -p1 <0017-fix-const-warning.all.patch; \
+	patch -p1 <0018-function-declaration-isnt-prototype.all.patch; \
+	patch -p1 <0019-unused-flags.all.patch; \
+	patch -p1 <0020-fix-size_t-format-specifier.all.patch; \
+	patch -p1 <0023-fix-sitedir-detection.mingw.patch; \
+	patch -p1 <0024-shrext-pyd.mingw.patch; \
+	patch -p1 <0025-mingw-python-dont-remove-dot.patch; \
+	autoreconf -if; \
+	$(configure) --without-python --with-modules --with-threads=win32
 
 $(libxmldll): $(libxmlmak)
-	cd $(libxmldir); make && make install-strip; make clean
+	cd $(libxmldir); make && make install-strip && make clean
 
 $(libffitar):
 	wget -c -q ftp://sourceware.org/pub/libffi/$(libffitar)
@@ -391,7 +419,7 @@ $(libffimak): $(gccexe) $(automakeexe) $(libffitar)
 	cd $(libffidir); autoreconf -if; $(configure)
 
 $(libffidll): $(libffimak)
-	cd $(libffidir); make && make install-strip; make clean
+	cd $(libffidir); make && make install-strip && make clean
 
 $(termcaptar):
 	wget -c -q http://ftp.gnu.org/gnu/termcap/$(termcaptar)
@@ -401,7 +429,7 @@ $(termcapmak): $(gccexe) $(automakeexe) $(termcaptar)
 	cd $(termcapdir); autoreconf -if; $(configure)
 
 $(termcapdll): $(termcapmak)
-	cd $(termcapdir); make && make install; make clean
+	cd $(termcapdir); make && make install && make clean
 
 $(readlinetar):
 	wget -c -q http://ftp.gnu.org/gnu/readline/$(readlinetar)
@@ -422,7 +450,7 @@ $(readlinemak): $(gccexe) $(readlinetar)
 	$(configure)
 
 $(readlinedll): $(readlinemak)
-	cd $(readlinedir); make && make install; make clean
+	cd $(readlinedir); make && make install && make clean
 
 $(pythontar):
 	wget -c -q http://www.python.org/ftp/python/$(pythonver)/$(pythontar)
@@ -484,8 +512,9 @@ $(pythonmak): $(gccexe) $(automakeexe) $(expatdll) $(libffidll) $(readlinedll) \
 	cp ../python-2.7.6-readline.c Modules/readline.c
 
 $(pythondll): $(pythonmak)
-	cd $(pythondir); make clean; -make install; \
-	make && rm -rf /mingw/lib/python2.7/lib-dynload && make install
+	-cd $(pythondir); make install;
+	cd $(pythondir); make && rm -rf /mingw/lib/python2.7/lib-dynload && \
+	make install && make clean;
 
 $(glibtar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/glib/2.38/$(glibtar)
@@ -494,11 +523,16 @@ $(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(libffidll) $(pythondll) \
 	$(glibtar) 
 	tar xJf $(glibtar)
 	cd $(glibdir); \
+	unzip -j ../MINGW-packages-master.zip \
+		MINGW-packages-master/mingw-w64-glib2/*.patch -d .; \
+	patch -Np1 <0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch; \
+	patch -Np0 <glib-send-log-messages-to-correct-stdout-and-stderr.patch; \
+	patch -Np1 <glib-prefer-constructors-over-D11Main.patch; \
 	$(configure) --with-threads=win32 --with-python=$(python); \
-	cp ../glib-64-gdatetime.c glib/tests/gdatetime.c
+#	cp ../glib-64-gdatetime.c glib/tests/gdatetime.c
 
 $(glibdll): $(glibmak)
-	cd $(glibdir); make && make install-strip; make clean
+	cd $(glibdir); make && make install-strip && make clean
 
 $(gettexttar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/gettext/$(gettexttar)
@@ -510,7 +544,7 @@ $(gettextmak): $(gccexe) $(automakeexe) $(libiconvdll) $(libxmldll) $(glibdll) \
 	$(configure) --enable-threads=windows --disable-java;
 
 $(gettextdll): $(gettextmak)
-	cd $(gettextdir); make && make install-strip; make clean
+	cd $(gettextdir); make && make install-strip && make clean
 
 $(pkgconfigtar):
 	wget -c -q http://pkgconfig.freedesktop.org/releases/$(pkgconfigtar)
@@ -531,7 +565,7 @@ $(libpngmak): $(gccexe) $(automakeexe) $(zlibdll) $(libpngtar)
 	cd $(libpngdir); autoreconf -if; $(configure)
 
 $(libpngdll): $(libpngmak)
-	cd $(libpngdir); make && make install-strip; make clean
+	cd $(libpngdir); make && make install-strip && make clean
 
 $(freetypetar):
 	wget -c -q http://sourceforge.net/projects/freetype/files/freetype2/2.5.2/$(freetypetar)
@@ -553,7 +587,7 @@ $(fontconfigmak): $(gccexe) $(automakeexe) $(zlibdll) $(libpngdll) \
 	$(configure) --enable-libxml2 --disable-docs
 
 $(fontconfigdll): $(fontconfigmak)
-	cd $(fontconfigdir); make && make install-strip; make clean
+	cd $(fontconfigdir); make && make install-strip && make clean
 
 $(pixmantar):
 	wget -c -q http://www.cairographics.org/releases/$(pixmantar)
@@ -563,7 +597,7 @@ $(pixmanmak): $(gccexe) $(automakeexe) $(pixmantar)
 	cd $(pixmandir); autoreconf -if; $(configure)
 
 $(pixmandll): $(pixmanmak)
-	cd $(pixmandir); make && make install-strip; make clean
+	cd $(pixmandir); make && make install-strip && make clean
 
 $(cairotar):
 	wget -c -q http://www.cairographics.org/releases/$(cairotar)
@@ -575,7 +609,7 @@ $(cairomak): $(gccexe) $(automakeexe) $(zlibdll) $(glibdll) $(libpngdll) \
 	$(configure) --enable-win32=yes --enable-win32-font=yes
 
 $(cairodll): $(cairomak)
-	cd $(cairodir); make && make install-strip; make clean
+	cd $(cairodir); make && make install-strip && make clean
 
 $(atktar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/atk/2.10/$(atktar)
@@ -585,7 +619,7 @@ $(atkmak): $(gccexe) $(glibdll) $(atktar)
 	cd $(atkdir); $(configure)
 
 $(atkdll): $(atkmak)
-	cd $(atkdir); make && make install-strip; make clean
+	cd $(atkdir); make && make install-strip && make clean
 
 $(pangotar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/pango/1.34/$(pangotar)
@@ -596,7 +630,7 @@ $(pangomak): $(gccexe) $(glibdll) $(freetypedll) $(fontconfigdll) $(cairodll) \
 	cd $(pangodir); $(configure)
 
 $(pangodll): $(pangomak)
-	cd $(pangodir); make && make install-strip; make clean
+	cd $(pangodir); make && make install-strip && make clean
 
 $(gdk_pixbuftar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gdk-pixbuf/2.30/$(gdk_pixbuftar)
@@ -607,7 +641,7 @@ $(gdk_pixbufmak): $(gccexe) $(automakeexe) $(glibdll) $(libpngdll) \
 	cd $(gdk_pixbufdir); autoreconf -if; $(configure)
 
 $(gdk_pixbufdll): $(gdk_pixbufmak)
-	cd $(gdk_pixbufdir); make && make install-strip; make clean
+	cd $(gdk_pixbufdir); make && make install-strip && make clean
 
 $(hicolor_icon_themetar):
 	wget -c -q http://icon-theme.freedesktop.org/releases/$(hicolor_icon_themetar)
@@ -631,7 +665,7 @@ $(gtk2mak): $(gccexe) $(zlibdll) $(freetypedll) $(fontconfigdll) $(glibdll) \
 	perl ../gtk+64.pl
 
 $(gtk2dll): $(gtk2mak)
-	cd $(gtk2dir); make && make install-strip; make clean
+	cd $(gtk2dir); make && make install-strip && make clean
 
 $(freegluttar):
 	wget -c -q http://sourceforge.net/projects/freeglut/files/freeglut/$(freeglutver)/$(freegluttar)
@@ -641,7 +675,7 @@ $(freeglutmak): $(gccexe) $(automakeexe) $(freegluttar)
 	cd $(freeglutdir); autoreconf -if; $(configure)
 	
 $(freeglutdll): $(freeglutmak)
-	cd $(freeglutdir); make && make install-strip; make clean
+	cd $(freeglutdir); make && make install-strip && make clean
 
 $(gsltar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/gsl/$(gsltar)
@@ -651,7 +685,7 @@ $(gslmak): $(gccexe) $(automakeexe) $(gsltar)
 	cd $(gsldir); autoreconf -if; $(configure)
 
 $(gsldll): $(gslmak)
-	cd $(gsldir); make && make install-strip; make clean
+	cd $(gsldir); make && make install-strip && make clean
 
 $(sqlitetar):
 	wget -c -q http://www.sqlite.org/2013/$(sqlitetar)
@@ -690,9 +724,9 @@ $(girmak): $(gccexe) $(automakeexe) $(pythondll) $(glibdll) $(girtar)
 	autoreconf -if; $(configure) --enable-silent-rules;
 
 $(girdll): $(girmak)
-	cd $(girdir); make clean; \
+	cd $(girdir) && make clean; \
 	GI_SCANNER_INCLUDES='-I/mingw/include' make && make install-strip;
-#	cd $(girdir); make clean; PATH='/c/Windows:/bin:/mingw/bin' make -i; \
+#	cd $(girdir) && make clean; PATH='/c/Windows:/bin:/mingw/bin' make -i; \
 #  	cd .libs; ln -s ../.libs; cd ..; \
 #	PATH='/c/Windows:/bin:/mingw/bin' make && make install-strip
 
@@ -709,7 +743,7 @@ $(gtk3mak): $(gccexe) $(cairodll) $(atkdll) $(pangodll) $(gdk_pixbufdll) \
 	mv gdkdnd-win32.c.new gdkdnd-win32.c;
 
 $(gtk3dll): $(gtk3mak)
-	cd $(gtk3dir); make && make install-strip; make clean
+	cd $(gtk3dir); make && make install-strip && make clean
 
 $(mpidll):
 	cp -r '/c/Program Files/Microsoft HPC Pack 2012/Inc/'* /mingw/include
