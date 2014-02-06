@@ -1,5 +1,3 @@
-pkg_config = ../pkg-config.sh
-pkg_config_path = /mingw/lib/pkgconfig
 flags = -march=corei7 -mfpmath=sse -msse3 -mthreads -DWINVER=0x0500
 cppflags = -I/mingw/include -I/mingw/x86_64-w64-mingw32/include 
 cflags = -O2 -fno-strict-aliasing $(cppflags)
@@ -7,7 +5,7 @@ ldflags = -L/c/Windows/SysWOW64 -L/mingw/bin -L/mingw/lib \
 	-L/mingw/x86_64-w64-mingw32/lib 
 cc = 'gcc $(flags)'
 cxx = 'g++ $(flags)'
-configure = PKG_CONFIG=$(pkg_config) PKG_CONFIG_PATH=$(pkg_config_path) \
+configure = PKG_CONFIG_PATH='/mingw/lib/pkgconfig' \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' CFLAGS='$(cflags)' \
 	LDFLAGS='$(ldflags)' \
 	configure --prefix=/mingw --disable-debug --host=x86_64-w64-mingw32 \
@@ -20,6 +18,7 @@ automakever = 1.14.1
 #m4ver = 1.4.17
 libiconvver = 1.14
 zlibver = 1.2.8
+pkgconfigver = 0.9.3
 expatver = 2.1.0
 libxmlver = 2.9.1
 libffiver = 3.0.13
@@ -28,12 +27,11 @@ readlinever = 6.2
 pythonver = 2.7.6
 glibver = 2.38.2
 gettextver = 0.18.3.1
-pkgconfigver = 0.28
-libpngver = 1.6.7
+libpngver = 1.6.8
 freetypever = 2.5.2
-fontconfigver = 2.10.95
+fontconfigver = 2.11.0
 pixmanver = 0.32.4
-cairover = 1.10.2
+cairover = 1.12.16
 atkver = 2.10.0
 pangover = 1.34.1
 gdk_pixbufver = 2.30.3
@@ -77,6 +75,11 @@ zlibdir = zlib-$(zlibver)/
 zlibtar = zlib-$(zlibver).tar.xz
 zlibdll = /mingw/bin/libz.dll
 
+pkgconfigdir = pkgconf-$(pkgconfigver)/
+pkgconfigtar = pkgconf-$(pkgconfigver).tar.bz2
+pkgconfigmak = $(pkgconfigdir)Makefile
+pkgconfigexe = /mingw/bin/pkg-config.exe
+
 expatdir = expat-$(expatver)/
 expattar = expat-$(expatver).tar.gz
 expatmak = $(expatdir)Makefile
@@ -116,11 +119,6 @@ gettextdir = gettext-$(gettextver)/
 gettexttar = gettext-$(gettextver).tar.gz
 gettextmak = $(gettextdir)Makefile
 gettextdll = /mingw/bin/libintl-8.dll
-
-pkgconfigdir = pkg-config-$(pkgconfigver)/
-pkgconfigtar = pkg-config-$(pkgconfigver).tar.gz
-pkgconfigmak = $(pkgconfigdir)Makefile
-pkgconfigexe = /mingw/bin/pkg-config.exe
 
 libpngdir = libpng-$(libpngver)/
 libpngtar = libpng-$(libpngver).tar.xz
@@ -221,6 +219,7 @@ dll = \
 	$(libtoolexe) \
 	$(libiconvdll) \
 	$(zlibdll) \
+	$(pkgconfigexe) \
 	$(expatdll) \
 	$(libxmldll) \
 	$(libffidll) \
@@ -229,7 +228,6 @@ dll = \
 	$(pythondll) \
 	$(glibdll) \
 	$(gettextdll) \
-	$(pkgconfigexe) \
 	$(libpngdll) \
 	$(freetypedll) \
 	$(fontconfigdll) \
@@ -364,10 +362,21 @@ $(zlibdll): $(gccexe) $(zlibtar)
 		make install -f win32/Makefile.gcc SHARED_MODE=1
 	cp /mingw/bin/zlib1.dll /mingw/bin/libz.dll
 
+$(pkgconfigtar):
+	wget -c -q http://files.etoilebsd.net/pkgconf/$(pkgconfigtar)
+
+$(pkgconfigmak): $(gccexe) $(automakeexe) $(pkgconfigtar)
+	tar xjf $(pkgconfigtar)
+	cd $(pkgconfigdir); autoreconf -if; $(configure)
+
+$(pkgconfigexe): $(pkgconfigmak)
+	cd $(pkgconfigdir); make && make install && make clean
+	mv /mingw/bin/pkgconf.exe /mingw/bin/pkg-config.exe
+
 $(expattar):
 	wget -c -q http://sourceforge.net/projects/expat/files/expat/$(expatver)/$(expattar)
 
-$(expatmak): $(gccexe) $(automakeexe) $(expattar)
+$(expatmak): $(gccexe) $(pkgconfigexe) $(expattar)
 	tar xzf $(expattar);
 	cd $(expatdir); autoreconf -if; $(configure)
 
@@ -377,7 +386,7 @@ $(expatdll): $(expatmak)
 $(libxmltar):
 	wget -c -q http://xmlsoft.org/sources/$(libxmltar)
 
-$(libxmlmak): $(gccexe) $(zlibdll) $(libiconvdll) $(automakeexe) $(libxmltar)
+$(libxmlmak): $(gccexe) $(zlibdll) $(libiconvdll) $(pkgconfigexe) $(libxmltar)
 	tar xzf $(libxmltar)
 	cd $(libxmldir); \
 	unzip -j ../MINGW-packages-master.zip \
@@ -414,7 +423,7 @@ $(libxmldll): $(libxmlmak)
 $(libffitar):
 	wget -c -q ftp://sourceware.org/pub/libffi/$(libffitar)
 
-$(libffimak): $(gccexe) $(automakeexe) $(libffitar)
+$(libffimak): $(gccexe) $(pkgconfigexe) $(libffitar)
 	tar xzf $(libffitar)
 	cd $(libffidir); autoreconf -if; $(configure)
 
@@ -424,7 +433,7 @@ $(libffidll): $(libffimak)
 $(termcaptar):
 	wget -c -q http://ftp.gnu.org/gnu/termcap/$(termcaptar)
 
-$(termcapmak): $(gccexe) $(automakeexe) $(termcaptar)
+$(termcapmak): $(gccexe) $(pkgconfigexe) $(termcaptar)
 	tar xzf $(termcaptar)
 	cd $(termcapdir); autoreconf -if; $(configure)
 
@@ -439,7 +448,7 @@ $(readlinetar):
 	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-004
 	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-005
 
-$(readlinemak): $(gccexe) $(readlinetar)
+$(readlinemak): $(gccexe) $(pkgconfigexe) $(readlinetar)
 	tar xzf $(readlinetar)
 	cd $(readlinedir); \
 	patch -p0 <../readline62-001; \
@@ -455,8 +464,8 @@ $(readlinedll): $(readlinemak)
 $(pythontar):
 	wget -c -q http://www.python.org/ftp/python/$(pythonver)/$(pythontar)
 
-$(pythonmak): $(gccexe) $(automakeexe) $(expatdll) $(libffidll) $(readlinedll) \
-	$(pythontar)
+$(pythonmak): $(gccexe) $(pkgconfigexe) $(expatdll) $(libffidll) \
+	$(readlinedll) $(pythontar)
 	tar xJf $(pythontar)
 	cd $(pythondir); \
 	unzip -j ../MINGW-packages-master.zip \
@@ -500,6 +509,7 @@ $(pythonmak): $(gccexe) $(automakeexe) $(expatdll) $(libffidll) $(readlinedll) \
 	CPPFLAGS='$(cppflags) -I/mingw/lib/libffi-3.0.13/include -I/mingw/include/readline' \
 	CFLAGS='$(cflags) -I/mingw/lib/libffi-3.0.13/include -I/mingw/include/readline' \
 	LDFLAGS='-L. $(ldflags) -lm -lexpat -lffi -lreadline' \
+	PYTHON_FOR_BUILD='python.exe' \
 	configure --prefix=/mingw/ --disable-debug --host=x86_64-w64-mingw32 \
 		--enable-shared --disable-static \
 		--build=mingw32 --with-system-expat --with-system-ffi; \
@@ -514,13 +524,13 @@ $(pythonmak): $(gccexe) $(automakeexe) $(expatdll) $(libffidll) $(readlinedll) \
 $(pythondll): $(pythonmak)
 	-cd $(pythondir); make install;
 	cd $(pythondir); make && rm -rf /mingw/lib/python2.7/lib-dynload && \
-	make install && make clean;
+	make install && make clean
 
 $(glibtar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/glib/2.38/$(glibtar)
 
-$(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(libffidll) $(pythondll) \
-	$(glibtar) 
+$(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(pkgconfigexe) $(libffidll) \
+	$(pythondll) $(glibtar) 
 	tar xJf $(glibtar)
 	cd $(glibdir); \
 	unzip -j ../MINGW-packages-master.zip \
@@ -537,30 +547,41 @@ $(glibdll): $(glibmak)
 $(gettexttar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/gettext/$(gettexttar)
 
-$(gettextmak): $(gccexe) $(automakeexe) $(libiconvdll) $(libxmldll) $(glibdll) \
-	$(gettexttar)
+$(gettextmak): $(gccexe) $(pkgconfigexe) $(libiconvdll) $(libxmldll) \
+	$(glibdll) $(gettexttar)
 	tar xzf $(gettexttar)
-	cd $(gettextdir); autoreconf -if; \
-	$(configure) --enable-threads=windows --disable-java;
+	cd $(gettextdir); \
+	autoreconf -if; \
+	$(configure) --enable-threads=windows --disable-java
+
+#	unzip -j ../MINGW-packages-master.zip \
+#		MINGW-packages-master/mingw-w64-gettext/*.patch -d .; \
+#	patch -p1 <00-relocatex-libintl-0.18.3.1.patch; \
+#	patch -p0 <04-mingw-script-slash-fix.mingw.patch; \
+#	patch -p0 <05-always-use-libintl-vsnprintf.mingw.patch; \
+#	patch -p0 <06-dont-include-ctype-after-gnulibs-wctype.mingw.patch; \
+#	patch -p0 <07-fix-asprintf-conflict.mingw.patch; \
+#	patch -p1 <120-Fix-Woe32-link-errors-when-compiling-with-O0.patch; \
+#	autoreconf -if; \
+#	PKG_CONFIG_PATH='/mingw/lib/pkgconfig' \
+#	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+#	CFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
+#	CXXFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
+#	LDFLAGS='$(ldflags)' \
+#	configure --prefix=/mingw --disable-debug --host=x86_64-w64-mingw32 \
+#		--enable-shared --disable-static \
+#		--enable-threads=windows --disable-java --disable-native-java \
+#		--disable-csharp --without-emacs --disable-openmp
 
 $(gettextdll): $(gettextmak)
 	cd $(gettextdir); make && make install-strip && make clean
 
-$(pkgconfigtar):
-	wget -c -q http://pkgconfig.freedesktop.org/releases/$(pkgconfigtar)
-
-$(pkgconfigmak): $(gccexe) $(automakeexe) $(glibdll) $(pkgconfigtar)
-	tar xzf $(pkgconfigtar)
-	cd $(pkgconfigdir); autoreconf -if; $(configure)
-
-$(pkgconfigexe): $(pkgconfigmak)
-	cd $(pkgconfigdir); \
-	make clean; make; rm /mingw/bin/*pkg-config.exe; make install-strip
-
 $(libpngtar):
-	wget -c -q http://sourceforge.net/projects/libpng/files/libpng16/older-releases/$(libpngver)/$(libpngtar)
+	-wget -c -q http://sourceforge.net/projects/libpng/files/libpng16/older-releases/$(libpngver)/$(libpngtar)
+	-wget -c -q http://sourceforge.net/projects/libpng/files/libpng16/$(libpngver)/$(libpngtar)
 
-$(libpngmak): $(gccexe) $(automakeexe) $(zlibdll) $(libpngtar)
+
+$(libpngmak): $(gccexe) $(pkgconfigexe) $(zlibdll) $(libpngtar)
 	tar xJf $(libpngtar)
 	cd $(libpngdir); autoreconf -if; $(configure)
 
@@ -570,21 +591,31 @@ $(libpngdll): $(libpngmak)
 $(freetypetar):
 	wget -c -q http://sourceforge.net/projects/freetype/files/freetype2/2.5.2/$(freetypetar)
 
-$(freetypemak): $(gccexe) $(zlibdll) $(freetypetar)
+$(freetypemak): $(gccexe) $(pkgconfigexe) $(zlibdll) $(freetypetar)
 	tar xjf $(freetypetar)
-	cd $(freetypedir); $(configure)
+	cd $(freetypedir); \
+	unzip -j ../MINGW-packages-master.zip \
+		MINGW-packages-master/mingw-w64-freetype/*.patch -d .; \
+	patch -Np1 <freetype-2.2.1-enable-valid.patch; \
+	patch -Np1 <freetype-2.5.1-enable-spr.patch; \
+	$(configure)
 
 $(freetypedll): $(freetypemak)
-	cd $(freetypedir); make && make install
+	cd $(freetypedir); make && make install && make clean
 
 $(fontconfigtar):
 	wget -c -q http://fontconfig.freedesktop.org/release/$(fontconfigtar)
 
-$(fontconfigmak): $(gccexe) $(automakeexe) $(zlibdll) $(libpngdll) \
+$(fontconfigmak): $(gccexe) $(pkgconfigexe) $(zlibdll) $(libpngdll) \
 	$(freetypedll) $(libxmldll) $(fontconfigtar)
 	tar xjf $(fontconfigtar)
-	cd $(fontconfigdir); autoreconf -if; \
-	$(configure) --enable-libxml2 --disable-docs
+	cd $(fontconfigdir); \
+	unzip -j ../MINGW-packages-master.zip \
+		MINGW-packages-master/mingw-w64-fontconfig/*.patch -d .; \
+	patch -p1 <fontconfig-2.11.0-symlinks-fix.patch; \
+	autoreconf -if; \
+	$(configure) --enable-iconv --enable-libxml2 --disable-docs; \
+	sed -i 's,all-am: Makefile $(PROGRAMS),all-am:,' test/Makefile
 
 $(fontconfigdll): $(fontconfigmak)
 	cd $(fontconfigdir); make && make install-strip && make clean
@@ -592,7 +623,7 @@ $(fontconfigdll): $(fontconfigmak)
 $(pixmantar):
 	wget -c -q http://www.cairographics.org/releases/$(pixmantar)
 
-$(pixmanmak): $(gccexe) $(automakeexe) $(pixmantar)
+$(pixmanmak): $(gccexe) $(pkgconfigexe) $(pixmantar)
 	tar xzf $(pixmantar)
 	cd $(pixmandir); autoreconf -if; $(configure)
 
@@ -602,11 +633,12 @@ $(pixmandll): $(pixmanmak)
 $(cairotar):
 	wget -c -q http://www.cairographics.org/releases/$(cairotar)
 
-$(cairomak): $(gccexe) $(automakeexe) $(zlibdll) $(glibdll) $(libpngdll) \
+$(cairomak): $(gccexe) $(pkgconfigexe) $(zlibdll) $(glibdll) $(libpngdll) \
 	$(freetypedll) $(fontconfigdll) $(pixmandll) $(cairotar)
 	tar xzf $(cairotar)
-	cd $(cairodir); autoreconf -if; perl ../cairo.pl; \
-	$(configure) --enable-win32=yes --enable-win32-font=yes
+	cd $(cairodir); autoreconf -if; \
+	$(configure) --enable-win32 --enable-win32-font; \
+	sed -i "s/deplibs_check_method=.*/deplibs_check_method=pass_all/g" libtool
 
 $(cairodll): $(cairomak)
 	cd $(cairodir); make && make install-strip && make clean
@@ -635,7 +667,7 @@ $(pangodll): $(pangomak)
 $(gdk_pixbuftar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gdk-pixbuf/2.30/$(gdk_pixbuftar)
 
-$(gdk_pixbufmak): $(gccexe) $(automakeexe) $(glibdll) $(libpngdll) \
+$(gdk_pixbufmak): $(gccexe) $(pkgconfigexe) $(glibdll) $(libpngdll) \
 	$(gdk_pixbuftar)
 	tar xJf $(gdk_pixbuftar)
 	cd $(gdk_pixbufdir); autoreconf -if; $(configure)
@@ -670,7 +702,7 @@ $(gtk2dll): $(gtk2mak)
 $(freegluttar):
 	wget -c -q http://sourceforge.net/projects/freeglut/files/freeglut/$(freeglutver)/$(freegluttar)
 
-$(freeglutmak): $(gccexe) $(automakeexe) $(freegluttar)
+$(freeglutmak): $(gccexe) $(pkgconfigexe) $(freegluttar)
 	tar xzf $(freegluttar)
 	cd $(freeglutdir); autoreconf -if; $(configure)
 	
@@ -680,7 +712,7 @@ $(freeglutdll): $(freeglutmak)
 $(gsltar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/gsl/$(gsltar)
 
-$(gslmak): $(gccexe) $(automakeexe) $(gsltar)
+$(gslmak): $(gccexe) $(pkgconfigexe) $(gsltar)
 	tar xzf $(gsltar)
 	cd $(gsldir); autoreconf -if; $(configure)
 
@@ -690,7 +722,7 @@ $(gsldll): $(gslmak)
 $(sqlitetar):
 	wget -c -q http://www.sqlite.org/2013/$(sqlitetar)
 
-$(sqlitemak): $(gccexe) $(automakeexe) $(sqlitetar)
+$(sqlitemak): $(gccexe) $(pkgconfigexe) $(sqlitetar)
 	tar xzf $(sqlitetar)
 	cd $(sqlitedir); autoreconf -if; $(configure)
 
@@ -700,7 +732,7 @@ $(sqliteexe): $(sqlitemak)
 $(girtar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gobject-introspection/1.39/$(girtar)
 
-$(girmak): $(gccexe) $(automakeexe) $(pythondll) $(glibdll) $(girtar)
+$(girmak): $(gccexe) $(pkgconfigexe) $(pythondll) $(glibdll) $(girtar)
 	tar xJf $(girtar)
 	cd $(girdir); \
 	unzip -j ../MINGW-packages-master.zip \
