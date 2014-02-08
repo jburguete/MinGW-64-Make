@@ -11,7 +11,7 @@ configure = PKG_CONFIG_PATH='/mingw/lib/pkgconfig' \
 	configure --prefix=/mingw --disable-debug --host=x86_64-w64-mingw32 \
 		--enable-shared --disable-static
 
-gccver = 4.8.2
+gccver = 4.8.1
 autoconfver = 2.69
 libtoolver = 2.4.2
 automakever = 1.14.1
@@ -43,7 +43,7 @@ sqlitever = 3080200
 girver = 1.39.0
 gtk3ver = 3.6.4
 
-gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev2.7z
+gcctar = x64-$(gccver)-release-win32-seh-rev5.7z
 gccexe = /mingw/bin/gcc.exe
 
 autoconfdir = autoconf-$(autoconfver)/
@@ -251,21 +251,21 @@ all: $(dll)
 start:
 	echo "C:/MinGW /mingw" > /etc/fstab
 	mingw-get install msys-unzip msys-wget msys-perl msys-patch msys-flex \
-		msys-bison msys-m4 msys-vim
+		msys-bison msys-m4 msys-vim msys-openssh
 	cd /mingw; \
-	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/pkg-config_0.23-2_win64.zip; \
-	unzip pkg-config_0.23-2_win64.zip; \
-	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/glib/2.26/glib_2.26.1-1_win64.zip; \
-	unzip glib_2.26.1-1_win64.zip; \
-	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime_0.18.1.1-2_win64.zip; \
-	unzip gettext-runtime_0.18.1.1-2_win64.zip; \
-	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime-dev_0.18.1.1-2_win64.zip; \
-	unzip gettext-runtime-dev_0.18.1.1-2_win64.zip; \
-	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-tools-dev_0.18.1.1-2_win64.zip; \
-	unzip gettext-tools-dev_0.18.1.1-2_win64.zip; \
+#	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/pkg-config_0.23-2_win64.zip; \
+#	unzip pkg-config_0.23-2_win64.zip; \
+#	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/glib/2.26/glib_2.26.1-1_win64.zip; \
+#	unzip glib_2.26.1-1_win64.zip; \
+#	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime_0.18.1.1-2_win64.zip; \
+#	unzip gettext-runtime_0.18.1.1-2_win64.zip; \
+#	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime-dev_0.18.1.1-2_win64.zip; \
+#	unzip gettext-runtime-dev_0.18.1.1-2_win64.zip; \
+#	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-tools-dev_0.18.1.1-2_win64.zip; \
+#	unzip gettext-tools-dev_0.18.1.1-2_win64.zip; \
 
 $(gcctar):
-	wget -c -q "http://sourceforge.net/projects/mingw-w64/files/Toolchains targetting Win64/Personal Builds/mingw-builds/$(gccver)/threads-win32/seh/$(gcctar)"
+	wget -c -q "http://sourceforge.net/projects/mingwbuilds/files/host-windows/releases/$(gccver)/64-bit/threads-win32/seh/$(gcctar)"
 
 $(gccexe): $(gcctar)
 	7z x $(gcctar)
