@@ -11,7 +11,7 @@ configure = PKG_CONFIG_PATH='/mingw/lib/pkgconfig' \
 	configure --prefix=/mingw --disable-debug --host=x86_64-w64-mingw32 \
 		--enable-shared --disable-static
 
-gccver = 4.8.1
+gccver = 4.8.2
 autoconfver = 2.69
 libtoolver = 2.4.2
 automakever = 1.14.1
@@ -26,7 +26,7 @@ termcapver = 1.3.1
 readlinever = 6.2
 pythonver = 2.7.6
 glibver = 2.38.2
-gettextver = 0.18.3.1
+gettextver = 0.18.3.2
 libpngver = 1.6.8
 freetypever = 2.5.2
 fontconfigver = 2.11.0
@@ -35,7 +35,7 @@ cairover = 1.12.16
 atkver = 2.10.0
 pangover = 1.34.1
 gdk_pixbufver = 2.30.3
-hicolor_icon_themever = 0.12
+hicolorver = 0.12
 gtk2ver = 2.24.22
 freeglutver = 2.8.1
 gslver = 1.16
@@ -43,7 +43,7 @@ sqlitever = 3080200
 girver = 1.39.0
 gtk3ver = 3.6.4
 
-gcctar = x64-$(gccver)-release-win32-seh-rev5.7z
+gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev2.7z
 gccexe = /mingw/bin/gcc.exe
 
 autoconfdir = autoconf-$(autoconfver)/
@@ -160,10 +160,10 @@ gdk_pixbuftar = gdk-pixbuf-$(gdk_pixbufver).tar.xz
 gdk_pixbufmak = $(gdk_pixbufdir)Makefile
 gdk_pixbufdll = /mingw/bin/libgdk_pixbuf-2.0-0.dll
 
-hicolor_icon_themedir = hicolor-icon-theme-$(hicolor_icon_themever)/
-hicolor_icon_themetar = hicolor-icon-theme-$(hicolor_icon_themever).tar.gz
-hicolor_icon_thememak = $(hicolor_icon_themedir)Makefile
-hicolor_icon_themedll = /mingw/share/icons/hicolor
+hicolordir = hicolor-icon-theme-$(hicolorver)/
+hicolortar = hicolor-icon-theme-$(hicolorver).tar.gz
+hicolormak = $(hicolordir)Makefile
+hicolordll = /mingw/share/icons/hicolor
 
 gtk2dir = gtk+-$(gtk2ver)/
 gtk2tar = gtk+-$(gtk2ver).tar.xz
@@ -236,7 +236,7 @@ dll = \
 	$(atkdll) \
 	$(pangodll) \
 	$(gdk_pixbufdll) \
-	$(hicolor_icon_themedll) \
+	$(hicolordll) \
 	$(gtk2dll) \
 	$(freeglutdll) \
 	$(gsldll) \
@@ -253,63 +253,46 @@ start:
 	mingw-get install msys-unzip msys-wget msys-perl msys-patch msys-flex \
 		msys-bison msys-m4 msys-vim msys-openssh
 	cd /mingw; \
-#	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/pkg-config_0.23-2_win64.zip; \
-#	unzip pkg-config_0.23-2_win64.zip; \
-#	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/glib/2.26/glib_2.26.1-1_win64.zip; \
-#	unzip glib_2.26.1-1_win64.zip; \
-#	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime_0.18.1.1-2_win64.zip; \
-#	unzip gettext-runtime_0.18.1.1-2_win64.zip; \
-#	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime-dev_0.18.1.1-2_win64.zip; \
-#	unzip gettext-runtime-dev_0.18.1.1-2_win64.zip; \
-#	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-tools-dev_0.18.1.1-2_win64.zip; \
-#	unzip gettext-tools-dev_0.18.1.1-2_win64.zip; \
+	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime_0.18.1.1-2_win64.zip; \
+	unzip gettext-runtime_0.18.1.1-2_win64.zip; \
+	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime-dev_0.18.1.1-2_win64.zip; \
+	unzip gettext-runtime-dev_0.18.1.1-2_win64.zip; \
+	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-tools-dev_0.18.1.1-2_win64.zip; \
+	unzip gettext-tools-dev_0.18.1.1-2_win64.zip
 
 $(gcctar):
-	wget -c -q "http://sourceforge.net/projects/mingwbuilds/files/host-windows/releases/$(gccver)/64-bit/threads-win32/seh/$(gcctar)"
+	wget -c -q "http://sourceforge.net/projects/mingw-w64/files/Toolchains targetting Win64/Personal Builds/mingw-builds/$(gccver)/threads-win32/seh/$(gcctar)"
+	touch $(gcctar)
 
 $(gccexe): $(gcctar)
 	7z x $(gcctar)
 	-cd mingw64; tar cf /mingw/temp.tar *
-	cd /mingw; tar xf temp.tar;
-	touch $(gccexe)
+	cd /mingw; tar xf temp.tar
 	rm /mingw/temp.tar
 	rm -rf mingw64
 	rm -rf /mingw/opt
+	touch $(gccexe)
 
-$(autoconftar):
-	wget -c -q http://ftp.gnu.org/pub/gnu/autoconf/$(autoconftar)
+$(m4tar):
+	wget -c -q http://ftp.gnu.org/pub/gnu/m4/$(m4tar)
+	touch $(m4tar)
 
-$(autoconfmak): $(gccexe) $(autoconftar)
-	tar xJf $(autoconftar)
-	cd $(autoconfdir); \
+$(m4mak): $(gccexe) $(m4tar)
+	tar xJf $(m4tar)
+	cd $(m4dir); \
 	unzip -j ../MSYS2-packages-master.zip \
-		MSYS2-packages-master/autoconf/*.patch -d .; \
-	patch -p1 <autoconf-2.69-fix-texinfo.patch; \
-	patch -p1 <autoconf-2.69-msys2.patch; \
-	$(configure)
+		MSYS2-packages-master/m4/*.patch -d .; \
+	patch -p1 <m4-1.4.17-msys2.patch; \
+	$(configure) ac_cv_header_spawn_h=no
 
-$(autoconfexe): $(autoconfmak)
-	cd $(autoconfdir); make && make install-strip && make clean
-
-$(automaketar):
-	wget -c -q http://ftp.gnu.org/pub/gnu/automake/$(automaketar)
-
-$(automakemak): $(gccexe) $(autoconfexe) $(automaketar)
-	tar xJf $(automaketar)
-	cd $(automakedir); \
-	unzip -j ../MSYS2-packages-master.zip \
-		MSYS2-packages-master/automake1.14/*.patch -d .; \
-	patch -p2 <automake1.14-documentation.patch; \
-	patch -p1 <automake-1.14-msys2.patch; \
-	$(configure)
-
-$(automakeexe): $(automakemak)
-	cd $(automakedir); make && make install-strip && make clean
+$(m4exe): $(m4mak)
+	cd $(m4dir); make && make install-strip && make clean
 
 $(libtooltar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/libtool/$(libtooltar)
+	touch $(libtooltar)
 
-$(libtoolmak): $(gccexe) $(automakeexe) $(libtooltar)
+$(libtoolmak): $(gccexe) $(libtooltar)
 	tar xJf $(libtooltar)
 	cd $(libtooldir); \
 	unzip -j ../MSYS2-packages-master.zip \
@@ -323,24 +306,41 @@ $(libtoolmak): $(gccexe) $(automakeexe) $(libtooltar)
 $(libtoolexe): $(libtoolmak)
 	cd $(libtooldir); make && make install-strip && make clean
 
-#$(m4tar):
-#	wget -c -q http://ftp.gnu.org/pub/gnu/m4/$(m4tar)
+$(autoconftar):
+	wget -c -q http://ftp.gnu.org/pub/gnu/autoconf/$(autoconftar)
+	touch $(autoconftar)
 
-#$(m4mak): $(gccexe) $(automakeexe) $(m4tar)
-#	tar xJf $(m4tar)
-#	cd $(m4dir); \
-#	unzip -j ../MSYS2-packages-master.zip \
-#		MSYS2-packages-master/m4/*.patch -d .; \
-#	patch -p1 <m4-1.4.17-msys2.patch; \
-#	$(configure) ac_cv_header_spawn_h=no
+$(autoconfmak): $(gccexe) $(m4exe) $(autoconftar)
+	tar xJf $(autoconftar)
+	cd $(autoconfdir); \
+	unzip -j ../MSYS2-packages-master.zip \
+		MSYS2-packages-master/autoconf/*.patch -d .; \
+	patch -p1 <autoconf-2.69-fix-texinfo.patch; \
+	patch -p1 <autoconf-2.69-msys2.patch; \
+	$(configure)
 
-#$(m4exe): $(m4mak)
-#	cd $(m4dir); make && make install-strip && make clean
-#	mingw-get remove msys-m4
-#	rm -rf $(autoconfdir) $(libtooldir) $(automakedir)
+$(autoconfexe): $(autoconfmak)
+	cd $(autoconfdir); make && make install-strip && make clean
+
+$(automaketar):
+	wget -c -q http://ftp.gnu.org/pub/gnu/automake/$(automaketar)
+	touch $(automaketar)
+
+$(automakemak): $(gccexe) $(m4exe) $(autoconfexe) $(automaketar)
+	tar xJf $(automaketar)
+	cd $(automakedir); \
+	unzip -j ../MSYS2-packages-master.zip \
+		MSYS2-packages-master/automake1.14/*.patch -d .; \
+	patch -p2 <automake1.14-documentation.patch; \
+	patch -p1 <automake-1.14-msys2.patch; \
+	$(configure)
+
+$(automakeexe): $(automakemak)
+	cd $(automakedir); make && make install-strip && make clean
 
 $(libiconvtar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/libiconv/$(libiconvtar)
+	touch $(libiconvtar)
 
 $(libiconvmak): $(gccexe) $(libiconvtar)
 	tar xzf $(libiconvtar)
@@ -351,6 +351,7 @@ $(libiconvdll): $(libiconvmak)
 
 $(zlibtar):
 	wget -c -q http://sourceforge.net/projects/libpng/files/zlib/$(zlibver)/$(zlibtar)
+	touch $(zlibtar)
 
 $(zlibdll): $(gccexe) $(zlibtar)
 	tar xJf $(zlibtar)
@@ -364,6 +365,7 @@ $(zlibdll): $(gccexe) $(zlibtar)
 
 $(pkgconfigtar):
 	wget -c -q http://files.etoilebsd.net/pkgconf/$(pkgconfigtar)
+	touch $(pkgconfigtar)
 
 $(pkgconfigmak): $(gccexe) $(automakeexe) $(pkgconfigtar)
 	tar xjf $(pkgconfigtar)
@@ -375,6 +377,7 @@ $(pkgconfigexe): $(pkgconfigmak)
 
 $(expattar):
 	wget -c -q http://sourceforge.net/projects/expat/files/expat/$(expatver)/$(expattar)
+	touch $(expattar)
 
 $(expatmak): $(gccexe) $(pkgconfigexe) $(expattar)
 	tar xzf $(expattar);
@@ -385,6 +388,7 @@ $(expatdll): $(expatmak)
 
 $(libxmltar):
 	wget -c -q http://xmlsoft.org/sources/$(libxmltar)
+	touch $(libxmltar)
 
 $(libxmlmak): $(gccexe) $(zlibdll) $(libiconvdll) $(pkgconfigexe) $(libxmltar)
 	tar xzf $(libxmltar)
@@ -422,6 +426,7 @@ $(libxmldll): $(libxmlmak)
 
 $(libffitar):
 	wget -c -q ftp://sourceware.org/pub/libffi/$(libffitar)
+	touch $(libffitar)
 
 $(libffimak): $(gccexe) $(pkgconfigexe) $(libffitar)
 	tar xzf $(libffitar)
@@ -432,6 +437,7 @@ $(libffidll): $(libffimak)
 
 $(termcaptar):
 	wget -c -q http://ftp.gnu.org/gnu/termcap/$(termcaptar)
+	touch $(termcaptar)
 
 $(termcapmak): $(gccexe) $(pkgconfigexe) $(termcaptar)
 	tar xzf $(termcaptar)
@@ -447,6 +453,7 @@ $(readlinetar):
 	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-003
 	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-004
 	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-005
+	touch $(readlinetar)
 
 $(readlinemak): $(gccexe) $(pkgconfigexe) $(readlinetar)
 	tar xzf $(readlinetar)
@@ -463,6 +470,7 @@ $(readlinedll): $(readlinemak)
 
 $(pythontar):
 	wget -c -q http://www.python.org/ftp/python/$(pythonver)/$(pythontar)
+	touch $(pythontar)
 
 $(pythonmak): $(gccexe) $(pkgconfigexe) $(expatdll) $(libffidll) \
 	$(readlinedll) $(pythontar)
@@ -528,6 +536,7 @@ $(pythondll): $(pythonmak)
 
 $(glibtar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/glib/2.38/$(glibtar)
+	touch $(glibtar)
 
 $(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(pkgconfigexe) $(libffidll) \
 	$(pythondll) $(glibtar) 
@@ -546,32 +555,31 @@ $(glibdll): $(glibmak)
 
 $(gettexttar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/gettext/$(gettexttar)
+	touch $(gettexttar)
 
 $(gettextmak): $(gccexe) $(pkgconfigexe) $(libiconvdll) $(libxmldll) \
 	$(glibdll) $(gettexttar)
 	tar xzf $(gettexttar)
 	cd $(gettextdir); \
 	autoreconf -if; \
-	$(configure) --enable-threads=windows --disable-java
-
-#	unzip -j ../MINGW-packages-master.zip \
-#		MINGW-packages-master/mingw-w64-gettext/*.patch -d .; \
-#	patch -p1 <00-relocatex-libintl-0.18.3.1.patch; \
-#	patch -p0 <04-mingw-script-slash-fix.mingw.patch; \
-#	patch -p0 <05-always-use-libintl-vsnprintf.mingw.patch; \
-#	patch -p0 <06-dont-include-ctype-after-gnulibs-wctype.mingw.patch; \
-#	patch -p0 <07-fix-asprintf-conflict.mingw.patch; \
-#	patch -p1 <120-Fix-Woe32-link-errors-when-compiling-with-O0.patch; \
-#	autoreconf -if; \
-#	PKG_CONFIG_PATH='/mingw/lib/pkgconfig' \
-#	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
-#	CFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
-#	CXXFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
-#	LDFLAGS='$(ldflags)' \
-#	configure --prefix=/mingw --disable-debug --host=x86_64-w64-mingw32 \
-#		--enable-shared --disable-static \
-#		--enable-threads=windows --disable-java --disable-native-java \
-#		--disable-csharp --without-emacs --disable-openmp
+	unzip -j ../MINGW-packages-master.zip \
+		MINGW-packages-master/mingw-w64-gettext/*.patch -d .; \
+	patch -p1 <00-relocatex-libintl-0.18.3.1.patch; \
+	patch -p0 <04-mingw-script-slash-fix.mingw.patch; \
+	patch -p0 <05-always-use-libintl-vsnprintf.mingw.patch; \
+	patch -p0 <06-dont-include-ctype-after-gnulibs-wctype.mingw.patch; \
+	patch -p0 <07-fix-asprintf-conflict.mingw.patch; \
+	patch -p1 <120-Fix-Woe32-link-errors-when-compiling-with-O0.patch; \
+	autoreconf -if; \
+	PKG_CONFIG_PATH='/mingw/lib/pkgconfig' \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
+	CXXFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
+	LDFLAGS='$(ldflags)' \
+	configure --prefix=/mingw --disable-debug --host=x86_64-w64-mingw32 \
+		--enable-shared --disable-static \
+		--enable-threads=windows --disable-java --disable-native-java \
+		--disable-csharp --without-emacs --disable-openmp
 
 $(gettextdll): $(gettextmak)
 	cd $(gettextdir); make && make install-strip && make clean
@@ -579,6 +587,7 @@ $(gettextdll): $(gettextmak)
 $(libpngtar):
 	-wget -c -q http://sourceforge.net/projects/libpng/files/libpng16/older-releases/$(libpngver)/$(libpngtar)
 	-wget -c -q http://sourceforge.net/projects/libpng/files/libpng16/$(libpngver)/$(libpngtar)
+	touch $(libpngtar)
 
 
 $(libpngmak): $(gccexe) $(pkgconfigexe) $(zlibdll) $(libpngtar)
@@ -590,6 +599,7 @@ $(libpngdll): $(libpngmak)
 
 $(freetypetar):
 	wget -c -q http://sourceforge.net/projects/freetype/files/freetype2/2.5.2/$(freetypetar)
+	touch $(freetypetar)
 
 $(freetypemak): $(gccexe) $(pkgconfigexe) $(zlibdll) $(freetypetar)
 	tar xjf $(freetypetar)
@@ -605,6 +615,7 @@ $(freetypedll): $(freetypemak)
 
 $(fontconfigtar):
 	wget -c -q http://fontconfig.freedesktop.org/release/$(fontconfigtar)
+	touch $(fontconfigtar)
 
 $(fontconfigmak): $(gccexe) $(pkgconfigexe) $(zlibdll) $(libpngdll) \
 	$(freetypedll) $(libxmldll) $(fontconfigtar)
@@ -622,6 +633,7 @@ $(fontconfigdll): $(fontconfigmak)
 
 $(pixmantar):
 	wget -c -q http://www.cairographics.org/releases/$(pixmantar)
+	touch $(pixmantar)
 
 $(pixmanmak): $(gccexe) $(pkgconfigexe) $(pixmantar)
 	tar xzf $(pixmantar)
@@ -632,6 +644,7 @@ $(pixmandll): $(pixmanmak)
 
 $(cairotar):
 	wget -c -q http://www.cairographics.org/releases/$(cairotar)
+	touch $(cairotar)
 
 $(cairomak): $(gccexe) $(pkgconfigexe) $(zlibdll) $(glibdll) $(libpngdll) \
 	$(freetypedll) $(fontconfigdll) $(pixmandll) $(cairotar)
@@ -645,6 +658,7 @@ $(cairodll): $(cairomak)
 
 $(atktar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/atk/2.10/$(atktar)
+	touch $(atktar)
 
 $(atkmak): $(gccexe) $(glibdll) $(atktar)
 	tar xJf $(atktar)
@@ -655,6 +669,7 @@ $(atkdll): $(atkmak)
 
 $(pangotar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/pango/1.34/$(pangotar)
+	touch $(pangotar)
 
 $(pangomak): $(gccexe) $(glibdll) $(freetypedll) $(fontconfigdll) $(cairodll) \
 	$(pangotar)
@@ -666,6 +681,7 @@ $(pangodll): $(pangomak)
 
 $(gdk_pixbuftar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gdk-pixbuf/2.30/$(gdk_pixbuftar)
+	touch $(gdk_pixbuftar)
 
 $(gdk_pixbufmak): $(gccexe) $(pkgconfigexe) $(glibdll) $(libpngdll) \
 	$(gdk_pixbuftar)
@@ -675,15 +691,16 @@ $(gdk_pixbufmak): $(gccexe) $(pkgconfigexe) $(glibdll) $(libpngdll) \
 $(gdk_pixbufdll): $(gdk_pixbufmak)
 	cd $(gdk_pixbufdir); make && make install-strip && make clean
 
-$(hicolor_icon_themetar):
-	wget -c -q http://icon-theme.freedesktop.org/releases/$(hicolor_icon_themetar)
+$(hicolortar):
+	wget -c -q http://icon-theme.freedesktop.org/releases/$(hicolortar)
+	touch $(hicolortar)
 
-$(hicolor_icon_thememak): $(hicolor_icon_themetar)
-	tar xzf $(hicolor_icon_themetar)
-	cd $(hicolor_icon_themedir); $(configure)
+$(hicolormak): $(hicolortar)
+	tar xzf $(hicolortar)
+	cd $(hicolordir); $(configure)
 
-$(hicolor_icon_themedll): $(hicolor_icon_thememak)
-	cd $(hicolor_icon_themedir); make install
+$(hicolordll): $(hicolormak)
+	cd $(hicolordir); make install
 
 $(gtk2tar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/$(gtk2tar)
