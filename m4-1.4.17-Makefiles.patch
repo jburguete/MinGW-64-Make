@@ -1,0 +1,36 @@
+diff -Naur m4-1.4.17/Makefile.in m4-1.4.17.new/Makefile.in
+--- m4-1.4.17/Makefile.in	2013-09-22 06:23:43 +0000
++++ m4-1.4.17.new/Makefile.in	2014-02-09 17:31:28 +0000
+@@ -1464,7 +1464,7 @@
+ am--refresh: Makefile
+ 	@:
+ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+-	@for dep in $?; do \
++	-@for dep in $?; do \
+ 	  case '$(am__configure_deps)' in \
+ 	    *$$dep*) \
+ 	      echo ' cd $(srcdir) && $(AUTOMAKE) --gnu'; \
+@@ -1491,9 +1491,9 @@
+ 	$(SHELL) ./config.status --recheck
+ 
+ $(top_srcdir)/configure:  $(am__configure_deps)
+-	$(am__cd) $(srcdir) && $(AUTOCONF)
++	-$(am__cd) $(srcdir) && $(AUTOCONF)
+ $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
+-	$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
++	-$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
+ $(am__aclocal_m4_deps):
+ 
+ # This directory's subdirectories are mostly independent; you can cd
+diff -Naur m4-1.4.17/lib/Makefile.in m4-1.4.17.new/lib/Makefile.in
+--- m4-1.4.17/lib/Makefile.in	2014-02-09 18:28:11 +0000
++++ m4-1.4.17.new/lib/Makefile.in	2014-02-09 17:35:39 +0000
+@@ -1643,7 +1643,7 @@
+ 	@rm -f stamp-h1
+ 	cd $(top_builddir) && $(SHELL) ./config.status lib/config.h
+ $(srcdir)/config.hin:  $(am__configure_deps) 
+-	($(am__cd) $(top_srcdir) && $(AUTOHEADER))
++	-($(am__cd) $(top_srcdir) && $(AUTOHEADER))
+ 	rm -f stamp-h1
+ 	touch $@
+ 
