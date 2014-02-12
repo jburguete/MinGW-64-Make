@@ -1,0 +1,269 @@
+\documentclass[a4paper]{article}
+
+\usepackage{graphicx}
+\usepackage{color}
+
+\newcommand{\FIGURE}[1]
+{
+	\begin{figure}[!ht]
+	\centering
+	\includegraphics[scale=0.35]{#1}
+	\end{figure}
+}
+
+\newcommand{\RED}[1] {\textcolor{red}{#1}}
+
+\title{Setting up a 64 bits C/Fortran/Python compiler and some useful libraries
+and utilities on Microsoft Windows step by step}
+
+\author{Javier Burguete Tolosa}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section*{}
+
+SORRY!: I have only one spanish license of Microsoft Windows 7. Therefore, some
+figures have spanish texts.
+
+\section{Installing MSYS}
+
+MSYS is a minimal Unix terminal emulator running over the Microsoft Windows. In
+this section we install and we do a direct access on the desktop.
+
+\begin{enumerate}
+
+\item Download MSYS/MinGW installer (file \RED{mingw-get-setup.exe}) on \newline
+\RED{http://sourceforge.net/projects/mingw/files/Instaler}
+
+\FIGURE{msys-1.png.eps}
+
+\clearpage
+
+\item Click on \RED{Save file} button
+\FIGURE{msys-2.png.eps}
+
+\item Click on the downloaded \RED{mingw-get-setup.exe} installer
+\FIGURE{msys-3.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Execute} button
+\FIGURE{msys-4.png.eps}
+
+\item Click on the \RED{Install} button
+\FIGURE{msys-5.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Continue} button (WARNING! if you change the instalation
+directory you must change the /etc/fstab file on the MSYS system to work
+properly)
+\FIGURE{msys-6.png.eps}
+
+\item Click on the \RED{Continue} button
+\FIGURE{msys-7.png.eps}
+
+\clearpage
+
+\item Click only on the \RED{msys-base} option (other options install 32 bits
+compilers that can interfere the 64 bits compilations)
+\FIGURE{msys-8.png.eps}
+
+\item Click on the \RED{Apply Changes} menu option
+\FIGURE{msys-9.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Apply} button
+\FIGURE{msys-10.png.eps}
+
+\item Click on the \RED{Close} button
+\FIGURE{msys-11.png.eps}
+
+\clearpage
+
+\item Create a direct access of the
+\RED{C:$\backslash$MinGW$\backslash$msys$\backslash$1.0$\backslash$msys.bat}
+file sending it to the desktop
+\FIGURE{msys-12.png.eps}
+
+\item Select the new direct access and clicking on the right button and click on
+the \RED{Properties} menu option
+\FIGURE{msys-13.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Change icon} button
+\FIGURE{msys-14.png.eps}
+
+\item Click on the \RED{Accept} button
+\FIGURE{msys-15.png.eps}
+
+\clearpage
+
+\item Click ont the \RED{Check} button
+\FIGURE{msys-16.png.eps}
+
+\item Select the
+\RED{C:$\backslash$MinGW$\backslash$msys$\backslash$1.0$\backslash$msys.ico} (or
+\RED{C:$\backslash$MinGW$\backslash$msys$\backslash$1.0$\backslash$m.ico}) file
+and click on the \RED{Accept} button
+\FIGURE{msys-17.png.eps}
+
+\clearpage
+
+\item Select the icon and click on the \RED{Accept} button
+\FIGURE{msys-18.png.eps}
+
+\item Click on the \RED{Accept} button
+\FIGURE{msys-19.png.eps}
+
+\clearpage
+
+\item Select the direct access clicking on the right button and click on the
+\RED{Rename} menu option. Then change the label (i.e. MinGW 64 bits)
+\FIGURE{msys-20.png.eps}
+
+\item Click on the direct access button and you have a MSYS (minimal Unix)
+terminal
+\FIGURE{msys-21.png.eps}
+
+\end{enumerate}
+
+\clearpage
+
+\section{Installing 7-Zip}
+
+7-Zip is a files compressor required to install the MinGW 64 bits compiler. In
+this section the program is installed and configured to be accessible in the
+MSYS terminal.
+
+\begin{enumerate}
+
+\item Download the 7-Zip 64 bits installer (\RED{.msi 64-bit x64}) on \newline
+\RED{http://www.7-zip.org/download.html}
+
+\FIGURE{7zip.png.eps}
+
+\clearpage
+
+\item Click on \RED{Save file} button
+\FIGURE{7zip-2.png.eps}
+
+\item Click on the downloaded installer (\RED{7z920-x64.msi} is the last version
+at the date to make this tutorial)
+
+\FIGURE{7zip-3.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Execute} button
+\FIGURE{7zip-4.png.eps}
+
+\item Click on the \RED{Next} button
+\FIGURE{7zip-5.png.eps}
+
+\clearpage
+
+\item Accept the license and click on the \RED{Next} button
+\FIGURE{7zip-6.png.eps}
+
+\item Customize the localization files and click on the \RED{Next} button
+\FIGURE{7zip-7.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Install} button
+\FIGURE{7zip-8.png.eps}
+
+\item Click on the \RED{Yes} button
+\FIGURE{7zip-9.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Finish} button
+\FIGURE{7zip-10.png.eps}
+
+\item Go to \RED{Computer} on the main menu and click on the
+\RED{System properties} menu bar option
+\FIGURE{7zip-11.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Advanced system configuration} option
+\FIGURE{7zip-12.png.eps}
+
+\item Click on the \RED{Environment variables} button
+\FIGURE{7zip-13.png.eps}
+
+\clearpage
+
+\item Select \RED{Path} on the \RED{System variables} and click on the
+\RED{Edit...} button
+\FIGURE{7zip-14.png.eps}
+
+\item Append with a semicolon the path where the 7-Zip program has been
+installed (in this case \RED{C:$\backslash$Program Files$\backslash$7-Zip}) and
+click on the \RED{Accept} buttons
+\FIGURE{7zip-15.png.eps}
+
+\end{enumerate}
+
+\clearpage
+
+\section{Installing Git}
+
+Git is a distributed revision control and source code management. In this
+section we install and configure it to be accessible in the MSYS terminal.
+
+\begin{enumerate}
+
+\item Download the Git installer on \RED{http://git-scm.com/download/win} and
+click on \RED{Save file} button
+\FIGURE{git-1.png.eps}
+
+\clearpage
+
+\item Click on the downloaded installer (\RED{Git-1.8.5.2-preview20131230.exe}
+is the last version at the date to make this tutorial)
+\FIGURE{git-2.png.eps}
+
+\item Click on the \RED{Execute} button
+\FIGURE{git-3.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Yes} button
+\FIGURE{git-4.png.eps}
+
+\item Click on the \RED{Next} button
+\FIGURE{git-5.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Next} button
+\FIGURE{git-6.png.eps}
+
+\item Select the components to install (we use the default) and click on the
+\RED{Next} button
+\FIGURE{git-7.png.eps}
+
+\clearpage
+
+\item Select the \RED{Run Git from the Windows Command Prompt} option and click
+on the \RED{Next} button
+\FIGURE{git-8.png.eps}
+
+\item Select the \RED{Checkout Windows-style, commit Unix-style line endings}
+option and click on the \RED{Next} button
+\FIGURE{git-9.png.eps}
+
+\end{enumerate}
+
+\end{document}

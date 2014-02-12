@@ -1,0 +1,5 @@
+for f in $@*.png
+do
+	echo "Creating $f.eps"
+	convert "$f" "$f.eps"
+done
