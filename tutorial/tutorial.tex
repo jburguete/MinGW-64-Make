@@ -3,13 +3,15 @@
 \usepackage{graphicx}
 \usepackage{color}
 
-\newcommand{\FIGURE}[1]
+\newcommand{\FIG}[2]
 {
-	\begin{figure}[!ht]
+	\begin{figure}[ht!]
 	\centering
-	\includegraphics[scale=0.35]{#1}
+	\includegraphics[scale=#1]{#2}
 	\end{figure}
 }
+\newcommand{\FIGURE}[1]{\FIG{0.35}{#1}}
+\newcommand{\FIGUREB}[1]{\FIG{0.26}{#1}}
 
 \newcommand{\RED}[1] {\textcolor{red}{#1}}
 
@@ -28,8 +30,12 @@ and tools on Microsoft Windows step by step}
 
 \section*{}
 
-SORRY! I have only a spanish license of Microsoft Windows 7. Therefore, some
-figures have spanish texts.
+SORRY! I have only a spanish license of Microsoft Windows 7\footnote{Windows 7
+is a registered trademark of Microsoft Corporation}. Therefore, some figures
+have spanish texts.
+
+Most of patches used in this project are extracted from
+\RED{https://github.com/Alexpux}
 
 \clearpage
 
@@ -160,7 +166,6 @@ MSYS terminal.
 
 \item Click on the downloaded installer (\RED{7z920-x64.msi} is the last version
 at the date to make this tutorial)
-
 \FIGURE{7zip-3.png.eps}
 
 \clearpage
@@ -270,53 +275,214 @@ option and click on the \RED{Next} button
 
 \end{enumerate}
 
+\section{Installing Microsoft MPI (optional)}
+
+Microsoft MPI is an implementation of the Message Passing Interface standard for
+developing and running parallel applications. This step is not strictly
+necessary. To install it:
+
+\begin{enumerate}
+
+\item Download it clicking in the \RED{Download} button from\\
+\RED{http://www.microsoft.com/en-sg/download/details.aspx?id=39961}
+\FIGURE{mpi-1.png.eps}
+
+\clearpage
+
+\item Select the correct option (\RED{msmpi\_x86.msi} for 32 bits and
+\RED{msmpi\_x64.msi} for 64 bits) and click on the \RED{Next} button
+\FIGURE{mpi-2.png.eps}
+
+\item Click on the \RED{Save file} button
+\FIGURE{mpi-3.png.eps}
+
+\clearpage
+
+\item Click on the downloaded installer (\RED{msmpi-x64.msi})
+\FIGURE{mpi-4.png.eps}
+
+\item Click on the \RED{Execute} button
+\FIGURE{mpi-5.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Next} button
+\FIGURE{mpi-6.png.eps}
+
+\item Accept the license and click on the \RED{Next} button
+\FIGURE{mpi-7.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Next} button (WARNING! if you change the instalation
+directory you will must change the makefile to work properly)
+\FIGURE{mpi-8.png.eps}
+
+\item Click on the \RED{Install} button
+\FIGURE{mpi-9.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Yes} button
+\FIGURE{mpi-10.png.eps}
+
+\item Click on the \RED{Finish} button
+\FIGURE{mpi-11.png.eps}
+
+\clearpage
+
+\end{enumerate}
+
 \section{Installing MinGW 64 bits compiler and some useful libraries and tools}
 
-Here we install the MinGW 64 bits compiler and the following useful libraries
-and tools:
+Here we install the following MSYS useful tools:
 \begin{itemize}
-\item GCC 4.8.2 (C, C++, Objective C, and FORTRAN compilers)
+\item bash 3.1.17
+\item bison 2.4.2
+\item flex 2.5.35
+\item gawk 3.1.7
+\item grep 2.5.4
+\item groff 1.20.1
+\item gzip 1.3.12
 \item m4 1.4.16
-\item libtool 2.4.2
+\item make 3.81
+\item man 1.6f
+\item openssh 5.4p1
+\item perl 5.8.8
+\item patch 2.6.1
+\item sed 4.2.1
+\item tar 1.23
+\item texinfo 4.13a
+\item unzip 6.0
+\item vim 7.3
+\item wget 1.12
+\item xz 5.0.3
+\item zip 3.0
+\end{itemize}
+
+with the MinGW 64 bits compilers and the following useful libraries:
+\begin{itemize}
+\item atk 2.10.0
 \item autoconf 2.69
 \item automake 1.4.1
-\item libiconv 1.14
-\item zlib 1.2.8
-\item pkg-config 0.28
-\item expat 2.1.0
-\item libxml 2.9.1
-\item libffi 3.0.13
-\item Python 2.7.6
-\item glib 2.38.2
-\item gettext 0.18.3.2
-\item libpng 1.6.8
-\item freetype 2.5.2
-\item fontconfig 2.11.0
-\item pixman
 \item cairo 1.12.16
-\item atk 2.10.0
-\item pango 1.36.4
+\item expat 2.1.0
+\item fontconfig 2.11.0
+\item freeglut 2.8.1
+\item freetype 2.5.2
+\item gcc 4.8.2 (C, C++, Objective C, and FORTRAN compilers)
 \item gdk\_pixbuf 2.30.2
-\item GTK+ 2.24.22 and 3.10.6
-\item FreeGLUT 2.8.1
-\item GSL 1.16
-\item SQLite 3.8.3
-\item OpenSSH
-\item VIM
+\item gettext 0.18.3.2
+\item glib 2.38.2
+\item gsl 1.16
+\item gtk+ 2.24.22 and 3.10.6
+\item libffi 3.0.13
+\item libiconv 1.14
+\item libpng 1.6.8
+\item libtool 2.4.2
+\item libxml 2.9.1
+\item pango 1.36.2
+\item pixman 0.32.4
+\item pkg-config 0.28
+\item python 2.7.6
+\item readline 6.2
+\item sqlite 3.8.3
+\item termcap 1.3.1
+\item zlib 1.2.8
 \end{itemize}
 
 \begin{enumerate}
 
+\clearpage
+
 \item Open the MSYS terminal clicking on the created direct access
 \FIGURE{mingw-1.png.eps}
 
-\item Download the MinGW-64-Make set of makefiles and patches by typing
+\item Download the MinGW-64-Make set of makefiles and patches by typing\\
 \RED{git clone git@github.com:jburguete/MinGW-64-Make.git}
 \FIGURE{mingw-2.png.eps}
+
+\clearpage
+
+\item Enter on the new directory and execute the \RED{make} command passing the
+architecture (\RED{ARCH="32"} or \RED{ARCH="64"} for 32 bits or 64 bits
+respectively) and the version (\RED{VER="stable"}, \RED{VER="testing"} or
+\newline\RED{VER="experimental"} for stable, testing or experimental versions
+respectively) by typing for instance:\\
+\RED{cd MinGW-64-Make}\\
+\RED{make ARCH="64" VER="stable"}
 \FIGURE{mingw-3.png.eps}
+
+\item Press \RED{A} key on the question
 \FIGURE{mingw-4.png.eps}
-\FIGURE{mingw-5.png.eps}
 
 \end{enumerate}
+
+\clearpage
+
+\section{Installing MiKTeX LaTeX (optional)}
+
+MiKTeX is a distribution of the LaTeX text processor for Windows. We install
+here the basic 64 bits distribution.
+
+\begin{enumerate}
+
+\item Download the distribution from \RED{http://miktex.org/download} clicking
+on the \RED{Other Downloads} panel and the
+\RED{Basic MiKTeX 2.9.4813 64-bit Installer} (the number is the version at the
+date to make this tutorial)
+\FIGUREB{Latex-1.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Save file} button
+\FIGUREB{Latex-2.png.eps}
+
+\item Click on the downloaded installer (\RED{basic-miktex-2.9.4813-x64.exe}
+is the last version at the date to make this tutorial)
+\FIGUREB{Latex-3.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Yes} button
+\FIGUREB{Latex-4.png.eps}
+
+\item Accept the license and click on the \RED{Next} button
+\FIGUREB{Latex-5.png.eps}
+
+\clearpage
+
+\item Select the \RED{Anyone who uses the computer (all users)} option and click
+on the \RED{Next} button
+\FIGUREB{Latex-6.png.eps}
+
+\item Select the installation directory and click on the \RED{Next} button
+\FIGUREB{Latex-7.png.eps}
+
+\clearpage
+
+\item Select the prefered options and click on the \RED{Next} button
+\FIGUREB{Latex-8.png.eps}
+
+\item Click on the \RED{Start} button
+\FIGUREB{Latex-9.png.eps}
+
+\clearpage
+
+\item Click on the \RED{Next} button
+\FIGUREB{Latex-10.png.eps}
+
+\item Click on the \RED{Close} button
+\FIGUREB{Latex-11.png.eps}
+
+\end{enumerate}
+
+\clearpage
+
+\section{Installing Doxygen (optional)}
+
+\section{Installing WinMerge (optional)}
+
+\section{Installing GNUPlot (optional)}
 
 \end{document}

@@ -1,4 +1,5 @@
 prefix = /mingw
+installdir = C:/MinGW
 windir = /c/Windows
 bindir = $(prefix)/bin
 libdir = $(prefix)/lib
@@ -15,7 +16,7 @@ cxx = 'g++ $(flags)'
 configure = PKG_CONFIG_PATH='$(pkg_config_path)' \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' CFLAGS='$(cflags)' \
 	LDFLAGS='$(ldflags)' \
-	configure --prefix=/mingw --disable-debug --host=x86_64-w64-mingw32 \
+	configure --prefix=$(prefix) --disable-debug --host=x86_64-w64-mingw32 \
 		--enable-shared --disable-static
 
 gccver = 4.8.2
@@ -52,8 +53,6 @@ gtk3ver = 3.10.6
 
 gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev2.7z
 gccexe = $(bindir)/gcc.exe
-
-windll = $(bindir)/msmpi.dll
 
 m4dir = m4-$(m4ver)/
 m4tar = m4-$(m4ver).tar.xz
@@ -196,20 +195,7 @@ sqlitetar = sqlite-autoconf-$(sqlitever).tar.gz
 sqlitemak = $(sqlitedir)Makefile
 sqliteexe = $(bindir)/sqlite3.exe
 
-curldir = curl-$(curlver)/
-curltar = curl-$(curlver).tar.bz2
-curlmak = $(curldir)Makefile
-curlexe = $(bindir)/curl.exe
-
-cmakedir = cmake-$(cmakever)/
-cmaketar = cmake-$(cmakever).zip
-cmakemak = $(cmakedir)bootstrap
-cmakeexe = $(bindir)/cmake.exe
-
-openmpidir = openmpi-$(openmpiver)/
-openmpitar = openmpi-$(openmpiver).tar.bz2
-openmpimak = $(openmpidir)Makefile
-openmpidll = $(bindir)/libopenmpi.dll
+mpidll = $(bindir)/msmpi.dll
 
 girdir = gobject-introspection-$(girver)/
 girtar = gobject-introspection-$(girver).tar.xz
@@ -222,8 +208,8 @@ gtk3mak = $(gtk3dir)Makefile
 gtk3dll = $(bindir)/libgtk-3-0.dll
 
 all = \
+	$(msys) \
 	$(gccexe) \
-	$(windll) \
 	$(m4exe) \
 	$(libtoolexe) \
 	$(autoconfexe) \
@@ -258,8 +244,12 @@ all = \
 
 all: $(all)
 
-start:
-	echo "C:/MinGW /mingw" > /etc/fstab
+/etc/fstab:
+	echo "$(installdir) $(prefix)" > /etc/fstab
+
+msys: /etc/fstab /bin/unzip.exe /bin/wget.exe /bin/perl.exe /bin/patch.exe \
+	/bin/flex.exe /bin/bison.exe /bin/m4.exe /bin/vim.exe /bin/ssh.exe \
+	/bin/man.exe /bin/zip.exe
 	mingw-get install msys-unzip msys-wget msys-perl msys-patch msys-flex \
 		msys-bison msys-m4 msys-vim msys-openssh msys-man msys-zip
 	cd /mingw; \
@@ -282,37 +272,6 @@ $(gccexe): $(gcctar)
 	rm -rf mingw64
 	rm -rf $(prefix)/opt
 	touch $(gccexe)
-
-$(windll): $(gccexe)
-	cp -r '/c/Program Files/Microsoft HPC Pack 2012/Inc/'* $(includedir)
-	cp -r '/c/Program Files/Microsoft HPC Pack 2012/Bin/'* $(bindir)
-	cp $(winsysdir)/msmpi.dll $(bindir)
-	cd $(libdir); gendef $(bindir)/msmpi.dll; \
-	dlltool -d msmpi.def -l libmsmpi.a -D $(bindir)/msmpi.dll
-#	cp $(winsysdir)ws2_32.dll $(bindir)
-#	cd $(libdir); gendef $(bindir)/ws2_32.dll; \
-#	dlltool -d ws2_32.def -l libws2_32.a -D $(bindir)/ws2_32.dll
-#	cp $(winsysdir)ole32.dll $(bindir)
-#	cd $(libdir); gendef $(bindir)/ole32.dll; \
-#	dlltool -d ole32.def -l libole32.a -D $(bindir)/ole32.dll
-#	cp $(winsysdir)winmm.dll $(bindir)
-#	cd $(libdir); gendef $(bindir)/winmm.dll; \
-#	dlltool -d winmm.def -l libwinmm.a -D $(bindir)/winmm.dll
-#	cp $(winsysdir)shlwapi.dll $(bindir)
-#	cd $(libdir); gendef $(bindir)/shlwapi.dll; \
-#	dlltool -d shlwapi.def -l libshlwapi.a -D $(bindir)/shlwapi.dll
-#	cp $(winsysdir)dnsapi.dll $(bindir)
-#	cd $(libdir); gendef $(bindir)/dnsapi.dll; \
-#	dlltool -d dnsapi.def -l libdnsapi.a -D $(bindir)/dnsapi.dll
-#	cp $(winsysdir)iphlpapi.dll $(bindir)
-#	cd $(libdir); gendef $(bindir)/iphlpapi.dll; \
-#	dlltool -d iphlpapi.def -l libiphlpapi.a -D $(bindir)/iphlpapi.dll
-#	cp $(winsysdir)gdi32.dll $(bindir)
-#	cd $(libdir); gendef $(bindir)/gdi32.dll; \
-#	dlltool -d gdi32.def -l libgdi32.a -D $(bindir)/gdi32.dll
-#	cp $(winsysdir)msimg32.dll $(bindir)
-#	cd $(libdir); gendef $(bindir)/msimg32.dll; \
-#	dlltool -d msimg32.def -l libmsimg32.a -D $(bindir)/msimg32.dll
 
 $(m4tar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/m4/$(m4tar)
@@ -805,6 +764,37 @@ $(sqlitemak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(sqlitetar)
 $(sqliteexe): $(sqlitemak)
 	cd $(sqlitedir); make && make install-strip && make clean
 
+$(mpidll): $(gccexe)
+	cp -r '/c/Program Files/Microsoft HPC Pack 2012/Inc/'* $(includedir)
+	cp -r '/c/Program Files/Microsoft HPC Pack 2012/Bin/'* $(bindir)
+	cp $(winsysdir)/msmpi.dll $(bindir)
+	cd $(libdir); gendef $(bindir)/msmpi.dll; \
+	dlltool -d msmpi.def -l libmsmpi.a -D $(bindir)/msmpi.dll
+#	cp $(winsysdir)ws2_32.dll $(bindir)
+#	cd $(libdir); gendef $(bindir)/ws2_32.dll; \
+#	dlltool -d ws2_32.def -l libws2_32.a -D $(bindir)/ws2_32.dll
+#	cp $(winsysdir)ole32.dll $(bindir)
+#	cd $(libdir); gendef $(bindir)/ole32.dll; \
+#	dlltool -d ole32.def -l libole32.a -D $(bindir)/ole32.dll
+#	cp $(winsysdir)winmm.dll $(bindir)
+#	cd $(libdir); gendef $(bindir)/winmm.dll; \
+#	dlltool -d winmm.def -l libwinmm.a -D $(bindir)/winmm.dll
+#	cp $(winsysdir)shlwapi.dll $(bindir)
+#	cd $(libdir); gendef $(bindir)/shlwapi.dll; \
+#	dlltool -d shlwapi.def -l libshlwapi.a -D $(bindir)/shlwapi.dll
+#	cp $(winsysdir)dnsapi.dll $(bindir)
+#	cd $(libdir); gendef $(bindir)/dnsapi.dll; \
+#	dlltool -d dnsapi.def -l libdnsapi.a -D $(bindir)/dnsapi.dll
+#	cp $(winsysdir)iphlpapi.dll $(bindir)
+#	cd $(libdir); gendef $(bindir)/iphlpapi.dll; \
+#	dlltool -d iphlpapi.def -l libiphlpapi.a -D $(bindir)/iphlpapi.dll
+#	cp $(winsysdir)gdi32.dll $(bindir)
+#	cd $(libdir); gendef $(bindir)/gdi32.dll; \
+#	dlltool -d gdi32.def -l libgdi32.a -D $(bindir)/gdi32.dll
+#	cp $(winsysdir)msimg32.dll $(bindir)
+#	cd $(libdir); gendef $(bindir)/msimg32.dll; \
+#	dlltool -d msimg32.def -l libmsimg32.a -D $(bindir)/msimg32.dll
+
 $(girtar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gobject-introspection/1.39/$(girtar)
 	touch $(girtar)
@@ -854,10 +844,6 @@ $(gtk3mak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(cairodll) $(atkdll) \
 	patch -Np1 <0005-Remove-gobject-introspection.patch; \
 	autoreconf -if; \
 	$(configure) --enable-win32-backend --enable-gtk2-dependency
-
-#	cp ../gtk-launch.c gtk; \
-#	cd gdk/win32; grep -v INITGUID gdkdnd-win32.c > gdkdnd-win32.c.new; \
-#	mv gdkdnd-win32.c.new gdkdnd-win32.c;
 
 $(gtk3dll): $(gtk3mak)
 	cd $(gtk3dir); make && make install-strip && make clean
