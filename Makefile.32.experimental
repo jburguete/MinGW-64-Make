@@ -18,7 +18,8 @@ configure = PKG_CONFIG_PATH='$(pkg_config_path)' \
 	configure --prefix=$(prefix) --disable-debug --enable-shared \
 		--disable-static
 
-#m4ver = 1.4.17
+gccver = 4.8.2
+m4ver = 1.4.17
 libtoolver = 2.4.2
 autoconfver = 2.69
 automakever = 1.14.1
@@ -52,7 +53,8 @@ gtk3ver = 3.10.6
 fstab = /etc/fstab
 msys = /bin/zip.exe
 
-gccexe = /mingw/bin/gcc.exe
+gcctar = i686-$(gccver)-release-win32-sjlj-rt_v3-rev2.7z
+gccexe = $(bindir)/gcc.exe
 
 #m4dir = m4-$(m4ver)/
 #m4tar = m4-$(m4ver).tar.xz
@@ -209,6 +211,7 @@ gtk3dll = $(bindir)/libgtk-3-0.dll
 
 all = \
 	$(msys) \
+	$(gccexe) \
 	$(m4exe) \
 	$(libtoolexe) \
 	$(autoconfexe) \
@@ -257,6 +260,19 @@ $(msys): $(fstab)
 	unzip gettext-runtime-dev_0.18.1.1-2_win32.zip; \
 	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-tools-dev_0.18.1.1-2_win32.zip; \
 	unzip gettext-tools-dev_0.18.1.1-2_win32.zip
+
+$(gcctar):
+	wget -c -q "http://sourceforge.net/projects/mingw-w64/files/Toolchains targetting Win32/Personal Builds/mingw-builds/$(gccver)/threads-win32/sjlj/$(gcctar)"
+	touch $(gcctar)
+
+$(gccexe): $(gcctar)
+	7z x $(gcctar)
+	-cd mingw32; tar cf $(prefix)/temp.tar *
+	cd $(prefix); tar xf temp.tar
+	rm $(prefix)/temp.tar
+	rm -rf mingw32
+	rm -rf $(prefix)/opt
+	touch $(gccexe)
 
 #$(m4tar):
 #	wget -c -q http://ftp.gnu.org/pub/gnu/m4/$(m4tar)
@@ -583,7 +599,6 @@ $(libpngtar):
 	-wget -c -q http://sourceforge.net/projects/libpng/files/libpng16/older-releases/$(libpngver)/$(libpngtar)
 	-wget -c -q http://sourceforge.net/projects/libpng/files/libpng16/$(libpngver)/$(libpngtar)
 	touch $(libpngtar)
-
 
 $(libpngmak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) $(libpngtar)
 	tar xJf $(libpngtar)
