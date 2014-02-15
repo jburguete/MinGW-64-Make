@@ -4,22 +4,20 @@ windir = /c/Windows
 bindir = $(prefix)/bin
 libdir = $(prefix)/lib
 includedir = $(prefix)/include
-winsysdir = $(windir)/SysWOW64
+winsysdir = $(windir)/System32
 pkg_config_path = $(libdir)/pkgconfig
-flags = -march=corei7 -mfpmath=sse -msse3 -mthreads -DWINVER=0x0500
-cppflags = -I$(includedir) -I$(prefix)/x86_64-w64-mingw32/include 
+flags = -march=pentium4 -mfpmath=sse -msse3 -mthreads -DWINVER=0x0500
+cppflags = -I$(includedir)
 cflags = -O2 -fno-strict-aliasing $(cppflags)
-ldflags = -L$(libdir) -L$(bindir) -L$(prefix)/x86_64-w64-mingw32/lib \
-	-L$(winsysdir) 
+ldflags = -L$(libdir) -L$(bindir) -L$(winsysdir) 
 cc = 'gcc $(flags)'
 cxx = 'g++ $(flags)'
 configure = PKG_CONFIG_PATH='$(pkg_config_path)' \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' CFLAGS='$(cflags)' \
 	LDFLAGS='$(ldflags)' \
-	configure --prefix=$(prefix) --disable-debug --host=x86_64-w64-mingw32 \
-		--enable-shared --disable-static
+	configure --prefix=$(prefix) --disable-debug --enable-shared \
+		--disable-static
 
-gccver = 4.8.2
 m4ver = 1.4.17
 libtoolver = 2.4.2
 autoconfver = 2.69
@@ -51,8 +49,7 @@ sqlitever = 3080300
 girver = 1.39.0
 gtk3ver = 3.10.6
 
-gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev2.7z
-gccexe = $(bindir)/gcc.exe
+gccexe = /mingw/bin/gcc.exe
 
 m4dir = m4-$(m4ver)/
 m4tar = m4-$(m4ver).tar.xz
@@ -209,7 +206,6 @@ gtk3dll = $(bindir)/libgtk-3-0.dll
 
 all = \
 	$(msys) \
-	$(gccexe) \
 	$(m4exe) \
 	$(libtoolexe) \
 	$(autoconfexe) \
@@ -253,25 +249,12 @@ msys: /etc/fstab /bin/unzip.exe /bin/wget.exe /bin/perl.exe /bin/patch.exe \
 	mingw-get install msys-unzip msys-wget msys-perl msys-patch msys-flex \
 		msys-bison msys-m4 msys-vim msys-openssh msys-man msys-zip
 	cd /mingw; \
-	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime_0.18.1.1-2_win64.zip; \
-	unzip gettext-runtime_0.18.1.1-2_win64.zip; \
-	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime-dev_0.18.1.1-2_win64.zip; \
-	unzip gettext-runtime-dev_0.18.1.1-2_win64.zip; \
-	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-tools-dev_0.18.1.1-2_win64.zip; \
-	unzip gettext-tools-dev_0.18.1.1-2_win64.zip
-
-$(gcctar):
-	wget -c -q "http://sourceforge.net/projects/mingw-w64/files/Toolchains targetting Win64/Personal Builds/mingw-builds/$(gccver)/threads-win32/seh/$(gcctar)"
-	touch $(gcctar)
-
-$(gccexe): $(gcctar)
-	7z x $(gcctar)
-	-cd mingw64; tar cf $(prefix)/temp.tar *
-	cd $(prefix); tar xf temp.tar
-	rm $(prefix)/temp.tar
-	rm -rf mingw64
-	rm -rf $(prefix)/opt
-	touch $(gccexe)
+	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip; \
+	unzip gettext-runtime_0.18.1.1-2_win32.zip; \
+	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime-dev_0.18.1.1-2_win32.zip; \
+	unzip gettext-runtime-dev_0.18.1.1-2_win32.zip; \
+	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-tools-dev_0.18.1.1-2_win32.zip; \
+	unzip gettext-tools-dev_0.18.1.1-2_win32.zip
 
 $(m4tar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/m4/$(m4tar)
@@ -359,7 +342,6 @@ $(zlibtar):
 $(zlibmak): $(gccexe) $(zlibtar)
 	tar xJf $(zlibtar)
 	cd $(zlibdir); \
-	cp contrib/amd64/amd64-match.S match.S; \
 	sed 's/CC = \$$(PREFIX)gcc/CC = \$$(PREFIX)$(cc)/g' win32/Makefile.gcc > \
 		Makefile
 
@@ -527,9 +509,9 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	CFLAGS='$(cflags) -I$(libdir)/libffi-3.0.13/include -I$(includedir)/readline' \
 	LDFLAGS='-L. $(ldflags) -lm -lexpat -lffi -lreadline' \
 	PYTHON_FOR_BUILD='python.exe' \
-	configure --prefix=$(prefix) --disable-debug --host=x86_64-w64-mingw32 \
-		--enable-shared --disable-static \
-		--build=mingw32 --with-system-expat --with-system-ffi; \
+	configure --prefix=$(prefix) --disable-debug --enable-shared \
+		--disable-static \
+		--host=mingw32 --build=mingw32 --with-system-expat --with-system-ffi; \
 	cp $(includedir)/expat*.h Modules; \
 	cp -r $(includedir)/readline/*.h Modules; \
 	cp ../python-2.7.6-readline.h Modules/readline.h; \
@@ -583,8 +565,8 @@ $(gettextmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libiconvdll) \
 	CFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
 	CXXFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
 	LDFLAGS='$(ldflags)' \
-	configure --prefix=$(prefix) --disable-debug --host=x86_64-w64-mingw32 \
-		--enable-shared --disable-static \
+	configure --prefix=$(prefix) --disable-debug --enable-shared \
+		--disable-static \
 		--enable-threads=windows --disable-java --disable-native-java \
 		--disable-csharp --without-emacs --disable-openmp --without-cvs \
 		--without-git --with-included-libcroco --with-included-libunistring \
@@ -598,6 +580,7 @@ $(libpngtar):
 	-wget -c -q http://sourceforge.net/projects/libpng/files/libpng16/older-releases/$(libpngver)/$(libpngtar)
 	-wget -c -q http://sourceforge.net/projects/libpng/files/libpng16/$(libpngver)/$(libpngtar)
 	touch $(libpngtar)
+
 
 $(libpngmak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) $(libpngtar)
 	tar xJf $(libpngtar)
