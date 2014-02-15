@@ -360,10 +360,11 @@ $(zlibmak): $(gccexe) $(zlibtar)
 	tar xJf $(zlibtar)
 	cd $(zlibdir); \
 	cp contrib/amd64/amd64-match.S match.S; \
-	sed 's/CC = \$$(PREFIX)gcc/CC = \$$(PREFIX)$(cc)/g' win32/Makefile.gcc > \
-		Makefile
+	sed 's/CC = \$$(PREFIX)gcc/CC = \$$(PREFIX)gcc $(flags)/g' \
+		win32/Makefile.gcc > Makefile
 
 $(zlibdll): $(zlibmak)
+	cd $(zlibdir); \
 	make && \
 	INCLUDE_PATH=$(includedir) LIBRARY_PATH=$(libdir) BINARY_PATH=$(bindir) \
 		make install SHARED_MODE=1

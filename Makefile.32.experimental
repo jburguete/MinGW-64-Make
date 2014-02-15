@@ -7,9 +7,9 @@ includedir = $(prefix)/include
 winsysdir = $(windir)/System32
 pkg_config_path = $(libdir)/pkgconfig
 flags = -march=pentium4 -mfpmath=sse -msse3 -mthreads -DWINVER=0x0500
-cppflags = -I$(includedir)
+cppflags = -I$(includedir) -I$(prefix)/mingw32
 cflags = -O2 -fno-strict-aliasing $(cppflags)
-ldflags = -L$(libdir) -L$(bindir) -L$(winsysdir) 
+ldflags = -L$(libdir) -L$(bindir) -L$(prefix)/mingw32/lib -L$(winsysdir)
 cc = 'gcc $(flags)'
 cxx = 'g++ $(flags)'
 configure = PKG_CONFIG_PATH='$(pkg_config_path)' \
@@ -18,7 +18,7 @@ configure = PKG_CONFIG_PATH='$(pkg_config_path)' \
 	configure --prefix=$(prefix) --disable-debug --enable-shared \
 		--disable-static
 
-m4ver = 1.4.17
+#m4ver = 1.4.17
 libtoolver = 2.4.2
 autoconfver = 2.69
 automakever = 1.14.1
@@ -49,13 +49,16 @@ sqlitever = 3080300
 girver = 1.39.0
 gtk3ver = 3.10.6
 
+fstab = /etc/fstab
+msys = /bin/zip.exe
+
 gccexe = /mingw/bin/gcc.exe
 
-m4dir = m4-$(m4ver)/
-m4tar = m4-$(m4ver).tar.xz
-m4mak = $(m4dir)Makefile
+#m4dir = m4-$(m4ver)/
+#m4tar = m4-$(m4ver).tar.xz
+#m4mak = $(m4dir)Makefile
 #m4exe = $(bindir)/m4.exe
-m4exe = /bin/m4.exe
+#m4exe = /bin/m4.exe
 
 libtooldir = libtool-$(libtoolver)/
 libtooltar = libtool-$(libtoolver).tar.xz
@@ -240,14 +243,13 @@ all = \
 
 all: $(all)
 
-/etc/fstab:
-	echo "$(installdir) $(prefix)" > /etc/fstab
+$(fstab):
+	echo "$(installdir) $(prefix)" > $(fstab)
 
-msys: /etc/fstab /bin/unzip.exe /bin/wget.exe /bin/perl.exe /bin/patch.exe \
-	/bin/flex.exe /bin/bison.exe /bin/m4.exe /bin/vim.exe /bin/ssh.exe \
-	/bin/man.exe /bin/zip.exe
+$(msys): $(fstab)
 	mingw-get install msys-unzip msys-wget msys-perl msys-patch msys-flex \
 		msys-bison msys-m4 msys-vim msys-openssh msys-man msys-zip
+	touch $(msys)
 	cd /mingw; \
 	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip; \
 	unzip gettext-runtime_0.18.1.1-2_win32.zip; \
@@ -256,23 +258,23 @@ msys: /etc/fstab /bin/unzip.exe /bin/wget.exe /bin/perl.exe /bin/patch.exe \
 	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-tools-dev_0.18.1.1-2_win32.zip; \
 	unzip gettext-tools-dev_0.18.1.1-2_win32.zip
 
-$(m4tar):
-	wget -c -q http://ftp.gnu.org/pub/gnu/m4/$(m4tar)
-	touch $(m4tar)
+#$(m4tar):
+#	wget -c -q http://ftp.gnu.org/pub/gnu/m4/$(m4tar)
+#	touch $(m4tar)
 
-$(m4mak): $(gccexe) $(m4tar)
-	tar xJf $(m4tar)
-	cd $(m4dir); \
-	unzip -j ../MSYS2-packages-master.zip \
-		MSYS2-packages-master/m4/*.patch -d .; \
-	patch -p1 <m4-1.4.17-msys2.patch; \
-	patch -p1 <../m4-1.4.17-Makefiles.patch; \
-	$(configure) ac_cv_header_spawn_h=no
+#$(m4mak): $(gccexe) $(m4tar)
+#	tar xJf $(m4tar)
+#	cd $(m4dir); \
+#	unzip -j ../MSYS2-packages-master.zip \
+#		MSYS2-packages-master/m4/*.patch -d .; \
+#	patch -p1 <m4-1.4.17-msys2.patch; \
+#	patch -p1 <../m4-1.4.17-Makefiles.patch; \
+#	$(configure) ac_cv_header_spawn_h=no
 
-$(m4exe): #$(m4mak)
-	cd $(m4dir); make && make install-strip && make clean
-	mingw-get remove msys-m4
-	rm $(prefix)/var/cache/mingw-get/packages/m4-*
+#$(m4exe): #$(m4mak)
+#	cd $(m4dir); make && make install-strip && make clean
+#	mingw-get remove msys-m4
+#	rm $(prefix)/var/cache/mingw-get/packages/m4-*
 
 $(libtooltar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/libtool/$(libtooltar)
@@ -342,10 +344,11 @@ $(zlibtar):
 $(zlibmak): $(gccexe) $(zlibtar)
 	tar xJf $(zlibtar)
 	cd $(zlibdir); \
-	sed 's/CC = \$$(PREFIX)gcc/CC = \$$(PREFIX)$(cc)/g' win32/Makefile.gcc > \
-		Makefile
+	sed 's/CC = \$$(PREFIX)gcc/CC = \$$(PREFIX)gcc $(flags)/g' \
+		win32/Makefile.gcc > Makefile
 
 $(zlibdll): $(zlibmak)
+	cd $(zlibdir); \
 	make && \
 	INCLUDE_PATH=$(includedir) LIBRARY_PATH=$(libdir) BINARY_PATH=$(bindir) \
 		make install SHARED_MODE=1
