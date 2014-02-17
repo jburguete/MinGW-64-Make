@@ -445,6 +445,7 @@ $(libffimak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libffitar)
 
 $(libffidll): $(libffimak)
 	cd $(libffidir); make && make install-strip && make clean
+	sed -i 's,/lib/..,,g' $(libdir)libffi.la
 
 $(termcaptar):
 	wget -c -q http://ftp.gnu.org/gnu/termcap/$(termcaptar)
@@ -563,6 +564,10 @@ $(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(pkgconfigexe) $(libffidll) \
 $(glibdll): $(glibmak)
 	cd $(glibdir); make && make install-strip && make clean
 	cp -a $(prefix)/share/glib-2.0/codegen $(libdir)/python2.7
+	sed -i 's,-L=*C:[^ '\'']* ,,g' \
+		$(libdir)libgio-2.0.la $(libdir)libgobject-2.0.la
+	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' \
+		$(libdir)libgio-2.0.la $(libdir)libgobject-2.0.la
 
 $(gettexttar):
 	wget -c -q http://ftp.gnu.org/pub/gnu/gettext/$(gettexttar)
@@ -645,6 +650,8 @@ $(fontconfigmak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) \
 
 $(fontconfigdll): $(fontconfigmak)
 	cd $(fontconfigdir); make && make install-strip && make clean
+	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)libfontconfig.la
+	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)libfontconfig.la
 
 $(pixmantar):
 	wget -c -q http://www.cairographics.org/releases/$(pixmantar)
@@ -681,6 +688,8 @@ $(atkmak): $(gccexe) $(pkgconfigexe) $(glibdll) $(atktar)
 
 $(atkdll): $(atkmak)
 	cd $(atkdir); make && make install-strip && make clean
+	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)libatk-1.0.la
+	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)libatk-1.0.la
 
 $(pangotar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/pango/1.36/$(pangotar)
@@ -693,6 +702,8 @@ $(pangomak): $(gccexe) $(pkgconfigexe) $(glibdll) $(freetypedll) \
 
 $(pangodll): $(pangomak)
 	cd $(pangodir); make && make install-strip && make clean
+	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)libpango*.la
+	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)libpango*.la
 
 $(gdk_pixbuftar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gdk-pixbuf/2.30/$(gdk_pixbuftar)
@@ -705,6 +716,8 @@ $(gdk_pixbufmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(glibdll) \
 
 $(gdk_pixbufdll): $(gdk_pixbufmak)
 	cd $(gdk_pixbufdir); make && make install-strip && make clean
+	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)libgdk_pixbuf-2.0.la
+	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)libgdk_pixbuf-2.0.la
 
 $(hicolortar):
 	wget -c -q http://icon-theme.freedesktop.org/releases/$(hicolortar)
@@ -733,6 +746,10 @@ $(gtk2mak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypedll) \
 
 $(gtk2dll): $(gtk2mak)
 	cd $(gtk2dir); make && make install-strip && make clean
+	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)libgailutil.la \
+		$(libdir)libgdk-win32-2.0.la $(libdir)libgtk-win32-2.0.la
+	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)libgailutil.la \
+		$(libdir)libgdk-win32-2.0.la $(libdir)libgtk-win32-2.0.la
 
 $(freegluttar):
 	wget -c -q http://sourceforge.net/projects/freeglut/files/freeglut/$(freeglutver)/$(freegluttar)
@@ -852,3 +869,7 @@ $(gtk3mak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(cairodll) $(atkdll) \
 $(gtk3dll): $(gtk3mak)
 	cd $(gtk3dir); make GTK_UPDATE_ICON_CACHE=guic && make install-strip && \
 		make clean
+	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)libgailutil-3.la \
+		$(libdir)libgdk-3.la $(libdir)libgtk-3.la
+	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)libgailutil-3.la \
+		$(libdir)libgdk-3.la $(libdir)libgtk-3.la
