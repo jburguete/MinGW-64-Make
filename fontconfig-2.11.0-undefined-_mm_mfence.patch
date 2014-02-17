@@ -1,0 +1,44 @@
+diff -Naur fontconfig-2.11.0/src/fccache.c fontconfig-2.11.0.new/src/fccache.c
+--- fontconfig-2.11.0/src/fccache.c	2013-10-11 03:10:18 +0000
++++ fontconfig-2.11.0.new/src/fccache.c	2014-02-15 18:44:40 +0000
+@@ -33,6 +33,7 @@
+ #  include <unistd.h>
+ #  include <sys/mman.h>
+ #endif
++#include <emmintrin.h>
+ 
+ #ifndef O_BINARY
+ #define O_BINARY 0
+diff -Naur fontconfig-2.11.0/src/fccfg.c fontconfig-2.11.0.new/src/fccfg.c
+--- fontconfig-2.11.0/src/fccfg.c	2013-10-11 03:10:18 +0000
++++ fontconfig-2.11.0.new/src/fccfg.c	2014-02-15 18:44:47 +0000
+@@ -27,6 +27,7 @@
+ #include "fcint.h"
+ #include <dirent.h>
+ #include <sys/types.h>
++#include <emmintrin.h>
+ 
+ #if defined (_WIN32) && !defined (R_OK)
+ #define R_OK 4
+diff -Naur fontconfig-2.11.0/src/fcdefault.c fontconfig-2.11.0.new/src/fcdefault.c
+--- fontconfig-2.11.0/src/fcdefault.c	2013-10-11 03:10:18 +0000
++++ fontconfig-2.11.0.new/src/fcdefault.c	2014-02-15 18:44:53 +0000
+@@ -25,6 +25,7 @@
+ #include "fcint.h"
+ #include <limits.h>
+ #include <string.h>
++#include <emmintrin.h>
+ 
+ /* MT-safe */
+ 
+diff -Naur fontconfig-2.11.0/src/fcobjs.c fontconfig-2.11.0.new/src/fcobjs.c
+--- fontconfig-2.11.0/src/fcobjs.c	2013-10-11 03:10:18 +0000
++++ fontconfig-2.11.0.new/src/fcobjs.c	2014-02-15 18:45:17 +0000
+@@ -33,6 +33,7 @@
+ #include "fcobjshash.h"
+ 
+ #include <string.h>
++#include <emmintrin.h>
+ 
+ /* The 1000 is to leave some room for future added internal objects, such
+  * that caches from newer fontconfig can still be used with older fontconfig

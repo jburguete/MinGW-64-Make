@@ -1,3 +1,4 @@
+host = x86_64-w64-mingw32
 prefix = /mingw
 installdir = C:/MinGW
 windir = /c/Windows
@@ -7,16 +8,16 @@ includedir = $(prefix)/include
 winsysdir = $(windir)/SysWOW64
 pkg_config_path = $(libdir)/pkgconfig
 flags = -march=corei7 -mfpmath=sse -msse3 -mthreads -DWINVER=0x0500
-cppflags = -I$(includedir) -I$(prefix)/x86_64-w64-mingw32/include 
+cppflags = -I$(includedir) -I$(prefix)/$(host)/include \
+	-I$(libdir)/gcc/$(host)/$(gccver)/include
 cflags = -O2 -fno-strict-aliasing $(cppflags)
-ldflags = -L$(libdir) -L$(bindir) -L$(prefix)/x86_64-w64-mingw32/lib \
-	-L$(winsysdir) 
+ldflags = -L$(libdir) -L$(bindir) -L$(prefix)/$(host)/lib -L$(winsysdir)
 cc = 'gcc $(flags)'
 cxx = 'g++ $(flags)'
 configure = PKG_CONFIG_PATH='$(pkg_config_path)' \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' CFLAGS='$(cflags)' \
 	LDFLAGS='$(ldflags)' \
-	configure --prefix=$(prefix) --disable-debug --host=x86_64-w64-mingw32 \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static
 
 gccver = 4.8.2
@@ -530,7 +531,7 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	CFLAGS='$(cflags) -I$(libdir)/libffi-3.0.13/include -I$(includedir)/readline' \
 	LDFLAGS='-L. $(ldflags) -lm -lexpat -lffi -lreadline' \
 	PYTHON_FOR_BUILD='python.exe' \
-	configure --prefix=$(prefix) --disable-debug --host=x86_64-w64-mingw32 \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
 		--build=mingw32 --with-system-expat --with-system-ffi; \
 	cp $(includedir)/expat*.h Modules; \
@@ -586,7 +587,7 @@ $(gettextmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libiconvdll) \
 	CFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
 	CXXFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
 	LDFLAGS='$(ldflags)' \
-	configure --prefix=$(prefix) --disable-debug --host=x86_64-w64-mingw32 \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
 		--enable-threads=windows --disable-java --disable-native-java \
 		--disable-csharp --without-emacs --disable-openmp --without-cvs \
@@ -636,12 +637,12 @@ $(fontconfigmak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) \
 	unzip -j ../MINGW-packages-master.zip \
 		MINGW-packages-master/mingw-w64-fontconfig/*.patch -d .; \
 	patch -p1 <fontconfig-2.11.0-symlinks-fix.patch; \
+	patch -p1 <fontconfig-2.11.0-undefined-_mm_mfence.patch; \
 	autoreconf -if; \
 	$(configure) --enable-iconv --enable-libxml2 --disable-docs \
 		as_ln_s="cp -pR"; \
-	sed -i 's,all-am:$(PROGRAMS),all-am:,' test/Makefile
-
-#	sed -i 's,all-am: Makefile $(PROGRAMS),all-am:,' test/Makefile; \
+	sed -i 's,all-am: Makefile \$$(PROGRAMS),all-am:,' test/Makefile; \
+	sed -i 's,all-am:\$$(PROGRAMS),all-am:,' test/Makefile
 
 $(fontconfigdll): $(fontconfigmak)
 	cd $(fontconfigdir); make && make install-strip && make clean
@@ -683,7 +684,7 @@ $(atkdll): $(atkmak)
 	cd $(atkdir); make && make install-strip && make clean
 
 $(pangotar):
-	wget -c -q http://ftp.gnome.org/pub/gnome/sources/pango/1.34/$(pangotar)
+	wget -c -q http://ftp.gnome.org/pub/gnome/sources/pango/1.36/$(pangotar)
 	touch $(pangotar)
 
 $(pangomak): $(gccexe) $(pkgconfigexe) $(glibdll) $(freetypedll) \
@@ -727,6 +728,7 @@ $(gtk2mak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypedll) \
 	tar xJf $(gtk2tar)
 	cd $(gtk2dir); \
 	patch -p0 <../gtk+-2.24.22-modules-input-Makefile.in.patch; \
+	sed -i 's/gtk-update-icon-cache/guic/g' gtk/Makefile*
 	$(configure) --with-included-immodules=ime --with-gdktarget=win32; \
 	perl ../gtk+64.pl
 
@@ -844,6 +846,7 @@ $(gtk3mak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(cairodll) $(atkdll) \
 		MINGW-packages-master/mingw-w64-gtk3/*.patch -d .; \
 	patch -Np1 <0004-BURN-THE-.DEF.patch; \
 	patch -Np1 <0005-Remove-gobject-introspection.patch; \
+	sed -i 's/gtk-update-icon-cache/guic/g' configure.ac; \
 	autoreconf -if; \
 	$(configure) --enable-win32-backend --enable-gtk2-dependency
 
