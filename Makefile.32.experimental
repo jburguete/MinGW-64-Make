@@ -677,6 +677,8 @@ $(cairomak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) $(glibdll) \
 
 $(cairodll): $(cairomak)
 	cd $(cairodir); make && make install-strip && make clean
+	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)libcairo*.la
+	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)libcairo*.la
 
 $(atktar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/atk/2.10/$(atktar)
@@ -742,7 +744,7 @@ $(gtk2mak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypedll) \
 	patch -p0 <../gtk+-2.24.22-modules-input-Makefile.in.patch; \
 	sed -i 's/gtk-update-icon-cache/guic/g' gtk/Makefile*
 	$(configure) --with-included-immodules=ime --with-gdktarget=win32; \
-	perl ../gtk+64.pl; \
+	perl ../gtk+64.pl
 
 $(gtk2dll): $(gtk2mak)
 	cd $(gtk2dir); make && make install-strip && make clean
