@@ -511,22 +511,22 @@ $(termcapdll): $(termcapmak)
 
 $(readlinetar):
 	wget -c -q http://ftp.gnu.org/gnu/readline/$(readlinetar)
-	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-001
-	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-002
-	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-003
-	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-004
-	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-005
 	touch $(readlinetar)
 
 $(readlinemak): $(gccexe) $(pkgconfigexe) $(readlinetar)
 	if test -d $(readlinedir); then rm -rf $(readlinedir); fi
 	tar xzf $(readlinetar)
 	cd $(readlinedir); \
-	patch -p0 <../readline62-001; \
-	patch -p0 <../readline62-002; \
-	patch -p0 <../readline62-003; \
-	patch -p0 <../readline62-004; \
-	patch -p0 <../readline62-005; \
+	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-001; \
+	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-002; \
+	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-003; \
+	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-004; \
+	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-005; \
+	patch -p0 <readline62-001; \
+	patch -p0 <readline62-002; \
+	patch -p0 <readline62-003; \
+	patch -p0 <readline62-004; \
+	patch -p0 <readline62-005; \
 	$(configure)
 
 $(readlinedll): $(readlinemak)
@@ -611,14 +611,9 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 		--disable-static \
 		--host=mingw32 --build=mingw32 --with-threads --with-system-expat \
 		--with-system-ffi; \
-	cp $(includedir)/expat*.h $(includedir)/readline/*.h Modules; \
-	sed -i 's,readline/,,g' Modules/readline.h Modules/history.h \
-		Modules/keymaps.h Modules/readline.c
 
 $(pythondll): $(pythonmak)
-	-cd $(pythondir); make install
-	cd $(pythondir); make && rm -rf $(libdir)/python2.7/lib-dynload && \
-	make install && make clean
+	cd $(pythondir); make && make install && make clean
 
 $(glibtar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/glib/2.38/$(glibtar)

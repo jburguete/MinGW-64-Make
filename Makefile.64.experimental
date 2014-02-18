@@ -611,15 +611,9 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
 		--build=mingw32 --with-threads --with-system-expat --with-system-ffi; \
-	cp $(includedir)/expat*.h $(includedir)/readline/*.h Modules; \
-	sed -i 's,readline/,,g' Modules/readline.h Modules/history.h \
-		Modules/keymaps.h Modules/readline.c
 
 $(pythondll): $(pythonmak)
-	-cd $(pythondir); make install
-	read
-	cd $(pythondir); make && rm -rf $(libdir)/python2.7/lib-dynload && \
-	make install && make clean
+	cd $(pythondir); make && make install && make clean
 
 $(glibtar):
 	wget -c -q http://ftp.gnome.org/pub/gnome/sources/glib/2.38/$(glibtar)
