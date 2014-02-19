@@ -185,7 +185,7 @@ pythontar = Python-$(pythonver).tar.xz
 pythonmak = $(pythondir)/Makefile
 pythondll = $(bindir)/libpython2.7.dll
 
-gliburl = $(gnomeurl)/sources/glib/2.38
+gliburl = $(gnomeurl)/sources/glib/$(basename $(glibver))
 glibdir = glib-$(glibver)
 glibtar = glib-$(glibver).tar.xz
 glibmak = $(glibdir)/Makefile
@@ -234,13 +234,13 @@ atktar = atk-$(atkver).tar.xz
 atkmak = $(atkdir)/Makefile
 atkdll = $(bindir)/libatk-1.0-0.dll
 
-pangourl = $(gnomeurl)/sources/pango/1.36
+pangourl = $(gnomeurl)/sources/pango/$(basename $(pangover))
 pangodir = pango-$(pangover)
 pangotar = pango-$(pangover).tar.xz
 pangomak = $(pangodir)/Makefile
 pangodll = $(bindir)/libpango-1.0-0.dll
 
-gdk_pixbufurl = $(gnomeurl)/sources/gdk-pixbuf/2.30
+gdk_pixbufurl = $(gnomeurl)/sources/gdk-pixbuf/$(basename $(gdk_pixbufver))
 gdk_pixbufdir = gdk-pixbuf-$(gdk_pixbufver)
 gdk_pixbuftar = gdk-pixbuf-$(gdk_pixbufver).tar.xz
 gdk_pixbufmak = $(gdk_pixbufdir)/Makefile
@@ -252,7 +252,7 @@ hicolortar = hicolor-icon-theme-$(hicolorver).tar.gz
 hicolormak = $(hicolordir)/Makefile
 hicolordll = $(prefix)/share/icons/hicolor
 
-gtk2url = $(gnomeurl)/sources/gtk+/2.24
+gtk2url = $(gnomeurl)/sources/gtk+/$(basename $(gtk2ver))
 gtk2dir = gtk+-$(gtk2ver)
 gtk2tar = gtk+-$(gtk2ver).tar.xz
 gtk2mak = $(gtk2dir)/Makefile
@@ -270,13 +270,13 @@ gsltar = gsl-$(gslver).tar.gz
 gslmak = $(gsldir)/Makefile
 gsldll = $(bindir)/libgsl-0.dll
 
-girurl = $(gnomeurl)/sources/gobject-introspection/1.39
+girurl = $(gnomeurl)/sources/gobject-introspection/$(basename $(girver))
 girdir = gobject-introspection-$(girver)
 girtar = gobject-introspection-$(girver).tar.xz
 girmak = $(girdir)/Makefile
 girdll = $(bindir)/g-ir-compiler
 
-gtk3url = $(gnomeurl)/sources/gtk+/3.10
+gtk3url = $(gnomeurl)/sources/gtk+/$(basename $(gtk3ver))
 gtk3dir = gtk+-$(gtk3ver)
 gtk3tar = gtk+-$(gtk3ver).tar.xz
 gtk3mak = $(gtk3dir)/Makefile
