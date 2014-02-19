@@ -42,8 +42,12 @@ INSTRUCTIONS
 	directory on the PATH when the building will be finished.
 
 5.	Open a MSYS terminal as administrator (clicking on the right button and
-	selecting the *Execute as administrator* option), clone this repository and
-	execute *make* command with 2 arguments:
+	selecting the *Execute as administrator* option) and clone this repository.
+
+	> $ git clone git@github.com:jburguete/MinGW-64-Make.git
+	> 
+
+6.	Execute *make* command with 2 arguments:
 
 	-*ARCH* is the architecture and admits "32" and "64" values (for 32 and 64
 	bits respectively).
@@ -53,11 +57,16 @@ INSTRUCTIONS
 
 	For instance:
 
-	> $ git clone git@github.com:jburguete/MinGW-64-Make.git
-	> 
 	> $ cd MinGW-64-Make
 	> 
 	> $ make ARCH="64" VER="stable"
+
+	Alternative option is to execute *make* command with the desired Makefile.
+	For instance:
+
+	> $ cd MinGW-64-Make
+	> 
+	> $ make -f Makefile.64.stable
 
 INSTALLED TOOLS, COMPILERS AND LIBRARIES
 ========================================
