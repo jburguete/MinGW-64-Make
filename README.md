@@ -115,8 +115,8 @@ expat | 2.1.0 | 2.1.0 | 2.1.0
 fontconfig | 2.11.0 | 2.11.0 | 2.11.0
 freeglut | 2.8.1 | 2.8.1 | 2.8.1
 freetype | 2.5.2 | 2.5.2 | 2.5.2
-
 gcc (C, C++, Objective C and Fortran compilers) | 4.8.2 | 4.8.2 | 4.8.2
+
 gdk_pixbuf | 2.30.2 | 2.30.2 | 2.30.2
 gettext | 0.18.3.2 | 0.18.3.2 | 0.18.3.2
 glib | 2.38.2 | 2.38.2 | 2.38.2
