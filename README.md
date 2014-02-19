@@ -12,10 +12,11 @@ INSTRUCTIONS
 
 1. Install the last version of
 [MSYS](http://sourceforge.net/projects/mingw/files/Installer), selecting only
-the *msys-base* option, in C:\MinGW. WARNING! if you change the installation
-directory you have to change the installdir variable in the Makefiles. Due to
-some bugs in the MSYS environment, use of spaces and wrong types in the
-installation directory is strongly discouraged.
+the *msys-base* option, in C:\MinGW.
+
+	WARNING! if you change the installation directory you have to change the
+installdir variable in the Makefiles. Due to some bugs in MSYS, use of spaces
+and wrong types in the installation directory is strongly discouraged.
 
 2. Install the last version of
 [7-Zip for Windows](http://www.7-zip.org/downloag.html) and include the
@@ -28,6 +29,11 @@ Windows Command Prompt* option of the installer.
 
 4. Optionally, install
 [Microsoft MPI](http://www.microsoft.com/en-sg/details.aspx?id=39961)
+
+	WARNING! at this point, if you have installed Microsoft Visual C++ you have
+to avoid the installation directory of the PATH environment variable. It
+interfere on the building process. You can put the directory on the PATH when
+the building will be finished.
 
 5. Open a MSYS terminal, clone this repository and execute *make* command with
 2 arguments:
