@@ -12,7 +12,7 @@ INSTRUCTIONS
 
 1. Install the last version of
 [MSYS](http://sourceforge.net/projects/mingw/files/Installer), selecting only
-the msys-base option, in C:\MinGW. WARNING! If you change the installation
+the *msys-base* option, in C:\MinGW. WARNING! if you change the installation
 directory you have to change the installdir variable in the Makefiles. Due to
 some bugs in the MSYS environment use spaces and wrong types in the installation
 directory are strongly discouraged.
@@ -32,17 +32,19 @@ Windows Command Prompt* option of the installer.
 5. Open a MSYS terminal, clone this repository and execute *make* command with
 2 arguments:
 
--*ARCH* is the architecture and admits "32" and "64" values (for 32 and 64 bits
-respectively).
+	-*ARCH* is the architecture and admits "32" and "64" values (for 32 and 64
+	bits respectively).
 
--*VER* is the version and admits "stable", "testing" and "experimental" values.
+	-*VER* is the version and admits "stable", "testing" and "experimental"
+	values.
 
-For instance:
-> $ git clone git@github.com:jburguete/MinGW-64-Make.git
-> 
-> $ cd MinGW-64-Make
-> 
-> $ make ARCH="64" VER="stable"
+	For instance:
+
+	> $ git clone git@github.com:jburguete/MinGW-64-Make.git
+	> 
+	> $ cd MinGW-64-Make
+	> 
+	> $ make ARCH="64" VER="stable"
 
 INSTALLED TOOLS, COMPILERS AND LIBRARIES
 ========================================
@@ -50,7 +52,7 @@ INSTALLED TOOLS, COMPILERS AND LIBRARIES
 MSYS Tools
 ----------
 
-These tools are 32 bits
+These tools are 32 bits.
 
 * bash 3.1.17
 * bison 2.4.2
@@ -87,7 +89,7 @@ These tools can be of 32 or 64 bits depending on the choiced architecture.
 * fontconfig 2.11.0
 * freeglut 2.8.1
 * freetype 2.5.2
-* gcc 4.8.2 (C, C++, Objective C, and FORTRAN compilers)
+* gcc 4.8.2 (C, C++, Objective C, and Fortran compilers)
 * gdk_pixbuf 2.30.2
 * gettext 0.18.3.2
 * glib 2.38.2
