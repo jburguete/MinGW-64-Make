@@ -86,7 +86,7 @@ gtk3ver = 3.10.6
 
 gnuurl = http://ftp.gnu.org/pub/gnu
 sfurl = http://sourceforge.net/projects
-gnomeurl = http://ftp.gnome.org/pub/gnome/sources
+gnomeurl = http://ftp.gnome.org/pub/gnome
 
 # Files
 
@@ -863,7 +863,7 @@ $(gtk2mak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypedll) \
 	tar xJf $(gtk2tar)
 	cd $(gtk2dir); \
 	patch -p0 <../gtk+-2.24.22-modules-input-Makefile.in.patch; \
-	sed -i 's/gtk-update-icon-cache/guic/g' gtk/Makefile*
+	sed -i 's/gtk-update-icon-cache/guic/g' gtk/Makefile*; \
 	$(configure) --with-included-immodules=ime --with-gdktarget=win32; \
 	perl ../gtk+64.pl
 
