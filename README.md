@@ -30,10 +30,10 @@ Windows Command Prompt* option of the installer.
 4. Optionally, install
 [Microsoft MPI](http://www.microsoft.com/en-sg/details.aspx?id=39961)
 
-	WARNING! at this point, if you have installed Microsoft Visual C++ you have
-to avoid the installation directory of the PATH environment variable. It
-interfere on the building process. You can put the directory on the PATH when
-the building will be finished.
+	WARNING! at this point, if you have installed Microsoft Visual C++ and you
+have the installation directory included on the PATH environment variable, you
+must avoid it. It interferes on the building process. You can put the directory
+on the PATH when the building will be finished.
 
 5. Open a MSYS terminal, clone this repository and execute *make* command with
 2 arguments:
@@ -114,5 +114,3 @@ These tools can be 32 or 64 bits depending on the choiced architecture.
 * sqlite 3.8.3
 * termcap 1.3.1
 * zlib 1.2.8
-
-
