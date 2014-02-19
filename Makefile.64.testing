@@ -526,21 +526,17 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	patch -p1 <0535-msys-cygwin-semi-native-build-sysconfig.patch; \
 	patch -p1 <../python-2.7.6-DBL_EPSILON.patch; \
 	autoreconf -if; \
+	LIBFFI_INCLUDEDIR=`pkg-config --cflags libffi | sed 's/-I//'` \
 	PKG_CONFIG_PATH=$(pkg_config_path) \
 	CC=$(cc) CXX=$(cxx) \
 	CPPFLAGS='$(cppflags) -I$(libdir)/libffi-3.0.13/include -I$(includedir)/readline' \
 	CFLAGS='$(cflags) -I$(libdir)/libffi-3.0.13/include -I$(includedir)/readline' \
+	CXXFLAGS='$(cflags) -I$(libdir)/libffi-3.0.13/include -I$(includedir)/readline' \
 	LDFLAGS='-L. $(ldflags) -lm -lexpat -lffi -lreadline' \
 	PYTHON_FOR_BUILD='python.exe' \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
-		--build=mingw32 --with-system-expat --with-system-ffi; \
-	cp $(includedir)/expat*.h Modules; \
-	cp -r $(includedir)/readline/*.h Modules; \
-	cp ../python-2.7.6-readline.h Modules/readline.h; \
-	cp ../python-2.7.6-history.h Modules/history.h; \
-	cp ../python-2.7.6-keymaps.h Modules/keymaps.h; \
-	cp ../python-2.7.6-readline.c Modules/readline.c
+		--build=mingw32 --with-threads --with-system-expat --with-system-ffi; \
 
 $(pythondll): $(pythonmak)
 	-cd $(pythondir); make install;

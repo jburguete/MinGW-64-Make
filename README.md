@@ -7,6 +7,18 @@ compiler and some useful tools and libraries on Microsoft Windows systems.
 More detailed instructions to build it step by step can be consulted in
 tutorial.pdf file.
 
+INSTRUCTIONS
+============
+
+1. Install the last version of MSYS
+(*http://sourceforge.net/projects/mingw/files/Installer*), selecting only the
+msys-base option, in C:\MinGW. WARNING! If you change the installation directory
+you have to change the installdir variable in the Makefiles. By some bugs in the
+MSYS environment use spaces and wrong types in the installation directory are
+strongly discouraged.
+
+2. Install Git for Windows 
+
 INSTALLED TOOLS, COMPILERS AND LIBRARIES
 ========================================
 

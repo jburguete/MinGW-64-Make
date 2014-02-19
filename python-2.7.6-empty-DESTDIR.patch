@@ -1,0 +1,11 @@
+--- Python-2.7.6.orig/Makefile.pre.in	2014-02-18 17:50:00 +0000
++++ Python-2.7.6/Makefile.pre.in	2014-02-19 04:13:58 +0000
+@@ -1161,7 +1161,7 @@
+ 	   	--prefix=$(prefix) \
+ 		--install-scripts=$(BINDIR) \
+ 		--install-platlib=$(DESTSHARED) \
+-		--root=$(DESTDIR)
++		--root=$(DESTDIR)/
+ 	-rm $(DESTDIR)$(DESTSHARED)/_sysconfigdata.py*
+ 
+ # Here are a couple of targets for MacOSX again, to install a full

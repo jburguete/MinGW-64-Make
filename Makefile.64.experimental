@@ -5,7 +5,8 @@
 strip = 1
 host = x86_64-w64-mingw32
 prefix = /mingw
-installdir = C:/MinGW
+unit = C:
+installdir = $(unit)/MinGW
 windir = /c/Windows
 
 # Paths
@@ -81,6 +82,12 @@ gslver = 1.16
 girver = 1.39.0
 gtk3ver = 3.10.6
 
+# Some URLs
+
+gnuurl = http://ftp.gnu.org/pub/gnu
+sfurl = http://sourceforge.net/projects
+gnomeurl = http://ftp.gnome.org/pub/gnome/sources
+
 # Files
 
 fstab = /etc/fstab
@@ -89,155 +96,187 @@ msys = /bin/zip.exe
 msys_patches = MSYS2-packages-master.zip
 mingw_patches = MINGW-packages-master.zip
 
+gccurl = $(sfurl)/mingw-w64/files/Toolchains targetting Win64/Personal Builds/mingw-builds/$(gccver)/threads-win32/seh
 gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev2.7z
 gccexe = $(bindir)/gcc.exe
 
+#m4url = $(gnuurl)/m4/$(m4tar)
 #m4dir = m4-$(m4ver)/
 #m4tar = m4-$(m4ver).tar.xz
 #m4mak = $(m4dir)Makefile
 #m4exe = $(bindir)/m4.exe
 #m4exe = /bin/m4.exe
 
+libtoolurl = $(gnuurl)/libtool
 libtooldir = libtool-$(libtoolver)
 libtooltar = libtool-$(libtoolver).tar.xz
 libtoolmak = $(libtooldir)/Makefile
 libtoolexe = $(bindir)/libtool
 
+autoconfurl = $(gnuurl)/autoconf
 autoconfdir = autoconf-$(autoconfver)
 autoconftar = autoconf-$(autoconfver).tar.xz
 autoconfmak = $(autoconfdir)/Makefile
 autoconfexe = $(bindir)/autoconf
 
+automakeurl = $(gnuurl)/automake
 automakedir = automake-$(automakever)
 automaketar = automake-$(automakever).tar.xz
 automakemak = $(automakedir)/Makefile
 automakeexe = $(bindir)/automake
 
+libiconvurl = $(gnuurl)/libiconv
 libiconvdir = libiconv-$(libiconvver)
 libiconvtar = libiconv-$(libiconvver).tar.gz
 libiconvmak = $(libiconvdir)/Makefile
 libiconvdll = $(bindir)/libiconv-2.dll
 
+zliburl = $(sfurl)/libpng/files/zlib/$(zlibver)
 zlibdir = zlib-$(zlibver)
 zlibtar = zlib-$(zlibver).tar.xz
 zlibmak = $(zlibdir)/Makefile
 zlibdll = $(bindir)/libz.dll
 
+pkgconfigurl = http://pkgconfig.freedesktop.org/releases
 pkgconfigdir = pkg-config-$(pkgconfigver)
 pkgconfigtar = pkg-config-$(pkgconfigver).tar.gz
 pkgconfigmak = $(pkgconfigdir)/Makefile
 pkgconfigexe = $(bindir)/pkg-config.exe
 
+expaturl =  $(sfurl)/expat/files/expat/$(expatver)
 expatdir = expat-$(expatver)
 expattar = expat-$(expatver).tar.gz
 expatmak = $(expatdir)/Makefile
 expatdll = $(bindir)/libexpat-1.dll
 
+libxmlurl = http://xmlsoft.org/sources
 libxmldir = libxml2-$(libxmlver)
 libxmltar = libxml2-$(libxmlver).tar.gz
 libxmlmak = $(libxmldir)/Makefile
 libxmldll = $(bindir)/libxml2-2.dll
 
+libffiurl = ftp://sourceware.org/pub/libffi
 libffidir = libffi-$(libffiver)
 libffitar = libffi-$(libffiver).tar.gz
 libffimak = $(libffidir)/Makefile
 libffidll = $(bindir)/libffi-6.dll
 
+termcapurl = $(gnuurl)/termcap
 termcapdir = termcap-$(termcapver)
 termcaptar = termcap-$(termcapver).tar.gz
 termcapmak = $(termcapdir)/Makefile
 termcapdll = $(libdir)/libtermcap.a
 
+readlineurl = $(gnuurl)/readline
 readlinedir = readline-$(readlinever)
 readlinetar = readline-$(readlinever).tar.gz
 readlinemak = $(readlinedir)/Makefile
 readlinedll = $(bindir)/libreadline6.dll
 
+sqliteurl = http://www.sqlite.org/2014
 sqlitedir = sqlite-autoconf-$(sqlitever)
 sqlitetar = sqlite-autoconf-$(sqlitever).tar.gz
 sqlitemak = $(sqlitedir)/Makefile
 sqlitedll = $(bindir)/libsqlite3-0.dll
 
+pythonurl = http://www.python.org/ftp/python/$(pythonver)
 pythondir = Python-$(pythonver)
 pythontar = Python-$(pythonver).tar.xz
 pythonmak = $(pythondir)/Makefile
 pythondll = $(bindir)/libpython2.7.dll
 
+gliburl = $(gnomeurl)/sources/glib/2.38
 glibdir = glib-$(glibver)
 glibtar = glib-$(glibver).tar.xz
 glibmak = $(glibdir)/Makefile
 glibdll = $(bindir)/libglib-2.0-0.dll
 
+gettextbinurl = $(gnomeurl)/binaries/win64/dependencies
+gettexturl = $(gnuurl)/gettext
 gettextdir = gettext-$(gettextver)
 gettexttar = gettext-$(gettextver).tar.gz
 gettextmak = $(gettextdir)/Makefile
 gettextdll = $(bindir)/libintl-8.dll
 
+libpngurl = $(sfurl)/libpng/files/libpng16
 libpngdir = libpng-$(libpngver)
 libpngtar = libpng-$(libpngver).tar.xz
 libpngmak = $(libpngdir)/Makefile
 libpngdll = $(bindir)/libpng16-16.dll
 
+freetypeurl = $(sfurl)/freetype/files/freetype2/$(freetypever)
 freetypedir = freetype-$(freetypever)
 freetypetar = freetype-$(freetypever).tar.bz2
 freetypemak = $(freetypedir)/config.mk
 freetypedll = $(bindir)/libfreetype-6.dll
 
+fontconfigurl = http://fontconfig.freedesktop.org/release
 fontconfigdir = fontconfig-$(fontconfigver)
 fontconfigtar = fontconfig-$(fontconfigver).tar.bz2
 fontconfigmak = $(fontconfigdir)/Makefile
 fontconfigdll = $(bindir)/libfontconfig-1.dll
 
+pixmanurl = http://www.cairographics.org/releases
 pixmandir = pixman-$(pixmanver)
 pixmantar = pixman-$(pixmanver).tar.gz
 pixmanmak = $(pixmandir)/Makefile
 pixmandll = $(bindir)/libpixman-1-0.dll
 
+cairourl = http://www.cairographics.org/releases
 cairodir = cairo-$(cairover)
 cairotar = cairo-$(cairover).tar.xz
 cairomak = $(cairodir)/Makefile
 cairodll = $(bindir)/libcairo-2.dll
 
+atkurl = $(gnomeurl)/sources/atk/2.10
 atkdir = atk-$(atkver)
 atktar = atk-$(atkver).tar.xz
 atkmak = $(atkdir)/Makefile
 atkdll = $(bindir)/libatk-1.0-0.dll
 
+pangourl = $(gnomeurl)/sources/pango/1.36
 pangodir = pango-$(pangover)
 pangotar = pango-$(pangover).tar.xz
 pangomak = $(pangodir)/Makefile
 pangodll = $(bindir)/libpango-1.0-0.dll
 
+gdk_pixbufurl = $(gnomeurl)/sources/gdk-pixbuf/2.30
 gdk_pixbufdir = gdk-pixbuf-$(gdk_pixbufver)
 gdk_pixbuftar = gdk-pixbuf-$(gdk_pixbufver).tar.xz
 gdk_pixbufmak = $(gdk_pixbufdir)/Makefile
 gdk_pixbufdll = $(bindir)/libgdk_pixbuf-2.0-0.dll
 
+hicolorurl = http://icon-theme.freedesktop.org/releases
 hicolordir = hicolor-icon-theme-$(hicolorver)
 hicolortar = hicolor-icon-theme-$(hicolorver).tar.gz
 hicolormak = $(hicolordir)/Makefile
 hicolordll = $(prefix)/share/icons/hicolor
 
+gtk2url = $(gnomeurl)/sources/gtk+/2.24
 gtk2dir = gtk+-$(gtk2ver)
 gtk2tar = gtk+-$(gtk2ver).tar.xz
 gtk2mak = $(gtk2dir)/Makefile
 gtk2dll = $(bindir)/libgtk-win32-2.0-0.dll
 
+freegluturl = $(sfurl)/freeglut/files/freeglut/$(freeglutver)
 freeglutdir = freeglut-$(freeglutver)
 freegluttar = freeglut-$(freeglutver).tar.gz
 freeglutmak = $(freeglutdir)/Makefile
 freeglutdll = $(bindir)/libglut-0.dll
 
+gslurl = $(gnuurl)/gsl
 gsldir = gsl-$(gslver)
 gsltar = gsl-$(gslver).tar.gz
 gslmak = $(gsldir)/Makefile
 gsldll = $(bindir)/libgsl-0.dll
 
+girurl = $(gnomeurl)/sources/gobject-introspection/1.39
 girdir = gobject-introspection-$(girver)
 girtar = gobject-introspection-$(girver).tar.xz
 girmak = $(girdir)/Makefile
 girdll = $(bindir)/g-ir-compiler
 
+gtk3url = $(gnomeurl)/sources/gtk+/3.10
 gtk3dir = gtk+-$(gtk3ver)
 gtk3tar = gtk+-$(gtk3ver).tar.xz
 gtk3mak = $(gtk3dir)/Makefile
@@ -290,11 +329,11 @@ $(msys): $(fstab)
 		msys-bison msys-m4 msys-vim msys-openssh msys-man msys-zip
 	touch $(msys)
 	cd /mingw; \
-	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime_0.18.1.1-2_win64.zip; \
+	wget -c -q $(gettextbinurl)/gettext-runtime_0.18.1.1-2_win64.zip; \
 	unzip -o -q gettext-runtime_0.18.1.1-2_win64.zip; \
-	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-runtime-dev_0.18.1.1-2_win64.zip; \
+	wget -c -q $(gettextbinurl)/gettext-runtime-dev_0.18.1.1-2_win64.zip; \
 	unzip -o -q gettext-runtime-dev_0.18.1.1-2_win64.zip; \
-	wget -c -q http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/gettext-tools-dev_0.18.1.1-2_win64.zip; \
+	wget -c -q $(gettextbinurl)/gettext-tools-dev_0.18.1.1-2_win64.zip; \
 	unzip -o -q gettext-tools-dev_0.18.1.1-2_win64.zip
 
 $(msys_patches):
@@ -304,7 +343,7 @@ $(mingw_patches):
 	wget --no-check-certificate -q "https://github.com/Alexpux/MINGW-packages/archive/master.zip" -O $(mingw_patches)
 
 $(gcctar):
-	wget -c -q "http://sourceforge.net/projects/mingw-w64/files/Toolchains targetting Win64/Personal Builds/mingw-builds/$(gccver)/threads-win32/seh/$(gcctar)"
+	wget -c -q "$(gccurl)/$(gcctar)"
 	touch $(gcctar)
 
 $(gccexe): $(gcctar) $(msys_patches) $(mingw_patches)
@@ -317,7 +356,7 @@ $(gccexe): $(gcctar) $(msys_patches) $(mingw_patches)
 	touch $(gccexe)
 
 #$(m4tar):
-#	wget -c -q http://ftp.gnu.org/pub/gnu/m4/$(m4tar)
+#	wget -c -q $(gnuurl)/m4/$(m4tar)
 #	touch $(m4tar)
 
 #$(m4mak): $(gccexe) $(m4tar)
@@ -335,7 +374,7 @@ $(gccexe): $(gcctar) $(msys_patches) $(mingw_patches)
 #	rm $(prefix)/var/cache/mingw-get/packages/m4-*
 
 $(libtooltar):
-	wget -c -q http://ftp.gnu.org/pub/gnu/libtool/$(libtooltar)
+	wget -c -q $(libtoolurl)/$(libtooltar)
 	touch $(libtooltar)
 
 $(libtoolmak): $(gccexe) $(libtooltar)
@@ -354,7 +393,7 @@ $(libtoolexe): $(libtoolmak)
 	cd $(libtooldir); make && make $(install) && make clean
 
 $(autoconftar):
-	wget -c -q http://ftp.gnu.org/pub/gnu/autoconf/$(autoconftar)
+	wget -c -q $(autoconfurl)/$(autoconftar)
 	touch $(autoconftar)
 
 $(autoconfmak): $(gccexe) $(m4exe) $(libtoolexe) $(autoconftar)
@@ -371,7 +410,7 @@ $(autoconfexe): $(autoconfmak)
 	cd $(autoconfdir); make && make $(install) && make clean
 
 $(automaketar):
-	wget -c -q http://ftp.gnu.org/pub/gnu/automake/$(automaketar)
+	wget -c -q $(automakeurl)/$(automaketar)
 	touch $(automaketar)
 
 $(automakemak): $(gccexe) $(m4exe) $(libtoolexe) $(autoconfexe) $(automaketar)
@@ -388,7 +427,7 @@ $(automakeexe): $(automakemak)
 	cd $(automakedir); make && make $(install) && make clean
 
 $(libiconvtar):
-	wget -c -q http://ftp.gnu.org/pub/gnu/libiconv/$(libiconvtar)
+	wget -c -q $(libiconvurl)/$(libiconvtar)
 	touch $(libiconvtar)
 
 $(libiconvmak): $(gccexe) $(libiconvtar)
@@ -400,7 +439,7 @@ $(libiconvdll): $(libiconvmak)
 	cd $(libiconvdir); make && make $(install) && make clean
 
 $(zlibtar):
-	wget -c -q http://sourceforge.net/projects/libpng/files/zlib/$(zlibver)/$(zlibtar)
+	wget -c -q $(zliburl)/$(zlibtar)
 	touch $(zlibtar)
 
 $(zlibmak): $(gccexe) $(zlibtar)
@@ -420,7 +459,7 @@ $(zlibdll): $(zlibmak)
 	cp $(bindir)/zlib1.dll $(bindir)/libz.dll
 
 $(pkgconfigtar):
-	wget -c -q http://pkgconfig.freedesktop.org/releases/$(pkgconfigtar)
+	wget -c -q $(pkgconfigurl)/$(pkgconfigtar)
 	touch $(pkgconfigtar)
 
 $(pkgconfigmak): $(gccexe) $(automakeexe) $(pkgconfigtar)
@@ -434,7 +473,7 @@ $(pkgconfigexe): $(pkgconfigmak)
 	cd $(pkgconfigdir); make && make install && make clean
 
 $(expattar):
-	wget -c -q http://sourceforge.net/projects/expat/files/expat/$(expatver)/$(expattar)
+	wget -c -q $(expaturl)/$(expattar)
 	touch $(expattar)
 
 $(expatmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expattar)
@@ -446,7 +485,7 @@ $(expatdll): $(expatmak)
 	cd $(expatdir); make && make install && make clean
 
 $(libxmltar):
-	wget -c -q http://xmlsoft.org/sources/$(libxmltar)
+	wget -c -q $(libxmlurl)/$(libxmltar)
 	touch $(libxmltar)
 
 $(libxmlmak): $(gccexe) $(automakeexe) $(zlibdll) $(libiconvdll) \
@@ -486,7 +525,7 @@ $(libxmldll): $(libxmlmak)
 	cd $(libxmldir); make && make $(install) && make clean
 
 $(libffitar):
-	wget -c -q ftp://sourceware.org/pub/libffi/$(libffitar)
+	wget -c -q $(libffiurl)/$(libffitar)
 	touch $(libffitar)
 
 $(libffimak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libffitar)
@@ -499,7 +538,7 @@ $(libffidll): $(libffimak)
 	sed -i 's,/lib/..,,g' $(libdir)/libffi.la
 
 $(termcaptar):
-	wget -c -q http://ftp.gnu.org/gnu/termcap/$(termcaptar)
+	wget -c -q $(termcapurl)/$(termcaptar)
 	touch $(termcaptar)
 
 $(termcapmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(termcaptar)
@@ -511,34 +550,30 @@ $(termcapdll): $(termcapmak)
 	cd $(termcapdir); make && make install && make clean
 
 $(readlinetar):
-	wget -c -q http://ftp.gnu.org/gnu/readline/$(readlinetar)
-	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-001
-	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-002
-	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-003
-	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-004
-	wget -c -q http://ftp.gnu.org/gnu/readline/readline-$(readlinever)-patches/readline62-005
+	wget -c -q $(readlineurl)/$(readlinetar)
 	touch $(readlinetar)
 
 $(readlinemak): $(gccexe) $(pkgconfigexe) $(readlinetar)
 	if test -d $(readlinedir); then rm -rf $(readlinedir); fi
 	tar xzf $(readlinetar)
 	cd $(readlinedir); \
-	patch -p0 <../readline62-001; \
-	patch -p0 <../readline62-002; \
-	patch -p0 <../readline62-003; \
-	patch -p0 <../readline62-004; \
-	patch -p0 <../readline62-005; \
+	wget -c -q $(readlineurl)/readline-$(readlinever)-patches/readline62-001; \
+	wget -c -q $(readlineurl)/readline-$(readlinever)-patches/readline62-002; \
+	wget -c -q $(readlineurl)/readline-$(readlinever)-patches/readline62-003; \
+	wget -c -q $(readlineurl)/readline-$(readlinever)-patches/readline62-004; \
+	wget -c -q $(readlineurl)/readline-$(readlinever)-patches/readline62-005; \
+	patch -p0 <readline62-001; \
+	patch -p0 <readline62-002; \
+	patch -p0 <readline62-003; \
+	patch -p0 <readline62-004; \
+	patch -p0 <readline62-005; \
 	$(configure)
 
 $(readlinedll): $(readlinemak)
 	cd $(readlinedir); make && make install && make clean
 
-$(pythontar):
-	wget -c -q http://www.python.org/ftp/python/$(pythonver)/$(pythontar)
-	touch $(pythontar)
-
 $(sqlitetar):
-	wget -c -q http://www.sqlite.org/2014/$(sqlitetar)
+	wget -c -q $(sqliteurl)/$(sqlitetar)
 	touch $(sqlitetar)
 
 $(sqlitemak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(sqlitetar)
@@ -548,6 +583,10 @@ $(sqlitemak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(sqlitetar)
 
 $(sqlitedll): $(sqlitemak)
 	cd $(sqlitedir); make && make $(install) && make clean
+
+$(pythontar):
+	wget -c -q $(pythonurl)/$(pythontar)
+	touch $(pythontar)
 
 $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	$(libffidll) $(termcapdll) $(readlinedll) $(sqlitedll) $(pythontar)
@@ -591,6 +630,7 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	patch -p1 <0535-msys-cygwin-semi-native-build-sysconfig.patch; \
 	patch -p1 <0540-mingw-install-layout-as-posix.patch; \
 	patch -p1 <../python-2.7.6-DBL_EPSILON.patch; \
+	patch -p1 <../python-2.7.6-empty-DESTDIR.patch; \
 	autoreconf -if; \
 	sed -i '/progname =/s/python/python2.7/' Python/pythonrun.c; \
 	sed -i '/SQLITE_OMIT_LOAD_EXTENSION/d' setup.py; \
@@ -616,7 +656,7 @@ $(pythondll): $(pythonmak)
 	cd $(pythondir); make && make install && make clean
 
 $(glibtar):
-	wget -c -q http://ftp.gnome.org/pub/gnome/sources/glib/2.38/$(glibtar)
+	wget -c -q $(gliburl)/$(glibtar)
 	touch $(glibtar)
 
 $(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(pkgconfigexe) $(libffidll) \
@@ -634,13 +674,13 @@ $(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(pkgconfigexe) $(libffidll) \
 $(glibdll): $(glibmak)
 	cd $(glibdir); make && make $(install) && make clean
 	cp -a $(prefix)/share/glib-2.0/codegen $(libdir)/python2.7
-	sed -i 's,-L=*C:[^ '\'']* ,,g' \
-		$(libdir)libgio-2.0.la $(libdir)libgobject-2.0.la
-	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' \
-		$(libdir)libgio-2.0.la $(libdir)libgobject-2.0.la
+	sed -i 's,-L=*$(unit)[^ '\'']* ,,g' \
+		$(libdir)/libgio-2.0.la $(libdir)/libgobject-2.0.la
+	sed -i 's,-L=*$(unit)[^ '\'']*'\'','\'',g' \
+		$(libdir)/libgio-2.0.la $(libdir)/libgobject-2.0.la
 
 $(gettexttar):
-	wget -c -q http://ftp.gnu.org/pub/gnu/gettext/$(gettexttar)
+	wget -c -q $(gettexturl)/$(gettexttar)
 	touch $(gettexttar)
 
 $(gettextmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libiconvdll) \
@@ -674,8 +714,8 @@ $(gettextdll): $(gettextmak)
 	rm $(prefix)/gettext*.zip
 
 $(libpngtar):
-	-wget -c -q http://sourceforge.net/projects/libpng/files/libpng16/older-releases/$(libpngver)/$(libpngtar)
-	-wget -c -q http://sourceforge.net/projects/libpng/files/libpng16/$(libpngver)/$(libpngtar)
+	-wget -c -q $(libpngurl)/older-releases/$(libpngver)/$(libpngtar)
+	-wget -c -q $(libpngurl)/$(libpngver)/$(libpngtar)
 	touch $(libpngtar)
 
 $(libpngmak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) $(libpngtar)
@@ -687,7 +727,7 @@ $(libpngdll): $(libpngmak)
 	cd $(libpngdir); make && make $(install) && make clean
 
 $(freetypetar):
-	wget -c -q http://sourceforge.net/projects/freetype/files/freetype2/2.5.2/$(freetypetar)
+	wget -c -q $(freetypeurl)/$(freetypetar)
 	touch $(freetypetar)
 
 $(freetypemak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypetar)
@@ -704,11 +744,11 @@ $(freetypedll): $(freetypemak)
 	cd $(freetypedir); make && make install && make clean
 
 $(fontconfigtar):
-	wget -c -q http://fontconfig.freedesktop.org/release/$(fontconfigtar)
+	wget -c -q $(fontconfigurl)/$(fontconfigtar)
 	touch $(fontconfigtar)
 
 $(fontconfigmak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) \
-	$(libpngdll) $(freetypedll) $(libxmldll) $(fontconfigtar)
+	$(libxmldll) $(libpngdll) $(freetypedll) $(fontconfigtar)
 	if test -d $(fontconfigdir); then rm -rf $(fontconfigdir); fi
 	tar xjf $(fontconfigtar)
 	cd $(fontconfigdir); \
@@ -724,11 +764,11 @@ $(fontconfigmak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) \
 
 $(fontconfigdll): $(fontconfigmak)
 	cd $(fontconfigdir); make && make $(install) && make clean
-	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)/libfontconfig.la
-	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)/libfontconfig.la
+	sed -i 's,-L=*$(unit)[^ '\'']* ,,g' $(libdir)/libfontconfig.la
+	sed -i 's,-L=*$(unit)[^ '\'']*'\'','\'',g' $(libdir)/libfontconfig.la
 
 $(pixmantar):
-	wget -c -q http://www.cairographics.org/releases/$(pixmantar)
+	wget -c -q $(pixmanurl)/$(pixmantar)
 	touch $(pixmantar)
 
 $(pixmanmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(pixmantar)
@@ -740,7 +780,7 @@ $(pixmandll): $(pixmanmak)
 	cd $(pixmandir); make && make $(install) && make clean
 
 $(cairotar):
-	wget -c -q http://www.cairographics.org/releases/$(cairotar)
+	wget -c -q $(cairourl)/$(cairotar)
 	touch $(cairotar)
 
 $(cairomak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) $(glibdll) \
@@ -753,11 +793,11 @@ $(cairomak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) $(glibdll) \
 
 $(cairodll): $(cairomak)
 	cd $(cairodir); make && make $(install) && make clean
-	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)/libcairo*.la
-	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)/libcairo*.la
+	sed -i 's,-L=*$(unit)[^ '\'']* ,,g' $(libdir)/libcairo*.la
+	sed -i 's,-L=*$(unit)[^ '\'']*'\'','\'',g' $(libdir)/libcairo*.la
 
 $(atktar):
-	wget -c -q http://ftp.gnome.org/pub/gnome/sources/atk/2.10/$(atktar)
+	wget -c -q $(atkurl)/$(atktar)
 	touch $(atktar)
 
 $(atkmak): $(gccexe) $(pkgconfigexe) $(glibdll) $(atktar)
@@ -767,11 +807,11 @@ $(atkmak): $(gccexe) $(pkgconfigexe) $(glibdll) $(atktar)
 
 $(atkdll): $(atkmak)
 	cd $(atkdir); make && make $(install) && make clean
-	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)/libatk-1.0.la
-	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)/libatk-1.0.la
+	sed -i 's,-L=*$(unit)[^ '\'']* ,,g' $(libdir)/libatk-1.0.la
+	sed -i 's,-L=*$(unit)[^ '\'']*'\'','\'',g' $(libdir)/libatk-1.0.la
 
 $(pangotar):
-	wget -c -q http://ftp.gnome.org/pub/gnome/sources/pango/1.36/$(pangotar)
+	wget -c -q $(pangourl)/$(pangotar)
 	touch $(pangotar)
 
 $(pangomak): $(gccexe) $(pkgconfigexe) $(glibdll) $(freetypedll) \
@@ -782,11 +822,11 @@ $(pangomak): $(gccexe) $(pkgconfigexe) $(glibdll) $(freetypedll) \
 
 $(pangodll): $(pangomak)
 	cd $(pangodir); make && make $(install) && make clean
-	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)/libpango*.la
-	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)/libpango*.la
+	sed -i 's,-L=*$(unit)[^ '\'']* ,,g' $(libdir)/libpango*.la
+	sed -i 's,-L=*$(unit)[^ '\'']*'\'','\'',g' $(libdir)/libpango*.la
 
 $(gdk_pixbuftar):
-	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gdk-pixbuf/2.30/$(gdk_pixbuftar)
+	wget -c -q $(gdk_pixbufurl)/$(gdk_pixbuftar)
 	touch $(gdk_pixbuftar)
 
 $(gdk_pixbufmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(glibdll) \
@@ -797,11 +837,11 @@ $(gdk_pixbufmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(glibdll) \
 
 $(gdk_pixbufdll): $(gdk_pixbufmak)
 	cd $(gdk_pixbufdir); make && make $(install) && make clean
-	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)/libgdk_pixbuf-2.0.la
-	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)/libgdk_pixbuf-2.0.la
+	sed -i 's,-L=*$(unit)[^ '\'']* ,,g' $(libdir)/libgdk_pixbuf-2.0.la
+	sed -i 's,-L=*$(unit)[^ '\'']*'\'','\'',g' $(libdir)/libgdk_pixbuf-2.0.la
 
 $(hicolortar):
-	wget -c -q http://icon-theme.freedesktop.org/releases/$(hicolortar)
+	wget -c -q $(hicolorurl)/$(hicolortar)
 	touch $(hicolortar)
 
 $(hicolormak): $(hicolortar)
@@ -813,7 +853,7 @@ $(hicolordll): $(hicolormak)
 	cd $(hicolordir); make install
 
 $(gtk2tar):
-	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/$(gtk2tar)
+	wget -c -q $(gtk2url)/$(gtk2tar)
 	touch $(gtk2tar)
 
 $(gtk2mak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypedll) \
@@ -829,13 +869,13 @@ $(gtk2mak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypedll) \
 
 $(gtk2dll): $(gtk2mak)
 	cd $(gtk2dir); make && make $(install) && make clean
-	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)/libgailutil.la \
+	sed -i 's,-L=*$(unit)[^ '\'']* ,,g' $(libdir)/libgailutil.la \
 		$(libdir)/libgdk-win32-2.0.la $(libdir)/libgtk-win32-2.0.la
-	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)/libgailutil.la \
+	sed -i 's,-L=*$(unit)[^ '\'']*'\'','\'',g' $(libdir)/libgailutil.la \
 		$(libdir)/libgdk-win32-2.0.la $(libdir)/libgtk-win32-2.0.la
 
 $(freegluttar):
-	wget -c -q http://sourceforge.net/projects/freeglut/files/freeglut/$(freeglutver)/$(freegluttar)
+	wget -c -q $(freegluturl)/$(freegluttar)
 	touch $(freegluttar)
 
 $(freeglutmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(freegluttar)
@@ -847,7 +887,7 @@ $(freeglutdll): $(freeglutmak)
 	cd $(freeglutdir); make && make $(install) && make clean
 
 $(gsltar):
-	wget -c -q http://ftp.gnu.org/pub/gnu/gsl/$(gsltar)
+	wget -c -q $(gslurl)/$(gsltar)
 	touch $(gsltar)
 
 $(gslmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(gsltar)
@@ -859,7 +899,7 @@ $(gsldll): $(gslmak)
 	cd $(gsldir); make && make $(install) && make clean
 
 $(girtar):
-	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gobject-introspection/1.39/$(girtar)
+	wget -c -q $(girurl)/$(girtar)
 	touch $(girtar)
 
 $(girmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(pythondll) $(glibdll) \
@@ -896,7 +936,7 @@ $(girdll): $(girmak)
 #	PATH='/c/Windows:/bin:$(bindir)' make && make $(install)
 
 $(gtk3tar):
-	wget -c -q http://ftp.gnome.org/pub/gnome/sources/gtk+/3.10/$(gtk3tar)
+	wget -c -q $(gtk3url)/$(gtk3tar)
 
 $(gtk3mak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(cairodll) $(atkdll) \
 	$(pangodll) $(gdk_pixbufdll) $(gtk2dll) $(gtk3tar) #$(girdll)
@@ -914,9 +954,9 @@ $(gtk3mak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(cairodll) $(atkdll) \
 $(gtk3dll): $(gtk3mak)
 	cd $(gtk3dir); make GTK_UPDATE_ICON_CACHE=guic && make $(install) && \
 		make clean
-	sed -i 's,-L=*C:[^ '\'']* ,,g' $(libdir)/libgailutil-3.la \
+	sed -i 's,-L=*$(unit)[^ '\'']* ,,g' $(libdir)/libgailutil-3.la \
 		$(libdir)/libgdk-3.la $(libdir)/libgtk-3.la
-	sed -i 's,-L=*C:[^ '\'']*'\'','\'',g' $(libdir)/libgailutil-3.la \
+	sed -i 's,-L=*$(unit)[^ '\'']*'\'','\'',g' $(libdir)/libgailutil-3.la \
 		$(libdir)/libgdk-3.la $(libdir)/libgtk-3.la
 
 $(mpidll): $(gccexe)
