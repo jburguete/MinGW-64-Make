@@ -105,30 +105,33 @@ MinGW compilers, libraries and tools
 
 These tools can be 32 or 64 bits depending on the choiced architecture.
 
-atk 2.10.0
-autoconf 2.69
-automake 1.4.1
-cairo 1.12.16
-expat 2.1.0
-fontconfig 2.11.0
-freeglut 2.8.1
-freetype 2.5.2
-gcc 4.8.2 (C, C++, Objective C and Fortran compilers)
-gdk_pixbuf 2.30.2
-gettext 0.18.3.2
-glib 2.38.2
-gsl 1.16
-gtk+ 2.24.22 and 3.10.6
-libffi 3.0.13
-libiconv 1.14
-libpng 1.6.8
-libtool 2.4.2
-libxml 2.9.1
-pango 1.36.2
-pixman 0.32.4
-pkg-config 0.28
-python 2.7.6
-readline 6.2
-sqlite 3.8.3
-termcap 1.3.1
-zlib 1.2.8
+   | Stable | Testing | Experimental
+-- | ------ | ------- | ------------
+atk | 2.10.0 | 2.10.0 | 2.10.0
+autoconf | 2.69 | 2.69 | 2.69
+automake | 1.4.1 | 1.4.1 | 1.4.1
+cairo | 1.12.16 | 1.12.16 | 1.12.16
+expat | 2.1.0 | 2.1.0 | 2.1.0
+fontconfig | 2.11.0 | 2.11.0 | 2.11.0
+freeglut | 2.8.1 | 2.8.1 | 2.8.1
+freetype | 2.5.2 | 2.5.2 | 2.5.2
+gcc (C, C++, Objective C and Fortran compilers) | 4.8.2 | 4.8.2 | 4.8.2
+gdk_pixbuf | 2.30.2 | 2.30.2 | 2.30.2
+gettext | 0.18.3.2 | 0.18.3.2 | 0.18.3.2
+glib | 2.38.2 | 2.38.2 | 2.38.2
+gsl | 1.16 | 1.16 | 1.16
+gtk+2 | 2.24.22 | 2.24.22 | 2.24.22
+gtk+3 | 3.6.4 | 3.10.6 | 3.10.6
+libffi | 3.0.13 | 3.0.13 | 3.0.13
+libiconv | 1.14 | 1.14 | 1.14
+libpng | 1.6.8 | 1.6.8 | 1.6.8
+libtool | 2.4.2 | 2.4.2 | 2.4.2
+libxml | 2.9.1 | 2.9.1 | 2.9.1
+pango | 1.36.2 | 1.36.2 | 1.36.2
+pixman | 0.32.4 | 0.32.4 | 0.32.4
+pkg-config | 0.28 | 0.28 | 0.28
+python | 2.7.6 | 2.7.6 | 2.7.6
+readline | 6.2 | 6.2 | 6.2
+sqlite | 3.8.3 | 3.8.3 | 3.8.3
+termcap | 1.3.1 | 1.3.1 | 1.3.1
+zlib | 1.2.8 | 1.2.8 | 1.2.8
