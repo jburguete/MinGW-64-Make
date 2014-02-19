@@ -108,8 +108,6 @@ These tools can be 32 or 64 bits depending on the choiced architecture.
     | Stable | Testing | Experimental
 --- | ------ | ------- | ------------
 atk | 2.10.0 | 2.10.0 | 2.10.0
-
-
 autoconf | 2.69 | 2.69 | 2.69
 automake | 1.4.1 | 1.4.1 | 1.4.1
 cairo | 1.12.16 | 1.12.16 | 1.12.16
@@ -117,6 +115,7 @@ expat | 2.1.0 | 2.1.0 | 2.1.0
 fontconfig | 2.11.0 | 2.11.0 | 2.11.0
 freeglut | 2.8.1 | 2.8.1 | 2.8.1
 freetype | 2.5.2 | 2.5.2 | 2.5.2
+
 gcc (C, C++, Objective C and Fortran compilers) | 4.8.2 | 4.8.2 | 4.8.2
 gdk_pixbuf | 2.30.2 | 2.30.2 | 2.30.2
 gettext | 0.18.3.2 | 0.18.3.2 | 0.18.3.2
