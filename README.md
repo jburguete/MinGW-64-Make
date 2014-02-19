@@ -14,8 +14,8 @@ INSTRUCTIONS
 [MSYS](http://sourceforge.net/projects/mingw/files/Installer), selecting only
 the *msys-base* option, in C:\MinGW. WARNING! if you change the installation
 directory you have to change the installdir variable in the Makefiles. Due to
-some bugs in the MSYS environment use spaces and wrong types in the installation
-directory are strongly discouraged.
+some bugs in the MSYS environment, use of spaces and wrong types in the
+installation directory is strongly discouraged.
 
 2. Install the last version of
 [7-Zip for Windows](http://www.7-zip.org/downloag.html) and include the
