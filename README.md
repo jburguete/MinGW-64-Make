@@ -10,14 +10,38 @@ tutorial.pdf file.
 INSTRUCTIONS
 ============
 
-1. Install the last version of MSYS
-(*http://sourceforge.net/projects/mingw/files/Installer*), selecting only the
-msys-base option, in C:\MinGW. WARNING! If you change the installation directory
-you have to change the installdir variable in the Makefiles. By some bugs in the
-MSYS environment use spaces and wrong types in the installation directory are
-strongly discouraged.
+Exhaustive instructions step by step can be seen in [tutorial](tutorial.pdf).
 
-2. Install Git for Windows 
+1. Install the last version of
+[MSYS](http://sourceforge.net/projects/mingw/files/Installer), selecting only
+the msys-base option, in C:\MinGW. WARNING! If you change the installation
+directory you have to change the installdir variable in the Makefiles. Due to
+some bugs in the MSYS environment use spaces and wrong types in the installation
+directory are strongly discouraged.
+
+2. Install the last version of
+[7-Zip for Windows](http://www.7-zip.org/downloag.html) and include the
+installation directory in the PATH environment variable.
+
+3. Install [Git for Windows](http://git-scm.com/download/win) and include the
+installaction directory in the PATH environment variable selecting the *Run Git
+from the Windows Command Prompt* option of the installer.
+
+4. Optionally, install
+[Microsoft MPI](http://www.microsoft.com/en-sg/details.aspx?id=39961)
+
+5. Open a MSYS terminal, clone this repository and execute *make* command with
+2 arguments:
+
+-*ARCH* is the architecture and admits "32" and "64" values (for 32 and 64 bits
+respectively).
+
+-*VER* is the version and admits "stable", "testing" and "experimental" values.
+
+For instance:
+> $ git clone git@github.com:jburguete/MinGW-64-Make.git
+> $ cd MinGW-64-Make
+> $ make ARCH="64" VER="stable"
 
 INSTALLED TOOLS, COMPILERS AND LIBRARIES
 ========================================
