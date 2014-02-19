@@ -10,33 +10,35 @@ Exhaustive instructions to build it step by step can be consulted in
 INSTRUCTIONS
 ============
 
-1. Install the last version of
-[MSYS](http://sourceforge.net/projects/mingw/files/Installer), selecting only
-the *msys-base* option, in C:\MinGW.
+1.	Install the last version of
+	[MSYS](http://sourceforge.net/projects/mingw/files/Installer), selecting
+	only the *msys-base* option, in C:\MinGW.
 
 	WARNING! if you change the installation directory you have to change the
-installdir variable in the Makefiles. Due to some bugs in MSYS, use of spaces
-and wrong types in the installation directory is strongly discouraged.
+	installdir variable in the Makefiles. Due to some bugs in MSYS, use of
+	spaces and wrong types in the installation directory is strongly
+	discouraged.
 
-2. Install the last version of
-[7-Zip for Windows](http://www.7-zip.org/downloag.html) and include the
-installation directory in the PATH environment variable.
+2.	Install the last version of
+	[7-Zip for Windows](http://www.7-zip.org/downloag.html) and include the
+	installation directory in the PATH environment variable.
 
-3. Install the last version of
-[Git for Windows](http://git-scm.com/download/win) and include the installation
-directory in the PATH environment variable selecting the *Run Git from the
-Windows Command Prompt* option of the installer.
+3.	Install the last version of
+	[Git for Windows](http://git-scm.com/download/win) and include the
+	installation directory in the PATH environment variable selecting the *Run
+	Git from the Windows Command Prompt* option of the installer.
 
-4. Optionally, install
-[Microsoft MPI](http://www.microsoft.com/en-sg/details.aspx?id=39961)
+4.	Optionally, install
+	[Microsoft MPI](http://www.microsoft.com/en-sg/details.aspx?id=39961)
 
 	WARNING! at this point, if you have installed Microsoft Visual C++ and you
-have the installation directory included on the PATH environment variable, you
-must avoid it. It interferes on the building process. You can put the directory
-on the PATH when the building will be finished.
+	have the installation directory included on the PATH environment variable,
+	you must avoid it. It interferes on the building process. You can put the
+	directory on the PATH when the building will be finished.
 
-5. Open a MSYS terminal, clone this repository and execute *make* command with
-2 arguments:
+5.	Open a MSYS terminal as administrator (clicking on the right button and
+	selecting the *Execute as administrator* option), clone this repository and
+	execute *make* command with 2 arguments:
 
 	-*ARCH* is the architecture and admits "32" and "64" values (for 32 and 64
 	bits respectively).
@@ -71,8 +73,8 @@ These tools are 32 bits.
 * make 3.81
 * man 1.6f
 * openssh 5.4p1
-* perl 5.8.8
 * patch 2.6.1
+* perl 5.8.8
 * sed 4.2.1
 * tar 1.23
 * texinfo 4.13a
@@ -82,7 +84,7 @@ These tools are 32 bits.
 * xz 5.0.3
 * zip 3.0
 
-MINGW compilers, libraries and tools
+MinGW compilers, libraries and tools
 ------------------------------------
 
 These tools can be 32 or 64 bits depending on the choiced architecture.
