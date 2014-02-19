@@ -79,7 +79,7 @@ These tools are 32 bits.
 MINGW compilers, libraries and tools
 ------------------------------------
 
-These tools can be of 32 or 64 bits depending on the choiced architecture.
+These tools can be 32 or 64 bits depending on the choiced architecture.
 
 * atk 2.10.0
 * autoconf 2.69
@@ -89,7 +89,7 @@ These tools can be of 32 or 64 bits depending on the choiced architecture.
 * fontconfig 2.11.0
 * freeglut 2.8.1
 * freetype 2.5.2
-* gcc 4.8.2 (C, C++, Objective C, and Fortran compilers)
+* gcc 4.8.2 (C, C++, Objective C and Fortran compilers)
 * gdk_pixbuf 2.30.2
 * gettext 0.18.3.2
 * glib 2.38.2
