@@ -80,7 +80,7 @@ gtk2ver = 2.24.22
 freeglutver = 2.8.1
 gslver = 1.16
 girver = 1.39.0
-gtk3ver = 3.10.6
+gtk3ver = 3.6.4
 
 # Some URLs
 
@@ -943,10 +943,6 @@ $(gtk3mak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(cairodll) $(atkdll) \
 	if test -d $(gtk3dir); then rm -rf $(gtk3dir); fi
 	tar xJf $(gtk3tar)
 	cd $(gtk3dir); \
-	unzip -j ../$(mingw_patches) \
-		MINGW-packages-master/mingw-w64-gtk3/*.patch -d .; \
-	patch -Np1 <0004-BURN-THE-.DEF.patch; \
-	patch -Np1 <0005-Remove-gobject-introspection.patch; \
 	sed -i 's/gtk-update-icon-cache/guic/g' configure.ac; \
 	autoreconf -if; \
 	$(configure) --enable-win32-backend --enable-gtk2-dependency
