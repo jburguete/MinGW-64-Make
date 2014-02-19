@@ -105,9 +105,11 @@ MinGW compilers, libraries and tools
 
 These tools can be 32 or 64 bits depending on the choiced architecture.
 
-   | Stable | Testing | Experimental
--- | ------ | ------- | ------------
+    | Stable | Testing | Experimental
+--- | ------ | ------- | ------------
 atk | 2.10.0 | 2.10.0 | 2.10.0
+
+
 autoconf | 2.69 | 2.69 | 2.69
 automake | 1.4.1 | 1.4.1 | 1.4.1
 cairo | 1.12.16 | 1.12.16 | 1.12.16
