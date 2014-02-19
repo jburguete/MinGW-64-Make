@@ -4,13 +4,11 @@ MinGW-64-Make
 This is a collection of Makefiles and patches to set up a MSYS terminal, a MinGW
 compiler and some useful tools and libraries on Microsoft Windows systems.
 
-More detailed instructions to build it step by step can be consulted in
-tutorial.pdf file.
+Exhaustive instructions to build it step by step can be consulted in
+[tutorial](tutorial.pdf).
 
 INSTRUCTIONS
 ============
-
-Exhaustive instructions step by step can be seen in [tutorial](tutorial.pdf).
 
 1. Install the last version of
 [MSYS](http://sourceforge.net/projects/mingw/files/Installer), selecting only
@@ -49,8 +47,11 @@ For instance:
 INSTALLED TOOLS, COMPILERS AND LIBRARIES
 ========================================
 
-Tools
------
+MSYS Tools
+----------
+
+These tools are 32 bits
+
 * bash 3.1.17
 * bison 2.4.2
 * flex 2.5.35
@@ -73,8 +74,11 @@ Tools
 * xz 5.0.3
 * zip 3.0
 
-Compilers and libraries
------------------------
+MINGW compilers, libraries and tools
+------------------------------------
+
+These tools can be of 32 or 64 bits depending on the choiced architecture.
+
 * atk 2.10.0
 * autoconf 2.69
 * automake 1.4.1
