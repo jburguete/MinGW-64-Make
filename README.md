@@ -10,7 +10,7 @@ Exhaustive instructions to build it step by step can be consulted in
 [tutorial](tutorial.pdf).
 
 Most of patches and building instructions have been extracted from
-[Alexpux](Alexpux).
+[Alexpux](https://github.com/Alexpux).
 
 INSTRUCTIONS
 ============
