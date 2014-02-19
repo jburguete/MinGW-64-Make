@@ -1,11 +1,16 @@
 MinGW-64-Make
 =============
 
-This is a collection of Makefiles and patches to set up a MSYS terminal, a MinGW
-compiler and some useful tools and libraries on Microsoft Windows systems.
+This is a collection of Makefiles and patches to set up a
+[MSYS](http://sourceforge.net/projects/mingw) terminal, a
+[MINGW](http://sourceforge.net/projects/mingw) compiler and some useful tools
+and libraries on Microsoft Windows systems.
 
 Exhaustive instructions to build it step by step can be consulted in
 [tutorial](tutorial.pdf).
+
+Most of patches and building instructions have been extracted from
+[Alexpux](Alexpux).
 
 INSTRUCTIONS
 ============

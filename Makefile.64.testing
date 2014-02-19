@@ -93,8 +93,8 @@ gnomeurl = http://ftp.gnome.org/pub/gnome
 fstab = /etc/fstab
 msys = /bin/zip.exe
 
-msys_patches = MSYS2-packages-master.zip
-mingw_patches = MINGW-packages-master.zip
+msys_patches = MSYS2-packages-master-testing.zip
+mingw_patches = MINGW-packages-master-testing.zip
 
 gccurl = $(sfurl)/mingw-w64/files/Toolchains targetting Win64/Personal Builds/mingw-builds/$(gccver)/threads-win32/seh
 gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev2.7z
@@ -335,12 +335,6 @@ $(msys): $(fstab)
 	unzip -o -q gettext-runtime-dev_0.18.1.1-2_win64.zip; \
 	wget -c -q $(gettextbinurl)/gettext-tools-dev_0.18.1.1-2_win64.zip; \
 	unzip -o -q gettext-tools-dev_0.18.1.1-2_win64.zip
-
-$(msys_patches):
-	wget --no-check-certificate -q "https://github.com/Alexpux/MSYS2-packages/archive/master.zip" -O $(msys_patches)
-
-$(mingw_patches):
-	wget --no-check-certificate -q "https://github.com/Alexpux/MINGW-packages/archive/master.zip" -O $(mingw_patches)
 
 $(gcctar):
 	wget -c -q "$(gccurl)/$(gcctar)"
