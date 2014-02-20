@@ -7,44 +7,48 @@ message3 = Alternative usage is:
 message4 = make -f Makefile.32|64.stable|testing|experimental
 
 all:
-ifneq ($(ARCH),32)
-	$(info $(message1))
-	$(info $(message2))
-	$(info )
-	$(info $(message3))
-	$(info $(message4))
-else
-ifneq ($(ARCH),64)
-	$(info $(message1))
-	$(info $(message2))
-	$(info )
-	$(info $(message3))
-	$(info $(message4))
-else
-ifneq ($(VER),stable)
-	$(info $(message1))
-	$(info $(message2))
-	$(info )
-	$(info $(message3))
-	$(info $(message4))
-else
-ifneq ($(VER),testing)
-	$(info $(message1))
-	$(info $(message2))
-	$(info )
-	$(info $(message3))
-	$(info $(message4))
-else
-ifneq ($(VER),experimental)
-	$(info $(message1))
-	$(info $(message2))
-	$(info )
-	$(info $(message3))
-	$(info $(message4))
-else
+ifeq ($(ARCH),32)
+ifeq ($(VER),stable)
 	make -f Makefile.$(ARCH).$(VER)
+else
+ifeq ($(VER),testing)
+	make -f Makefile.$(ARCH).$(VER)
+else
+ifeq ($(VER),experimental)
+	make -f Makefile.$(ARCH).$(VER)
+else
+	$(info $(message1))
+	$(info $(message2))
+	$(info )
+	$(info $(message3))
+	$(info $(message4))
 endif
 endif
 endif
+else
+ifeq ($(ARCH),64)
+ifeq ($(VER),stable)
+	make -f Makefile.$(ARCH).$(VER)
+else
+ifeq ($(VER),testing)
+	make -f Makefile.$(ARCH).$(VER)
+else
+ifeq ($(VER),experimental)
+	make -f Makefile.$(ARCH).$(VER)
+else
+	$(info $(message1))
+	$(info $(message2))
+	$(info )
+	$(info $(message3))
+	$(info $(message4))
+endif
+endif
+endif
+else
+	$(info $(message1))
+	$(info $(message2))
+	$(info )
+	$(info $(message3))
+	$(info $(message4))
 endif
 endif
