@@ -336,60 +336,68 @@ directory you will must change the makefile to work properly)
 \section{Installing MinGW 64 bits compiler and some useful libraries and tools}
 
 Here we install the following MSYS useful tools:
-\begin{itemize}
-\item bash 3.1.17
-\item bison 2.4.2
-\item flex 2.5.35
-\item gawk 3.1.7
-\item grep 2.5.4
-\item groff 1.20.1
-\item gzip 1.3.12
-\item m4 1.4.16
-\item make 3.81
-\item man 1.6f
-\item openssh 5.4p1
-\item patch 2.6.1
-\item perl 5.8.8
-\item sed 4.2.1
-\item tar 1.23
-\item texinfo 4.13a
-\item unzip 6.0
-\item vim 7.3
-\item wget 1.12
-\item xz 5.0.3
-\item zip 3.0
-\end{itemize}
+\begin{table}[ht!]
+\centering
+\begin{tabular}{lccc}
+Tool&Stable&Testing&Experimental\\
+\hline
+bash & 3.1.17 & 3.1.17 & 3.1.17\\
+bison & 2.4.2 & 2.4.2 & 2.4.2\\
+flex & 2.5.35 & 2.5.35 & 2.5.35\\
+gawk & 3.1.7 & 3.1.7 & 3.1.7\\
+grep & 2.5.4 & 2.5.4 & 2.5.4\\
+groff & 1.20.1 & 1.20.1 & 1.20.1\\
+gzip & 1.3.12 & 1.3.12 & 1.3.12\\
+m4 & 1.4.16 & 1.4.16 & 1.4.16\\
+make & 3.81 & 3.81 & 3.81\\
+man & 1.6f & 1.6f & 1.6f\\
+openssh & 5.4p1 & 5.4p1 & 5.4p1\\
+patch & 2.6.1 & 2.6.1 & 2.6.1\\
+perl & 5.8.8 & 5.8.8 & 5.8.8\\
+sed & 4.2.1 & 4.2.1 & 4.2.1\\
+tar & 1.23 & 1.23 & 1.23\\
+texinfo & 4.13a & 4.13a & 4.13a\\
+unzip & 6.0 & 6.0 & 6.0\\
+vim & 6.0 & 6.0 & 7.3\\
+wget & 1.12 & 1.12 & 1.12\\
+xz & 5.0.3 & 5.0.3 & 5.0.3\\
+zip & 3.0 & 3.0 & 3.0
+\end{tabular}
+\end{table}
 
 with the MinGW 64 bits compilers and the following useful libraries:
-\begin{itemize}
-\item atk 2.10.0
-\item autoconf 2.69
-\item automake 1.4.1
-\item cairo 1.12.16
-\item expat 2.1.0
-\item fontconfig 2.11.0
-\item freeglut 2.8.1
-\item freetype 2.5.2
-\item gcc 4.8.2 (C, C++, Objective C, and FORTRAN compilers)
-\item gdk\_pixbuf 2.30.2
-\item gettext 0.18.3.2
-\item glib 2.38.2
-\item gsl 1.16
-\item gtk+ 2.24.22 and 3.10.6
-\item libffi 3.0.13
-\item libiconv 1.14
-\item libpng 1.6.8
-\item libtool 2.4.2
-\item libxml 2.9.1
-\item pango 1.36.2
-\item pixman 0.32.4
-\item pkg-config 0.28
-\item python 2.7.6
-\item readline 6.2
-\item sqlite 3.8.3
-\item termcap 1.3.1
-\item zlib 1.2.8
-\end{itemize}
+\begin{tabular}{lccc}
+Tool&Stable&Testing&Experimental\\
+\hline
+atk & 2.10.0 & 2.10.0 & 2.10.0\\
+autoconf & 2.69 & 2.69 & 2.69\\
+automake & 1.4.1 & 1.4.1 & 1.4.1\\
+cairo & 1.12.16 & 1.12.16 & 1.12.16\\
+expat & 2.1.0 & 2.1.0 & 2.1.0\\
+fontconfig & 2.11.0 & 2.11.0 & 2.11.0\\
+freeglut & 2.8.1 & 2.8.1 & 2.8.1\\
+freetype & 2.5.2 & 2.5.2 & 2.5.2\\
+gcc (C, C++, Objective C, and FORTRAN compilers) & 4.8.2  & 4.8.2  & 4.8.2\\
+gdk\_pixbuf & 2.30.2 & 2.30.2 & 2.30.2\\
+gettext & 0.18.3.2 & 0.18.3.2 & 0.18.3.2\\
+glib & 2.38.2 & 2.38.2 & 2.38.2\\
+gsl & 1.16 & 1.16 & 1.16\\
+gtk+2 & 2.24.22 & 2.24.22 & 2.24.22\\
+gtk+3 & 3.10.6 & 3.10.6 & 3.10.6\\
+libffi & 3.0.13 & 3.0.13 & 3.0.13\\
+libiconv & 1.14 & 1.14 & 1.14\\
+libpng & 1.6.8 & 1.6.8 & 1.6.8\\
+libtool & 2.4.2 & 2.4.2 & 2.4.2\\
+libxml & 2.9.1 & 2.9.1 & 2.9.1\\
+pango & 1.36.2 & 1.36.2 & 1.36.2\\
+pixman & 0.32.4 & 0.32.4 & 0.32.4\\
+pkg-config & 0.28 & 0.28 & 0.28\\
+python & 2.7.6 & 2.7.6 & 2.7.6\\
+readline & 6.2 & 6.2 & 6.2\\
+sqlite & 3.8.3 & 3.8.3 & 3.8.3\\
+termcap & 1.3.1 & 1.3.1 & 1.3.1\\
+zlib & 1.2.8 & 1.2.8 & 1.2.8
+\end{tabular}
 
 \begin{enumerate}
 

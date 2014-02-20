@@ -152,7 +152,7 @@ figures = $(msys_eps) $(sevenzip_eps) $(git_eps) $(mpi_eps) $(mingw_eps) \
 ../tutorial.pdf: tutorial.tex makefile $(figures)
 	latex tutorial
 	latex tutorial
-	dvipdf tutorial ../tutorial.pdf
+	dvipdfmx -o ../tutorial.pdf tutorial.dvi
 
 $(msys_eps): $(msys_png)
 	./script msys
