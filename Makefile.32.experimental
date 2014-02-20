@@ -678,9 +678,9 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	LIBFFI_INCLUDEDIR=`pkg-config --cflags libffi | sed 's/-I//'` \
 	PKG_CONFIG_PATH=$(pkg_config_path) \
 	CC=$(cc) CXX=$(cxx) \
-	CPPFLAGS='$(cppflags) -I$(libdir)/libffi-3.0.13/include' \
-	CFLAGS='-fwrapv -D__USE_MINGW_ANSI_STDIO=1 $(cflags) -I$(libdir)/libffi-3.0.13/include' \
-	CXXFLAGS='-fwrapv -D__USE_MINGW_ANSI_STDIO=1 $(cflags) -I$(libdir)/libffi-3.0.13/include' \
+	CPPFLAGS='$(cppflags) -I$(libdir)/libffi-$(libffiver)/include' \
+	CFLAGS='-fwrapv -D__USE_MINGW_ANSI_STDIO=1 $(cflags) -I$(libdir)/libffi-$(libffiver)/include' \
+	CXXFLAGS='-fwrapv -D__USE_MINGW_ANSI_STDIO=1 $(cflags) -I$(libdir)/libffi-$(libffiver)/include' \
 	LDFLAGS='-L. $(ldflags) -lm -lexpat -lffi -lreadline' \
 	PYTHON_FOR_BUILD='python.exe' \
 	configure --prefix=$(prefix) --disable-debug --enable-shared \
