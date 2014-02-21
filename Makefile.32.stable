@@ -974,8 +974,9 @@ $(gtk3mak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(cairodll) $(atkdll) \
 	tar xJf $(gtk3tar)
 	cd $(gtk3dir); \
 	sed -i 's/gtk-update-icon-cache/guic/g' configure.ac; \
-	autoreconf -if; \
-	$(configure) --enable-win32-backend --enable-gtk2-dependency
+	$(configure) --enable-win32-backend --enable-gtk2-dependency; \
+	patch -p0 <../gtk+-3.6.4-gtk-launch.patch
+	#autoreconf -if; \
 
 $(gtk3dll): $(gtk3mak)
 	cd $(gtk3dir); make GTK_UPDATE_ICON_CACHE=guic && make $(install) && \
