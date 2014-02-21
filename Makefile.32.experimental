@@ -333,7 +333,7 @@ $(msys): $(fstab)
 	unzip -o -q gettext-runtime_0.18.1.1-2_win32.zip; \
 	wget -c -q $(gettextbinurl)/gettext-runtime-dev_0.18.1.1-2_win32.zip; \
 	unzip -o -q gettext-runtime-dev_0.18.1.1-2_win32.zip; \
-	wget -c -q $(gettexbinturl)/gettext-tools-dev_0.18.1.1-2_win32.zip; \
+	wget -c -q $(gettextbinurl)/gettext-tools-dev_0.18.1.1-2_win32.zip; \
 	unzip -o -q gettext-tools-dev_0.18.1.1-2_win32.zip
 
 $(msys_patches):
