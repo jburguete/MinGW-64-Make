@@ -665,8 +665,8 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	patch -p1 <0850-cross-PYTHON_FOR_BUILD-gteq-276-and-fullpath-it.patch; \
 	patch -p1 <1000-dont-link-with-gettext.patch; \
 	patch -p1 <1010-ctypes-python-dll.patch; \
-	patch -p1 <../python-2.7.6-DBL_EPSILON.patch; \
-	patch -p1 <../python-2.7.6-empty-DESTDIR.patch; \
+	patch -p0 <../python-2.7.6-DBL_EPSILON.patch; \
+	patch -p0 <../python-2.7.6-empty-DESTDIR.patch; \
 	autoreconf -if; \
 	sed -i '/progname =/s/python/python2.7/' Python/pythonrun.c; \
 	sed -i '/SQLITE_OMIT_LOAD_EXTENSION/d' setup.py; \

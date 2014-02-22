@@ -1,14 +1,13 @@
-diff -Naur a/Modules/_math.c b/Modules/_math.c
---- a/Modules/_math.c	2014-02-10 01:29:42 +0000
-+++ b/Modules/_math.c	2014-02-10 01:29:42 +0000
-@@ -9,6 +9,10 @@
- #  define USE_MINGWEX_MATH
- #endif
+--- Modules/_math.c	2013-11-10 07:36:41 +0000
++++ Modules/_math.c.new	2014-02-22 08:38:21 +0000
+@@ -5,6 +5,10 @@
+ #include <float.h>
+ #include "_math.h"
  
 +#ifndef DBL_EPSILON
 +#define DBL_EPSILON 2.2204460492503131e-16
 +#endif
 +
- #ifdef USE_MINGWEX_MATH
- /* To avoid problems with many MSVCRT implementations we will
-  * use a work-around
+ /* The following copyright notice applies to the original
+    implementations of acosh, asinh and atanh. */
+ 
