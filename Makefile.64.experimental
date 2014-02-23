@@ -791,7 +791,7 @@ $(fontconfigmak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) \
 	unzip -j ../$(mingw_patches) \
 		MINGW-packages-master/mingw-w64-fontconfig/*.patch -d .; \
 	patch -p1 <fontconfig-2.11.0-symlinks-fix.patch; \
-	patch -p1 <fontconfig-2.11.0-undefined-_mm_mfence.patch; \
+	patch -p1 <../fontconfig-2.11.0-undefined-_mm_mfence.patch; \
 	autoreconf -if; \
 	$(configure) --enable-iconv --enable-libxml2 --disable-docs \
 		as_ln_s="cp -pR"; \
