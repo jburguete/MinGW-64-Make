@@ -51,7 +51,6 @@ configure = PKG_CONFIG_PATH='$(pkg_config_path)' \
 # Versions
 
 gccver = 4.8.2
-m4ver = 1.4.17
 libtoolver = 2.4.2
 autoconfver = 2.69
 automakever = 1.14.1
@@ -65,16 +64,16 @@ termcapver = 1.3.1
 readlinever = 6.2
 sqlitever = 3080300
 pythonver = 2.7.6
-glibver = 2.38.2
+glibver = 2.39.4
 gettextver = 0.18.3.2
-libpngver = 1.6.8
+libpngver = 1.6.9
 freetypever = 2.5.2
 fontconfigver = 2.11.0
 pixmanver = 0.32.4
 cairover = 1.12.16
-atkver = 2.10.0
+atkver = 2.11.6
 pangover = 1.36.2
-gdk_pixbufver = 2.30.3
+gdk_pixbufver = 2.30.5
 hicolorver = 0.12
 gtk2ver = 2.24.22
 freeglutver = 2.8.1
@@ -99,13 +98,6 @@ mingw_patches = MINGW-packages-master.zip
 gccurl = $(sfurl)/mingw-w64/files/Toolchains targetting Win64/Personal Builds/mingw-builds/$(gccver)/threads-win32/seh
 gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev2.7z
 gccexe = $(bindir)/gcc.exe
-
-#m4url = $(gnuurl)/m4/$(m4tar)
-#m4dir = m4-$(m4ver)/
-#m4tar = m4-$(m4ver).tar.xz
-#m4mak = $(m4dir)Makefile
-#m4exe = $(bindir)/m4.exe
-#m4exe = /bin/m4.exe
 
 libtoolurl = $(gnuurl)/libtool
 libtooldir = libtool-$(libtoolver)
@@ -201,6 +193,7 @@ gettextdll = $(bindir)/libintl-8.dll
 libpngurl = $(sfurl)/libpng/files/libpng16
 libpngdir = libpng-$(libpngver)
 libpngtar = libpng-$(libpngver).tar.xz
+libpngpatch = libpng-$(libpngver)-apng.patch
 libpngmak = $(libpngdir)/Makefile
 libpngdll = $(bindir)/libpng16-16.dll
 
@@ -287,7 +280,6 @@ mpidll = $(bindir)/msmpi.dll
 all = \
 	$(msys) \
 	$(gccexe) \
-	$(m4exe) \
 	$(libtoolexe) \
 	$(autoconfexe) \
 	$(automakeexe) \
@@ -328,7 +320,7 @@ $(msys): $(fstab)
 	mingw-get install msys-unzip msys-wget msys-perl msys-patch msys-flex \
 		msys-bison msys-m4 msys-vim msys-openssh msys-man msys-zip
 	touch $(msys)
-	cd /mingw; \
+	cd $(prefix); \
 	wget -c -q $(gettextbinurl)/gettext-runtime_0.18.1.1-2_win64.zip; \
 	unzip -o -q gettext-runtime_0.18.1.1-2_win64.zip; \
 	wget -c -q $(gettextbinurl)/gettext-runtime-dev_0.18.1.1-2_win64.zip; \
@@ -355,24 +347,6 @@ $(gccexe): $(gcctar) $(msys_patches) $(mingw_patches)
 	rm -rf $(prefix)/opt
 	touch $(gccexe)
 
-#$(m4tar):
-#	wget -c -q $(gnuurl)/m4/$(m4tar)
-#	touch $(m4tar)
-
-#$(m4mak): $(gccexe) $(m4tar)
-#	tar xJf $(m4tar)
-#	cd $(m4dir); \
-#	unzip -j ../$(msys_patches) \
-#		MSYS2-packages-master/m4/*.patch -d .; \
-#	patch -p1 <m4-1.4.17-msys2.patch; \
-#	patch -p1 <../m4-1.4.17-Makefiles.patch; \
-#	$(configure) ac_cv_header_spawn_h=no
-
-#$(m4exe): #$(m4mak)
-#	cd $(m4dir); make && make $(install) && make clean
-#	mingw-get remove msys-m4
-#	rm $(prefix)/var/cache/mingw-get/packages/m4-*
-
 $(libtooltar):
 	wget -c -q $(libtoolurl)/$(libtooltar)
 	touch $(libtooltar)
@@ -396,7 +370,7 @@ $(autoconftar):
 	wget -c -q $(autoconfurl)/$(autoconftar)
 	touch $(autoconftar)
 
-$(autoconfmak): $(gccexe) $(m4exe) $(libtoolexe) $(autoconftar)
+$(autoconfmak): $(gccexe) $(libtoolexe) $(autoconftar)
 	if test -d $(autoconfdir); then rm -rf $(autoconfdir); fi
 	tar xJf $(autoconftar)
 	cd $(autoconfdir); \
@@ -413,7 +387,7 @@ $(automaketar):
 	wget -c -q $(automakeurl)/$(automaketar)
 	touch $(automaketar)
 
-$(automakemak): $(gccexe) $(m4exe) $(libtoolexe) $(autoconfexe) $(automaketar)
+$(automakemak): $(gccexe) $(libtoolexe) $(autoconfexe) $(automaketar)
 	if test -d $(automakedir); then rm -rf $(automakedir); fi
 	tar xJf $(automaketar)
 	cd $(automakedir); \
@@ -446,6 +420,14 @@ $(zlibmak): $(gccexe) $(zlibtar)
 	if test -d $(zlibdir); then rm -rf $(zlibdir); fi
 	tar xJf $(zlibtar)
 	cd $(zlibdir); \
+	unzip -j ../$(mingw_patches) \
+		MINGW-packages-master/mingw-w64-zlib/*.patch -d .; \
+	grep -A 24 '^ Copyright' zlib.h > LICENSE; \
+	patch -p2 -i 01-zlib-1.2.7-1-buildsys.mingw.patch; \
+	patch -p2 -i 02-no-undefined.mingw.patch; \
+	patch -p2 -i 03-dont-put-sodir-into-L.mingw.patch; \
+	patch -p2 -i 04-wrong-w8-check.mingw.patch; \
+	patch -p2 -i 05-fix-a-typo.mingw.patch; \
 	cp contrib/amd64/amd64-match.S match.S; \
 	sed 's/CC = \$$(PREFIX)gcc/CC = \$$(PREFIX)gcc $(flags) -DNO_UNDERLINE/g' \
 		win32/Makefile.gcc > Makefile; \
@@ -483,6 +465,7 @@ $(expatmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expattar)
 
 $(expatdll): $(expatmak)
 	cd $(expatdir); make && make install && make clean
+	mv $(prefix)/bin/xmlwf $(prefix)/bin/xmlwf.exe
 
 $(libxmltar):
 	wget -c -q $(libxmlurl)/$(libxmltar)
@@ -519,7 +502,18 @@ $(libxmlmak): $(gccexe) $(automakeexe) $(zlibdll) $(libiconvdll) \
 	patch -p1 <0024-shrext-pyd.mingw.patch; \
 	patch -p1 <0025-mingw-python-dont-remove-dot.patch; \
 	autoreconf -if; \
-	$(configure) --without-python --with-modules --with-threads=win32
+	PKG_CONFIG_PATH='$(pkg_config_path)' \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4 -D__USE_MINGW_ANSI_STDIO=1' \
+	CXXFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4 -D__USE_MINGW_ANSI_STDIO=1' \
+	LDFLAGS='$(ldflags) -Wl,-no-undefined' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static \
+		--without-python --with-modules --with-threads=win32; \
+	pushd $(prefix) > /dev/null; \
+	export PREFIX_DEPS=`pwd -W`; \
+	popd > /dev/null; \
+	find . -type f -name "Makefile" -exec sed -i "s|${PREFIX_DEPS}|$(prefix)|g" {} \;
 
 $(libxmldll): $(libxmlmak)
 	cd $(libxmldir); make && make $(install) && make clean
@@ -531,7 +525,15 @@ $(libffitar):
 $(libffimak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libffitar)
 	if test -d $(libffidir); then rm -rf $(libffidir); fi
 	tar xzf $(libffitar)
-	cd $(libffidir); autoreconf -if; $(configure)
+	cd $(libffidir); \
+	autoreconf -if; \
+	PKG_CONFIG_PATH='$(pkg_config_path)' \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
+	CXXFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
+	LDFLAGS='$(ldflags)' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static
 
 $(libffidll): $(libffimak)
 	cd $(libffidir); make && make $(install) && make clean
@@ -579,7 +581,15 @@ $(sqlitetar):
 $(sqlitemak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(sqlitetar)
 	if test -d $(sqlitedir); then rm -rf $(sqlitedir); fi
 	tar xzf $(sqlitetar)
-	cd $(sqlitedir); autoreconf -if; $(configure)
+	cd $(sqlitedir); autoreconf -if; \
+	PKG_CONFIG_PATH='$(pkg_config_path)' \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -fexceptions -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -DSQLITE_ENABLE_FTS3=3 -DSQLITE_ENABLE_RTREE=1' \
+	CXXFLAGS='$(cflags)' \
+	LDFLAGS='$(ldflags)' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static \
+		--enable-threadsafe
 
 $(sqlitedll): $(sqlitemak)
 	cd $(sqlitedir); make && make $(install) && make clean
@@ -665,28 +675,29 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	patch -p1 <0850-cross-PYTHON_FOR_BUILD-gteq-276-and-fullpath-it.patch; \
 	patch -p1 <1000-dont-link-with-gettext.patch; \
 	patch -p1 <1010-ctypes-python-dll.patch; \
+	patch -p1 <1020-gdbm-module-includes.patch; \
 	patch -p0 <../python-2.7.6-DBL_EPSILON.patch; \
 	patch -p0 <../python-2.7.6-empty-DESTDIR.patch; \
 	autoreconf -if; \
-	sed -i '/progname =/s/python/python2.7/' Python/pythonrun.c; \
 	sed -i '/SQLITE_OMIT_LOAD_EXTENSION/d' setup.py; \
+	sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python2|" Lib/cgi.py; \
 	sed -i 's/python2.3/python2/g' Lib/distutils/tests/test_build_scripts.py \
 		Lib/distutils/tests/test_install_scripts.py \
 		Tools/scripts/gprof2html.py; \
 	echo \"\" > Parser/pgen.stamp; \
 	rm -rf Modules/{expat,zlib,_ctypes/{darwin,libffi}*}; \
-	ac_cv_working_tzset=no \
 	LIBFFI_INCLUDEDIR=`pkg-config --cflags libffi | sed 's/-I//'` \
 	PKG_CONFIG_PATH=$(pkg_config_path) \
 	CC=$(cc) CXX=$(cxx) \
 	CPPFLAGS='$(cppflags) -I$(libdir)/libffi-$(libffiver)/include' \
-	CFLAGS='-fwrapv -D__USE_MINGW_ANSI_STDIO=1 $(cflags) -I$(libdir)/libffi-$(libffiver)/include' \
-	CXXFLAGS='-fwrapv -D__USE_MINGW_ANSI_STDIO=1 $(cflags) -I$(libdir)/libffi-$(libffiver)/include' \
+	CFLAGS='$(cflags) -fwrapv -D__USE_MINGW_ANSI_STDIO=1 $(cflags) -I$(libdir)/libffi-$(libffiver)/include' \
+	CXXFLAGS='$(cflags) -fwrapv -D__USE_MINGW_ANSI_STDIO=1 $(cflags) -I$(libdir)/libffi-$(libffiver)/include' \
 	LDFLAGS='-L. $(ldflags) -lm -lexpat -lffi -lreadline' \
 	PYTHON_FOR_BUILD='python.exe' \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
 		--build=mingw32 --with-threads --with-system-expat --with-system-ffi; \
+		ac_cv_working_tzset=no
 
 $(pythondll): $(pythonmak)
 	cd $(pythondir); make && make install && make clean
@@ -702,14 +713,25 @@ $(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(pkgconfigexe) $(libffidll) \
 	cd $(glibdir); \
 	unzip -j ../$(mingw_patches) \
 		MINGW-packages-master/mingw-w64-glib2/*.patch -d .; \
-	patch -Np1 <0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch; \
-	patch -Np0 <glib-send-log-messages-to-correct-stdout-and-stderr.patch; \
-	patch -Np1 <glib-prefer-constructors-over-D11Main.patch; \
-	$(configure) --with-threads=win32 --with-python=$(python)
+	patch -Np1 -i "0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch"; \
+	patch -Np0 -i "glib-send-log-messages-to-correct-stdout-and-stderr.patch"; \
+	patch -Np1 -i "glib-prefer-constructors-over-DllMain.patch"; \
+	patch -Np1 -i "0003-g_abort.all.patch"; \
+	patch -Np1 -i "0014-fix-gtkdoc.all.patch"; \
+	patch -Np1 -i "0015-fix-stat.all.patch"; \
+	patch -Np1 -i "0016-fix-separators-in-compiled-resources.mingw.patch"; \
+	NOCONFIGURE=1 sh autogen.sh; \
+	PKG_CONFIG_PATH=$(pkg_config_path) \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
+	CXXFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
+	LDFLAGS='$(ldflags)' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static \
+		--with-xml-catalog=$(prefix)/etc/xml/catalog
 
 $(glibdll): $(glibmak)
 	cd $(glibdir); make && make $(install) && make clean
-	cp -a $(prefix)/share/glib-2.0/codegen $(libdir)/python2.7
 	sed -i 's,-L=*$(unit)[^ '\'']* ,,g' \
 		$(libdir)/libgio-2.0.la $(libdir)/libgobject-2.0.la
 	sed -i 's,-L=*$(unit)[^ '\'']*'\'','\'',g' \
@@ -741,23 +763,29 @@ $(gettextmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libiconvdll) \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
 		--enable-threads=windows --disable-java --disable-native-java \
-		--disable-csharp --without-emacs --disable-openmp --without-cvs \
+		--disable-csharp --without-emacs --without-cvs \
 		--without-git --with-included-libcroco --with-included-libunistring \
 		--with-included-libxml --with-included-glib
 
 $(gettextdll): $(gettextmak)
 	cd $(gettextdir); make && make $(install) && make clean
-	rm $(prefix)/gettext*.zip
+	-rm $(prefix)/gettext*.zip
 
 $(libpngtar):
 	-wget -c -q $(libpngurl)/older-releases/$(libpngver)/$(libpngtar)
 	-wget -c -q $(libpngurl)/$(libpngver)/$(libpngtar)
+	-wget -c -q $(libpngurl)/older-releases/$(libpngver)/$(libpngpatch).gz
+	-wget -c -q $(libpngurl)/$(libpngver)/$(libpngpatch).gz
+	gunzip $(libpngpatch).gz
 	touch $(libpngtar)
 
 $(libpngmak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) $(libpngtar)
 	if test -d $(libpngdir); then rm -rf $(libpngdir); fi
 	tar xJf $(libpngtar)
-	cd $(libpngdir); autoreconf -if; $(configure) as_ln_s="cp -pR"
+	cd $(libpngdir); \
+	patch -p1 <../$(libpngpatch); \
+	autoreconf -if; \
+	$(configure) as_ln_s="cp -pR"
 
 $(libpngdll): $(libpngmak)
 	cd $(libpngdir); make && make $(install) && make clean
@@ -774,7 +802,7 @@ $(freetypemak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypetar)
 		MINGW-packages-master/mingw-w64-freetype/*.patch -d .; \
 	patch -Np1 <freetype-2.2.1-enable-valid.patch; \
 	patch -Np1 <freetype-2.5.1-enable-spr.patch; \
-	$(configure)
+	$(configure) --with-zlib=$(prefix)
 
 $(freetypedll): $(freetypemak)
 	cd $(freetypedir); make && make install && make clean
@@ -810,7 +838,7 @@ $(pixmantar):
 $(pixmanmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(pixmantar)
 	if test -d $(pixmandir); then rm -rf $(pixmandir); fi
 	tar xzf $(pixmantar)
-	cd $(pixmandir); autoreconf -if; $(configure)
+	cd $(pixmandir); autoreconf -if; $(configure) --disable-gtk
 
 $(pixmandll): $(pixmanmak)
 	cd $(pixmandir); make && make $(install) && make clean
@@ -823,9 +851,23 @@ $(cairomak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) $(glibdll) \
 	$(libpngdll) $(freetypedll) $(fontconfigdll) $(pixmandll) $(cairotar)
 	if test -d $(cairodir); then rm -rf $(cairodir); fi
 	tar xJf $(cairotar)
-	cd $(cairodir); autoreconf -if; \
-	$(configure) --enable-win32 --enable-win32-font; \
-	sed -i "s/deplibs_check_method=.*/deplibs_check_method=pass_all/g" libtool
+	cd $(cairodir); \
+	unzip -j ../$(mingw_patches) \
+		MINGW-packages-master/mingw-w64-cairo/*.patch -d .; \
+	patch -p1 -i 0001-no-need-to-define-ssize_t-on.v2.mingw.patch; \
+	patch -p1 -i 0009-standalone-headers.mingw.patch; \
+	patch -p1 -i 0010-binary-mode-in-any2ppm.mingw.patch; \
+	patch -p1 -i 0012-more-binary-mode.mingw.patch; \
+	autoreconf -if; \
+	lt_cv_deplibs_check_method='pass_all' \
+	PKG_CONFIG_PATH='$(pkg_config_path)' \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags)' \
+	LDFLAGS='$(ldflags)' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static \
+		--enable-win32 --enable-win32-font --enable-png --enable-gobject \
+		--enable-tee --disable-xlib --disable-xcb --enable-fc --enable-ft
 
 $(cairodll): $(cairomak)
 	cd $(cairodir); make && make $(install) && make clean
@@ -839,7 +881,19 @@ $(atktar):
 $(atkmak): $(gccexe) $(pkgconfigexe) $(glibdll) $(atktar)
 	if test -d $(atkdir); then rm -rf $(atkdir); fi
 	tar xJf $(atktar)
-	cd $(atkdir); $(configure)
+	cd $(atkdir); \
+	unzip -j ../$(mingw_patches) \
+		MINGW-packages-master/mingw-w64-atk/*.patch -d .; \
+	patch -p1 -i 0001-create-libdir.mingw.patch; \
+	patch -p1 -i 0002-fix-gtkdoc.all.patch; \
+	patch -p1 -i 0003-give-cc-to-git-scanner.mingw.patch; \
+	PKG_CONFIG_PATH='$(pkg_config_path)' \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags)' \
+	LDFLAGS='$(ldflags)' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static \
+		--enable-introspection --disable-glibtest
 
 $(atkdll): $(atkmak)
 	cd $(atkdir); make && make $(install) && make clean
@@ -854,7 +908,27 @@ $(pangomak): $(gccexe) $(pkgconfigexe) $(glibdll) $(freetypedll) \
 	$(fontconfigdll) $(cairodll) $(pangotar)
 	if test -d $(pangodir); then rm -rf $(pangodir); fi
 	tar xJf $(pangotar)
-	cd $(pangodir); $(configure)
+	cd $(pangodir); \
+	unzip -j ../$(mingw_patches) \
+		MINGW-packages-master/mingw-w64-pango/*.patch -d .; \
+	patch -p1 -i 0001-no-unconditional-xft-please.all.patch; \
+	patch -p1 -i 0002-msvc-is-impotent-but-not.mingw.patch; \
+	patch -p1 -i 0005-fix-gtkdoc.all.patch; \
+	patch -p1 -i 0006-give-cc-to-gir-scanner.mingw.patch; \
+	patch -p1 -i 0007-include-freetype.mingw.patch; \
+	patch -p1 -i 0008-allow-backend-selection.mingw.patch; \
+	patch -p1 -i 0009-pango_enable_static_build.patch; \
+	patch -p1 -i 0010-pangocairo-gir-add-cairo.patch; \
+	autoreconf -if; \
+	sed -i 's/have_libthai=true/have_libthai=false/' configure; \
+	PKG_CONFIG_PATH='$(pkg_config_path)' \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -mms-bitfields -I$(prefix)/include/cairo' \
+	CXXFLAGS='$(cflags) -mms-bitfields' LDFLAGS='$(ldflags)' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static \
+		--with-included-modules=yes --with-dynamic-modules=no \
+		--enable-introspection
 
 $(pangodll): $(pangomak)
 	cd $(pangodir); make && make $(install) && make clean
@@ -869,7 +943,18 @@ $(gdk_pixbufmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(glibdll) \
 	$(libpngdll) $(gdk_pixbuftar)
 	if test -d $(gdk_pixbufdir); then rm -rf $(gdk_pixbufdir); fi
 	tar xJf $(gdk_pixbuftar)
-	cd $(gdk_pixbufdir); autoreconf -if; $(configure)
+	cd $(gdk_pixbufdir); \
+	unzip -j ../$(mingw_patches) \
+		MINGW-packages-master/mingw-w64-gdk-pixbuf2/*.patch -d .; \
+	patch -p1 -i 0004-give-cc-to-gir-scanner.all.patch; \
+	autoreconf -if;
+	PKG_CONFIG_PATH='$(pkg_config_path)' \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags) -mms-bitfields' \
+	LDFLAGS='$(ldflags)' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static \
+		--enable-introspection
 
 $(gdk_pixbufdll): $(gdk_pixbufmak)
 	cd $(gdk_pixbufdir); make && make $(install) && make clean
