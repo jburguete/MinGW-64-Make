@@ -707,7 +707,7 @@ $(pythondll): $(pythonmak)
 	cd $(pythondir); make && make install && make clean
 	mv $(baddir)/bin/* $(prefix)/bin
 	rmdir $(baddir)/bin
-	rmdir $(prefix)/lib/python$(basename $(pythonver))/lib-dynload
+	rm -rf $(prefix)/lib/python$(basename $(pythonver))/lib-dynload
 	mv -f $(baddir)/lib/python$(basename $(pythonver))/* \
 		$(prefix)/lib/python$(basename $(pythonver))
 	rm -rf $(baddir)
@@ -889,8 +889,8 @@ $(girtar):
 	wget -c -q $(girurl)/$(girtar)
 	touch $(girtar)
 
-$(girmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(pythondll) $(glibdll) \
-	$(girtar)
+$(girmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libffidll) $(pythondll) \
+	$(glibdll) $(cairodll) $(girtar)
 	if test -d $(girdir); then rm -rf $(girdir); fi
 	tar xJf $(girtar)
 	cd $(girdir); \
@@ -914,17 +914,17 @@ $(girmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(pythondll) $(glibdll) \
 	patch -p1 <dont-load-msvcrt.patch; \
 	patch -p1 <fix-python-detection.patch; \
 	autoreconf -if; \
+	PYTHON=$(prefix)/bin/python2 PREFIX_DEPS=$(installpath) \
 	PKG_CONFIG_PATH='$(pkg_config_path)' \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
 	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags) -mms-bitfields' \
 	LDFLAGS='$(ldflags)' \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
-		--enable-shared --disable-static \
-		--enable-silent-rules
+		--enable-shared --disable-static
 
 $(girdll): $(girmak)
 	cd $(girdir); \
-	make && make $(install) && make clean
+	make -j1 && make $(install) && make clean
 
 $(atktar):
 	wget -c -q $(atkurl)/$(atktar)
@@ -1102,15 +1102,23 @@ $(gtk3mak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(cairodll) $(atkdll) \
 	cd $(gtk3dir); \
 	unzip -j ../$(mingw_patches) \
 		MINGW-packages-master/mingw-w64-gtk3/*.patch -d .; \
-	patch -Np1 <0004-BURN-THE-.DEF.patch; \
-	patch -Np1 <0005-Remove-gobject-introspection.patch; \
-	sed -i 's/gtk-update-icon-cache/guic/g' configure.ac; \
+	patch -Np1 -i "0001-REBURN-THE-DEF-FILE.mingw.patch"; \
+	patch -Np1 -i "0009-give-cc-to-gir-scanner.mingw.patch"; \
+	patch -Np1 -i "0010-put-gtk-dll-into-path.mingw.patch"; \
+	patch -Np1 -i "0011-gir-for-gdkwin32.mingw.patch"; \
+	patch -Np1 -i "0012-embed-manifest.all.patch"; \
 	autoreconf -if; \
-	$(configure) --enable-win32-backend --enable-gtk2-dependency
+	PKG_CONFIG_PATH='$(pkg_config_path)' \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags) -mms-bitfields' \
+	LDFLAGS='$(ldflags)' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static \
+		--enable-win32-backend --disable-gtk2-dependency \
+		--enable-introspection --disable-cups
 
 $(gtk3dll): $(gtk3mak)
-	cd $(gtk3dir); make GTK_UPDATE_ICON_CACHE=guic && make $(install) && \
-		make clean
+	cd $(gtk3dir); make && make $(install) && make clean
 	sed -i 's,-L=*$(unit):[^ '\'']* ,,g' $(libdir)/libgailutil-3.la \
 		$(libdir)/libgdk-3.la $(libdir)/libgtk-3.la
 	sed -i 's,-L=*$(unit):[^ '\'']*'\'','\'',g' $(libdir)/libgailutil-3.la \
