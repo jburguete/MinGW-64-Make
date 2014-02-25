@@ -193,6 +193,7 @@ gettextdll = $(bindir)/libintl-8.dll
 libpngurl = $(sfurl)/libpng/files/libpng16
 libpngdir = libpng-$(libpngver)
 libpngtar = libpng-$(libpngver).tar.xz
+libpngpatchurl = $(sfurl)/libpng-apng/files/libpng16/$(libpngver)
 libpngpatch = libpng-$(libpngver)-apng.patch
 libpngmak = $(libpngdir)/Makefile
 libpngdll = $(bindir)/libpng16-16.dll
@@ -774,12 +775,14 @@ $(gettextdll): $(gettextmak)
 $(libpngtar):
 	-wget -c -q $(libpngurl)/older-releases/$(libpngver)/$(libpngtar)
 	-wget -c -q $(libpngurl)/$(libpngver)/$(libpngtar)
-	-wget -c -q $(libpngurl)/older-releases/$(libpngver)/$(libpngpatch).gz
-	-wget -c -q $(libpngurl)/$(libpngver)/$(libpngpatch).gz
-	gunzip $(libpngpatch).gz
 	touch $(libpngtar)
 
-$(libpngmak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) $(libpngtar)
+$(libpngpatch):
+	wget -c -q $(libpngpatchurl)/$(libpngpatch).gz
+	gunzip $(libpngpatch).gz
+
+$(libpngmak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) \
+	$(libpngtar) $(libpngpatch)
 	if test -d $(libpngdir); then rm -rf $(libpngdir); fi
 	tar xJf $(libpngtar)
 	cd $(libpngdir); \
@@ -802,7 +805,7 @@ $(freetypemak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypetar)
 		MINGW-packages-master/mingw-w64-freetype/*.patch -d .; \
 	patch -Np1 <freetype-2.2.1-enable-valid.patch; \
 	patch -Np1 <freetype-2.5.1-enable-spr.patch; \
-	$(configure) --with-zlib=$(prefix)
+	$(configure) --with-zlib=$(prefix) --without-png
 
 $(freetypedll): $(freetypemak)
 	cd $(freetypedir); make && make install && make clean
@@ -985,7 +988,14 @@ $(gtk2mak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypedll) \
 	cd $(gtk2dir); \
 	patch -p0 <../gtk+-2.24.22-modules-input-Makefile.in.patch; \
 	sed -i 's/gtk-update-icon-cache/guic/g' gtk/Makefile*; \
-	$(configure) --with-included-immodules=ime --with-gdktarget=win32; \
+	PKG_CONFIG_PATH='$(pkg_config_path)' \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags) -mms-bitfields' \
+	LDFLAGS='$(ldflags)' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static \
+		--with-included-immodules=ime --with-gdktarget=win32; \
+		--disable-cups --disable-papi --disable-glibtest
 	perl ../gtk+64.pl
 
 $(gtk2dll): $(gtk2mak)
@@ -1002,7 +1012,7 @@ $(freegluttar):
 $(freeglutmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(freegluttar)
 	if test -d $(freeglutdir); then rm -rf $(freeglutdir); fi
 	tar xzf $(freegluttar)
-	cd $(freeglutdir); autoreconf -if; $(configure)
+	cd $(freeglutdir); autoreconf -if; $(configure) --without-x
 	
 $(freeglutdll): $(freeglutmak)
 	cd $(freeglutdir); make && make $(install) && make clean
