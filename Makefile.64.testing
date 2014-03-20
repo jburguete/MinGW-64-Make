@@ -97,15 +97,8 @@ msys_patches = MSYS2-packages-master-testing.zip
 mingw_patches = MINGW-packages-master-testing.zip
 
 gccurl = $(sfurl)/mingw-w64/files/Toolchains targetting Win64/Personal Builds/mingw-builds/$(gccver)/threads-win32/seh
-gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev2.7z
+gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev3.7z
 gccexe = $(bindir)/gcc.exe
-
-#m4url = $(gnuurl)/m4/$(m4tar)
-#m4dir = m4-$(m4ver)/
-#m4tar = m4-$(m4ver).tar.xz
-#m4mak = $(m4dir)Makefile
-#m4exe = $(bindir)/m4.exe
-#m4exe = /bin/m4.exe
 
 libtoolurl = $(gnuurl)/libtool
 libtooldir = libtool-$(libtoolver)
@@ -287,7 +280,6 @@ mpidll = $(bindir)/msmpi.dll
 all = \
 	$(msys) \
 	$(gccexe) \
-	$(m4exe) \
 	$(libtoolexe) \
 	$(autoconfexe) \
 	$(automakeexe) \
@@ -348,24 +340,6 @@ $(gccexe): $(gcctar) $(msys_patches) $(mingw_patches)
 	rm -rf mingw64
 	rm -rf $(prefix)/opt
 	touch $(gccexe)
-
-#$(m4tar):
-#	wget -c -q $(gnuurl)/m4/$(m4tar)
-#	touch $(m4tar)
-
-#$(m4mak): $(gccexe) $(m4tar)
-#	tar xJf $(m4tar)
-#	cd $(m4dir); \
-#	unzip -j ../$(msys_patches) \
-#		MSYS2-packages-master/m4/*.patch -d .; \
-#	patch -p1 <m4-1.4.17-msys2.patch; \
-#	patch -p1 <../m4-1.4.17-Makefiles.patch; \
-#	$(configure) ac_cv_header_spawn_h=no
-
-#$(m4exe): #$(m4mak)
-#	cd $(m4dir); make && make $(install) && make clean
-#	mingw-get remove msys-m4
-#	rm $(prefix)/var/cache/mingw-get/packages/m4-*
 
 $(libtooltar):
 	wget -c -q $(libtoolurl)/$(libtooltar)
