@@ -97,7 +97,7 @@ msys_patches = MSYS2-packages-master.zip
 mingw_patches = MINGW-packages-master.zip
 
 gccurl = $(sfurl)/mingw-w64/files/Toolchains targetting Win64/Personal Builds/mingw-builds/$(gccver)/threads-win32/seh
-gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev2.7z
+gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev3.7z
 gccexe = $(bindir)/gcc.exe
 
 libtoolurl = $(gnuurl)/libtool
