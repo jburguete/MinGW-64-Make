@@ -135,51 +135,9 @@ subversion_png = \
 	subversion-10.png \
 	subversion-11.png
 
-msys_eps = msys-21.png.eps
-sevenzip_eps = 7zip-15.png.eps
-git_eps = git-9.png.eps
-mpi_eps = mpi-11.png.eps
-mingw_eps = mingw-5.png.eps
-latex_eps = Latex-11.png.eps
-doxygen_eps = doxygen-13.png.eps
-winmerge_eps = Winmerge-14.png.eps
-gnuplot_eps = GNUPlot-16.png.eps
-subversion_eps = subversion-11.png.eps
-
-figures = $(msys_eps) $(sevenzip_eps) $(git_eps) $(mpi_eps) $(mingw_eps) \
-	$(latex_eps) $(doxygen_eps) $(winmerge_eps) $(gnuplot_eps) $(subversion_eps)
+figures = $(msys_png) $(sevenzip_png) $(git_png) $(mpi_png) $(mingw_png) \
+	$(latex_png) $(doxygen_png) $(winmerge_png) $(gnuplot_png) $(subversion_png)
 
 ../tutorial.pdf: tutorial.tex makefile $(figures)
-	latex tutorial
-	latex tutorial
-	dvipdfmx -o ../tutorial.pdf tutorial.dvi
-
-$(msys_eps): $(msys_png)
-	./script msys
-
-$(sevenzip_eps): $(7zip_png)
-	./script 7zip
-
-$(git_eps): $(git_png)
-	./script git
-
-$(mpi_eps): $(mpi_png)
-	./script mpi
-
-$(mingw_eps): $(mingw_png)
-	./script mingw
-
-$(latex_eps): $(Latex_png)
-	./script Latex
-
-$(doxygen_eps): $(doxygen_png)
-	./script doxygen
-
-$(winmerge_eps): $(Winmerge_png)
-	./script Winmerge
-
-$(gnuplot_eps): $(GNUPlot_png)
-	./script GNUPlot
-
-$(subversion_eps): $(subversion_png)
-	./script subversion
+	pdflatex tutorial
+	pdflatex tutorial
