@@ -63,24 +63,24 @@ libxmlver = 2.9.1
 libffiver = 3.0.13
 termcapver = 1.3.1
 readlinever = 6.2
-sqlitever = 3080300
+sqlitever = 3080400
 pythonver = 2.7.6
-glibver = 2.39.4
+glibver = 2.39.91
 gettextver = 0.18.3.2
-libpngver = 1.6.9
-freetypever = 2.5.2
+libpngver = 1.6.10
+freetypever = 2.5.3
 fontconfigver = 2.11.0
 pixmanver = 0.32.4
 cairover = 1.12.16
 girver = 1.39.3
-atkver = 2.11.6
+atkver = 2.11.90
 pangover = 1.36.2
-gdk_pixbufver = 2.30.5
+gdk_pixbufver = 2.30.6
 hicolorver = 0.12
 gtk2ver = 2.24.22
 freeglutver = 2.8.1
 gslver = 1.16
-gtk3ver = 3.10.6
+gtk3ver = 3.11.8
 
 # Some URLs
 
@@ -692,8 +692,8 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	PKG_CONFIG_PATH=$(pkg_config_path) \
 	CC=$(cc) CXX=$(cxx) \
 	CPPFLAGS='$(cppflags) -I$(libdir)/libffi-$(libffiver)/include' \
-	CFLAGS='$(cflags) -fwrapv -D__USE_MINGW_ANSI_STDIO=1 $(cflags) -I$(libdir)/libffi-$(libffiver)/include' \
-	CXXFLAGS='$(cflags) -fwrapv -D__USE_MINGW_ANSI_STDIO=1 $(cflags) -I$(libdir)/libffi-$(libffiver)/include' \
+	CFLAGS='$(cflags) -fwrapv -D__USE_MINGW_ANSI_STDIO=1 -I$(libdir)/libffi-$(libffiver)/include' \
+	CXXFLAGS='$(cflags) -fwrapv -D__USE_MINGW_ANSI_STDIO=1 -I$(libdir)/libffi-$(libffiver)/include' \
 	LDFLAGS='-L. $(ldflags) -lm -lexpat -lffi -lreadline' \
 	PYTHON_FOR_BUILD='python.exe' \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
@@ -724,11 +724,12 @@ $(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(pkgconfigexe) $(libffidll) \
 	unzip -j ../$(mingw_patches) \
 		MINGW-packages-master/mingw-w64-glib2/*.patch -d .; \
 	patch -Np1 -i "0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch"; \
-	patch -Np0 -i "glib-send-log-messages-to-correct-stdout-and-stderr.patch"; \
-	patch -Np1 -i "glib-prefer-constructors-over-DllMain.patch"; \
+	patch -Np1 -i "0004-glib-prefer-constructors-over-DllMain.patch"; \
+	patch -Np0 -i "0005-glib-send-log-messages-to-correct-stdout-and-stderr.patch"; \
 	patch -Np1 -i "0003-g_abort.all.patch"; \
 	patch -Np1 -i "0015-fix-stat.all.patch"; \
 	patch -Np1 -i "0016-fix-separators-in-compiled-resources.mingw.patch"; \
+	patch -Np1 -i "0017-glib-use-gnu-print-scanf.patch"; \
 	NOCONFIGURE=1 sh autogen.sh; \
 	PKG_CONFIG_PATH=$(pkg_config_path) \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
@@ -766,8 +767,8 @@ $(gettextmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libiconvdll) \
 	autoreconf -if; \
 	PKG_CONFIG_PATH='$(pkg_config_path)' \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
-	CFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
-	CXXFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
+	CFLAGS='$(cflags) -D__USE_MINGW_ANSI_STDIO=1 -fexceptions --param=ssp-buffer-size=4' \
+	CXXFLAGS='$(cflags) -D__USE_MINGW_ANSI_STDIO=1 -fexceptions --param=ssp-buffer-size=4' \
 	LDFLAGS='$(ldflags)' \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
@@ -813,7 +814,7 @@ $(freetypemak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypetar)
 		MINGW-packages-master/mingw-w64-freetype/*.patch -d .; \
 	patch -Np1 <freetype-2.2.1-enable-valid.patch; \
 	patch -Np1 <freetype-2.5.1-enable-spr.patch; \
-	$(configure) --with-zlib=$(prefix) --without-png
+	$(configure) --with-zlib=$(prefix)
 
 $(freetypedll): $(freetypemak)
 	cd $(freetypedir); make && make install && make clean
@@ -914,7 +915,10 @@ $(girmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libffidll) $(pythondll) \
 	patch -p1 <dont-load-msvcrt.patch; \
 	patch -p1 <fix-python-detection.patch; \
 	autoreconf -if; \
-	PYTHON=$(prefix)/bin/python2 PREFIX_DEPS=$(installpath) \
+	export PYTHON=$(prefix)/bin/python2 \
+	pushd $(prefix) > /dev/null; \
+	export PREFIX_DEPS=`pwd -W`; \
+	popd > /dev/null; \
 	PKG_CONFIG_PATH='$(pkg_config_path)' \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
 	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags) -mms-bitfields' \
@@ -939,6 +943,9 @@ $(atkmak): $(gccexe) $(pkgconfigexe) $(glibdll) $(girdll) $(atktar)
 	patch -p1 -i 0001-create-libdir.mingw.patch; \
 	patch -p1 -i 0002-fix-gtkdoc.all.patch; \
 	patch -p1 -i 0003-give-cc-to-git-scanner.mingw.patch; \
+	patch -p1 -i 0004-export-missing-symbol.all.patch; \
+	patch -p1 -i 0005-export-by-regex.all.patch; \
+	autoreconf -if; \
 	PKG_CONFIG_PATH='$(pkg_config_path)' \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
 	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags)' \
@@ -998,6 +1005,8 @@ $(gdk_pixbufmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(glibdll) \
 	cd $(gdk_pixbufdir); \
 	unzip -j ../$(mingw_patches) \
 		MINGW-packages-master/mingw-w64-gdk-pixbuf2/*.patch -d .; \
+	patch -p1 -i 0002-A-hack-to-fix-export-symbols.mingw.patch; \
+	patch -p1 -i 0003-use-free-software-libs-on.mingw.patch; \
 	patch -p1 -i 0004-give-cc-to-gir-scanner.all.patch; \
 	autoreconf -if;
 	PKG_CONFIG_PATH='$(pkg_config_path)' \
@@ -1107,7 +1116,9 @@ $(gtk3mak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(cairodll) $(atkdll) \
 	patch -Np1 -i "0010-put-gtk-dll-into-path.mingw.patch"; \
 	patch -Np1 -i "0011-gir-for-gdkwin32.mingw.patch"; \
 	patch -Np1 -i "0012-embed-manifest.all.patch"; \
+	patch -Np1 -i "0014-fix-gnu-print-format.patch"; \
 	autoreconf -if; \
+	export MSYS2_ARG_CONV_EXCL="-//OASIS"; \
 	PKG_CONFIG_PATH='$(pkg_config_path)' \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
 	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags) -mms-bitfields' \
@@ -1118,7 +1129,8 @@ $(gtk3mak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(cairodll) $(atkdll) \
 		--enable-introspection --disable-cups
 
 $(gtk3dll): $(gtk3mak)
-	cd $(gtk3dir); make && make $(install) && make clean
+	export MSYS2_ARG_CONV_EXCL="-//OASIS"; \
+	cd $(gtk3dir); make -j1 && make $(install) && make clean
 	sed -i 's,-L=*$(unit):[^ '\'']* ,,g' $(libdir)/libgailutil-3.la \
 		$(libdir)/libgdk-3.la $(libdir)/libgtk-3.la
 	sed -i 's,-L=*$(unit):[^ '\'']*'\'','\'',g' $(libdir)/libgailutil-3.la \
