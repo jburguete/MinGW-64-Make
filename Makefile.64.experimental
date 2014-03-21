@@ -223,7 +223,7 @@ cairotar = cairo-$(cairover).tar.xz
 cairomak = $(cairodir)/Makefile
 cairodll = $(bindir)/libcairo-2.dll
 
-atkurl = $(gnomeurl)/sources/atk/2.10
+atkurl = $(gnomeurl)/sources/atk/$(basename $(atkver))
 atkdir = atk-$(atkver)
 atktar = atk-$(atkver).tar.xz
 atkmak = $(atkdir)/Makefile
@@ -890,7 +890,7 @@ $(atktar):
 	wget -c -q $(atkurl)/$(atktar)
 	touch $(atktar)
 
-$(atkmak): $(gccexe) $(pkgconfigexe) $(glibdll) $(girdll) $(atktar)
+$(atkmak): $(gccexe) $(pkgconfigexe) $(glibdll) $(atktar)
 	if test -d $(atkdir); then rm -rf $(atkdir); fi
 	tar xJf $(atktar)
 	cd $(atkdir); \
@@ -908,7 +908,8 @@ $(atkmak): $(gccexe) $(pkgconfigexe) $(glibdll) $(girdll) $(atktar)
 	LDFLAGS='$(ldflags)' \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
-		--enable-introspection --disable-glibtest
+		--disable-glibtest \
+		#--enable-introspection
 
 $(atkdll): $(atkmak)
 	cd $(atkdir); make && make $(install) && make clean
@@ -943,7 +944,7 @@ $(pangomak): $(gccexe) $(pkgconfigexe) $(glibdll) $(freetypedll) \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
 		--with-included-modules=yes --with-dynamic-modules=no \
-		--enable-introspection
+		#--enable-introspection
 
 $(pangodll): $(pangomak)
 	cd $(pangodir); make && make $(install) && make clean
@@ -971,7 +972,7 @@ $(gdk_pixbufmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(glibdll) \
 	LDFLAGS='$(ldflags)' \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
-		--enable-introspection
+		#--enable-introspection
 
 $(gdk_pixbufdll): $(gdk_pixbufmak)
 	cd $(gdk_pixbufdir); make && make $(install) && make clean
@@ -1021,8 +1022,8 @@ $(gtk2mak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypedll) \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
 		--with-included-immodules=ime --with-gdktarget=win32; \
-		--disable-cups --disable-papi --disable-glibtest \
-		--enable-introspection; \
+		--disable-cups --disable-papi --disable-glibtest; \
+		#--enable-introspection;
 	perl ../gtk+64.pl
 #	sed -i 's/gtk-update-icon-cache/guic/g' gtk/Makefile*; \
 
@@ -1126,7 +1127,8 @@ $(gtk3mak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(cairodll) $(atkdll) \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
 		--enable-win32-backend --disable-gtk2-dependency \
-		--enable-introspection --disable-cups
+		--disable-cups
+		#--enable-introspection 
 
 $(gtk3dll): $(gtk3mak)
 	export MSYS2_ARG_CONV_EXCL="-//OASIS"; \

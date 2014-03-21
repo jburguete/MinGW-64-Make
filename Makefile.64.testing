@@ -223,7 +223,7 @@ cairotar = cairo-$(cairover).tar.xz
 cairomak = $(cairodir)/Makefile
 cairodll = $(bindir)/libcairo-2.dll
 
-atkurl = $(gnomeurl)/sources/atk/2.10
+atkurl = $(gnomeurl)/sources/atk/$(basename $(atkver))
 atkdir = atk-$(atkver)
 atktar = atk-$(atkver).tar.xz
 atkmak = $(atkdir)/Makefile
@@ -868,7 +868,6 @@ $(cairodll): $(cairomak)
 	sed -i 's,-L=*$(unit):[^ '\'']* ,,g' $(libdir)/libcairo*.la
 	sed -i 's,-L=*$(unit):[^ '\'']*'\'','\'',g' $(libdir)/libcairo*.la
 
-
 $(atktar):
 	wget -c -q $(atkurl)/$(atktar)
 	touch $(atktar)
@@ -911,7 +910,7 @@ $(pangomak): $(gccexe) $(pkgconfigexe) $(glibdll) $(freetypedll) \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
 		--with-included-modules=yes --with-dynamic-modules=no \
-		--enable-introspection
+		#--enable-introspection
 
 $(pangodll): $(pangomak)
 	cd $(pangodir); make && make $(install) && make clean
