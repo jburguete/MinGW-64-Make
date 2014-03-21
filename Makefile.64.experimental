@@ -72,7 +72,6 @@ freetypever = 2.5.3
 fontconfigver = 2.11.0
 pixmanver = 0.32.4
 cairover = 1.12.16
-girver = 1.39.3
 atkver = 2.11.90
 pangover = 1.36.2
 gdk_pixbufver = 2.30.6
@@ -80,6 +79,7 @@ hicolorver = 0.12
 gtk2ver = 2.24.22
 freeglutver = 2.8.1
 gslver = 1.16
+girver = 1.39.3
 gtk3ver = 3.11.8
 
 # Some URLs
@@ -223,12 +223,6 @@ cairotar = cairo-$(cairover).tar.xz
 cairomak = $(cairodir)/Makefile
 cairodll = $(bindir)/libcairo-2.dll
 
-girurl = $(gnomeurl)/sources/gobject-introspection/$(basename $(girver))
-girdir = gobject-introspection-$(girver)
-girtar = gobject-introspection-$(girver).tar.xz
-girmak = $(girdir)/Makefile
-girdll = $(bindir)/g-ir-compiler
-
 atkurl = $(gnomeurl)/sources/atk/2.10
 atkdir = atk-$(atkver)
 atktar = atk-$(atkver).tar.xz
@@ -271,6 +265,12 @@ gsltar = gsl-$(gslver).tar.gz
 gslmak = $(gsldir)/Makefile
 gsldll = $(bindir)/libgsl-0.dll
 
+girurl = $(gnomeurl)/sources/gobject-introspection/$(basename $(girver))
+girdir = gobject-introspection-$(girver)
+girtar = gobject-introspection-$(girver).tar.xz
+girmak = $(girdir)/Makefile
+girdll = $(bindir)/g-ir-compiler
+
 gtk3url = $(gnomeurl)/sources/gtk+/$(basename $(gtk3ver))
 gtk3dir = gtk+-$(gtk3ver)
 gtk3tar = gtk+-$(gtk3ver).tar.xz
@@ -302,7 +302,6 @@ all = \
 	$(fontconfigdll) \
 	$(pixmandll) \
 	$(cairodll) \
-	$(girdll) \
 	$(atkdll) \
 	$(pangodll) \
 	$(gdk_pixbufdll) \
@@ -311,7 +310,8 @@ all = \
 	$(freeglutdll) \
 	$(gsldll) \
 	$(gtk3dll) \
-	$(mpidll)
+	$(mpidll) \
+	$(girdll)
 
 all: $(all)
 
@@ -886,50 +886,6 @@ $(cairodll): $(cairomak)
 	sed -i 's,-L=*$(unit):[^ '\'']* ,,g' $(libdir)/libcairo*.la
 	sed -i 's,-L=*$(unit):[^ '\'']*'\'','\'',g' $(libdir)/libcairo*.la
 
-$(girtar):
-	wget -c -q $(girurl)/$(girtar)
-	touch $(girtar)
-
-$(girmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libffidll) $(pythondll) \
-	$(glibdll) $(cairodll) $(girtar)
-	if test -d $(girdir); then rm -rf $(girdir); fi
-	tar xJf $(girtar)
-	cd $(girdir); \
-	unzip -j ../$(mingw_patches) \
-		MINGW-packages-master/mingw-w64-gobject-introspection/*.patch -d .; \
-	patch -p1 <0003-fix-exeext.mingw.patch; \
-	patch -p1 <0005-quote-path.mingw.patch; \
-	patch -p1 <0006-w32-compat.mingw.patch; \
-	patch -p1 <0007-w32-subproc.mingw.patch; \
-	patch -p1 <0008-more.mingw.patch; \
-	patch -p1 <0009-make-libs.mingw.patch; \
-	patch -p1 <0010-fix-gcc-options.mingw.patch; \
-	patch -p1 <0011-exefix.mingw.patch; \
-	patch -p1 <0012-fix-runtime-prefix.mingw.patch; \
-	patch -p1 <0013-parallel-fix.mingw.patch; \
-	patch -p1 <0014-asm-volatile.mingw.patch; \
-	patch -p1 <0015-inline.mingw.patch; \
-	patch -p1 <0016-restrict.mingw.patch; \
-	patch -p1 <0017-correct-exeext.mingw.patch; \
-	patch -p1 <0020-DOS-paths-for-tools.all.patch; \
-	patch -p1 <dont-load-msvcrt.patch; \
-	patch -p1 <fix-python-detection.patch; \
-	autoreconf -if; \
-	export PYTHON=$(prefix)/bin/python2 \
-	pushd $(prefix) > /dev/null; \
-	export PREFIX_DEPS=`pwd -W`; \
-	popd > /dev/null; \
-	PKG_CONFIG_PATH='$(pkg_config_path)' \
-	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
-	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags) -mms-bitfields' \
-	LDFLAGS='$(ldflags)' \
-	configure --prefix=$(prefix) --disable-debug --host=$(host) \
-		--enable-shared --disable-static
-
-$(girdll): $(girmak)
-	cd $(girdir); \
-	make -j1 && make $(install) && make clean
-
 $(atktar):
 	wget -c -q $(atkurl)/$(atktar)
 	touch $(atktar)
@@ -964,7 +920,7 @@ $(pangotar):
 	touch $(pangotar)
 
 $(pangomak): $(gccexe) $(pkgconfigexe) $(glibdll) $(freetypedll) \
-	$(fontconfigdll) $(cairodll) $(girdll) $(pangotar)
+	$(fontconfigdll) $(cairodll) $(pangotar)
 	if test -d $(pangodir); then rm -rf $(pangodir); fi
 	tar xJf $(pangotar)
 	cd $(pangodir); \
@@ -999,7 +955,7 @@ $(gdk_pixbuftar):
 	touch $(gdk_pixbuftar)
 
 $(gdk_pixbufmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(glibdll) \
-	$(libpngdll) $(girdll) $(gdk_pixbuftar)
+	$(libpngdll) $(gdk_pixbuftar)
 	if test -d $(gdk_pixbufdir); then rm -rf $(gdk_pixbufdir); fi
 	tar xJf $(gdk_pixbuftar)
 	cd $(gdk_pixbufdir); \
@@ -1039,7 +995,7 @@ $(gtk2tar):
 	touch $(gtk2tar)
 
 $(gtk2mak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypedll) \
-	$(fontconfigdll) $(glibdll) $(cairodll) $(girdll) $(atkdll) $(pangodll) \
+	$(fontconfigdll) $(glibdll) $(cairodll) $(atkdll) $(pangodll) \
 	$(gdk_pixbufdll) $(gtk2tar)
 	if test -d $(gtk2dir); then rm -rf $(gtk2dir); fi
 	tar xJf $(gtk2tar)
@@ -1100,6 +1056,50 @@ $(gslmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(gsltar)
 
 $(gsldll): $(gslmak)
 	cd $(gsldir); make && make $(install) && make clean
+
+$(girtar):
+	wget -c -q $(girurl)/$(girtar)
+	touch $(girtar)
+
+$(girmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libffidll) $(pythondll) \
+	$(glibdll) $(cairodll) $(girtar)
+	if test -d $(girdir); then rm -rf $(girdir); fi
+	tar xJf $(girtar)
+	cd $(girdir); \
+	unzip -j ../$(mingw_patches) \
+		MINGW-packages-master/mingw-w64-gobject-introspection/*.patch -d .; \
+	patch -p1 <0003-fix-exeext.mingw.patch; \
+	patch -p1 <0005-quote-path.mingw.patch; \
+	patch -p1 <0006-w32-compat.mingw.patch; \
+	patch -p1 <0007-w32-subproc.mingw.patch; \
+	patch -p1 <0008-more.mingw.patch; \
+	patch -p1 <0009-make-libs.mingw.patch; \
+	patch -p1 <0010-fix-gcc-options.mingw.patch; \
+	patch -p1 <0011-exefix.mingw.patch; \
+	patch -p1 <0012-fix-runtime-prefix.mingw.patch; \
+	patch -p1 <0013-parallel-fix.mingw.patch; \
+	patch -p1 <0014-asm-volatile.mingw.patch; \
+	patch -p1 <0015-inline.mingw.patch; \
+	patch -p1 <0016-restrict.mingw.patch; \
+	patch -p1 <0017-correct-exeext.mingw.patch; \
+	patch -p1 <0020-DOS-paths-for-tools.all.patch; \
+	patch -p1 <dont-load-msvcrt.patch; \
+	patch -p1 <fix-python-detection.patch; \
+	autoreconf -if; \
+	export PYTHON=$(prefix)/bin/python2 \
+	pushd $(prefix) > /dev/null; \
+	export PREFIX_DEPS=`pwd -W`; \
+	popd > /dev/null; \
+	PKG_CONFIG_PATH='$(pkg_config_path)' \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags) -mms-bitfields' \
+	LDFLAGS='$(ldflags)' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static
+
+$(girdll): $(girmak)
+	cd $(girdir); \
+	make -j1 && make $(install) && make clean
 
 $(gtk3tar):
 	wget -c -q $(gtk3url)/$(gtk3tar)
