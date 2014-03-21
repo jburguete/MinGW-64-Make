@@ -281,6 +281,8 @@ mpidll = $(bindir)/msmpi.dll
 
 all = \
 	$(msys) \
+	$(msys_patches) \
+	$(mingw_patches) \
 	$(gccexe) \
 	$(libtoolexe) \
 	$(autoconfexe) \
@@ -334,7 +336,7 @@ $(gcctar):
 	wget -c -q "$(gccurl)/$(gcctar)"
 	touch $(gcctar)
 
-$(gccexe): $(gcctar) $(msys_patches) $(mingw_patches)
+$(gccexe): $(gcctar)
 	7z x $(gcctar)
 	-cd mingw64; tar cf $(prefix)/temp.tar *
 	cd $(prefix); tar xf temp.tar

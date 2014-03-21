@@ -72,7 +72,7 @@ freetypever = 2.5.3
 fontconfigver = 2.11.0
 pixmanver = 0.32.4
 cairover = 1.12.16
-atkver = 2.11.90
+atkver = 2.10.0
 pangover = 1.36.2
 gdk_pixbufver = 2.30.6
 hicolorver = 0.12
@@ -281,6 +281,8 @@ mpidll = $(bindir)/msmpi.dll
 
 all = \
 	$(msys) \
+	$(msys_patches) \
+	$(mingw_patches) \
 	$(gccexe) \
 	$(libtoolexe) \
 	$(autoconfexe) \
@@ -340,7 +342,7 @@ $(gcctar):
 	wget -c -q "$(gccurl)/$(gcctar)"
 	touch $(gcctar)
 
-$(gccexe): $(gcctar) $(msys_patches) $(mingw_patches)
+$(gccexe): $(gcctar)
 	7z x $(gcctar)
 	-cd mingw64; tar cf $(prefix)/temp.tar *
 	cd $(prefix); tar xf temp.tar
@@ -893,23 +895,24 @@ $(atktar):
 $(atkmak): $(gccexe) $(pkgconfigexe) $(glibdll) $(atktar)
 	if test -d $(atkdir); then rm -rf $(atkdir); fi
 	tar xJf $(atktar)
-	cd $(atkdir); \
-	unzip -j ../$(mingw_patches) \
-		MINGW-packages-master/mingw-w64-atk/*.patch -d .; \
-	patch -p1 -i 0001-create-libdir.mingw.patch; \
-	patch -p1 -i 0002-fix-gtkdoc.all.patch; \
-	patch -p1 -i 0003-give-cc-to-git-scanner.mingw.patch; \
-	patch -p1 -i 0004-export-missing-symbol.all.patch; \
-	patch -p1 -i 0005-export-by-regex.all.patch; \
-	autoreconf -if; \
-	PKG_CONFIG_PATH='$(pkg_config_path)' \
-	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
-	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags)' \
-	LDFLAGS='$(ldflags)' \
-	configure --prefix=$(prefix) --disable-debug --host=$(host) \
-		--enable-shared --disable-static \
-		--disable-glibtest \
-		#--enable-introspection
+	cd $(atkdir); $(configure)
+#	cd $(atkdir); \
+#	unzip -j ../$(mingw_patches) \
+#		MINGW-packages-master/mingw-w64-atk/*.patch -d .; \
+#	patch -p1 -i 0001-create-libdir.mingw.patch; \
+#	patch -p1 -i 0002-fix-gtkdoc.all.patch; \
+#	patch -p1 -i 0003-give-cc-to-git-scanner.mingw.patch; \
+#	patch -p1 -i 0004-export-missing-symbol.all.patch; \
+#	patch -p1 -i 0005-export-by-regex.all.patch; \
+#	autoreconf -if; \
+#	PKG_CONFIG_PATH='$(pkg_config_path)' \
+#	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+#	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags)' \
+#	LDFLAGS='$(ldflags)' \
+#	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+#		--enable-shared --disable-static \
+#		--disable-glibtest \
+#		#--enable-introspection
 
 $(atkdll): $(atkmak)
 	cd $(atkdir); make && make $(install) && make clean
