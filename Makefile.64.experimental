@@ -653,6 +653,7 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	patch -p1 <0540-mingw-semicolon-DELIM.patch; \
 	patch -p1 <0550-mingw-regen-use-stddef_h.patch; \
 	patch -p1 <0560-mingw-use-posix-getpath.patch; \
+	patch -p1 <0565-mingw-add-ModuleFileName-dir-to-PATH.patch; \
 	patch -p1 <0570-mingw-add-BUILDIN_WIN32_MODULEs-time-msvcrt.patch; \
 	patch -p1 <0580-mingw32-test-REPARSE_DATA_BUFFER.patch; \
 	patch -p1 <0590-mingw-INSTALL_SHARED-LDLIBRARY-LIBPL.patch; \
@@ -680,6 +681,7 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	patch -p1 <1000-dont-link-with-gettext.patch; \
 	patch -p1 <1010-ctypes-python-dll.patch; \
 	patch -p1 <1020-gdbm-module-includes.patch; \
+	patch -p1 <1030-use-gnu_printf-in-format.patch; \
 	patch -p0 <../python-2.7.6-DBL_EPSILON.patch; \
 	patch -p0 <../python-2.7.6-empty-DESTDIR.patch; \
 	autoreconf -if; \
@@ -690,6 +692,8 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 		Tools/scripts/gprof2html.py; \
 	echo \"\" > Parser/pgen.stamp; \
 	rm -rf Modules/{expat,zlib,_ctypes/{darwin,libffi}*}; \
+	export ac_cv_working_tzset=no; \
+	MSYSTEM=MINGW \
 	LIBFFI_INCLUDEDIR=`pkg-config --cflags libffi | sed 's/-I//'` \
 	PKG_CONFIG_PATH=$(pkg_config_path) \
 	CC=$(cc) CXX=$(cxx) \
@@ -701,7 +705,6 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
 		--build=mingw32 --with-threads --with-system-expat --with-system-ffi; \
-		ac_cv_working_tzset=no
 
 baddir = /$(unit)$(installdir)/msys/1.0$(installdir)
 
