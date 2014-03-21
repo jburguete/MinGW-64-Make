@@ -711,8 +711,6 @@ baddir = /$(unit)$(installdir)/msys/1.0$(installdir)
 $(pythondll): $(pythonmak)
 	cd $(pythondir); make && make install && make clean
 	mv $(baddir)/bin/* $(prefix)/bin
-	rmdir $(baddir)/bin
-	rm -rf $(prefix)/lib/python$(basename $(pythonver))/lib-dynload
 	mv -f $(baddir)/lib/python$(basename $(pythonver))/* \
 		$(prefix)/lib/python$(basename $(pythonver))
 	rm -rf $(baddir)
