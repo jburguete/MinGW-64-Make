@@ -1024,7 +1024,7 @@ $(gtk2mak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypedll) \
 	patch -p1 -i 0009-give-cc-to-gir-scanner.mingw.patch; \
 	patch -p1 -i 0010-put-gtk-dll-into-path.mingw.patch; \
 	patch -p1 -i 0011-gir-for-gdkwin32.mingw.patch; \
-	patch -p1 -i 0012-embed-manifest.all.patch;
+	patch -p1 -i 0012-embed-manifest.all.patch; \
 	patch -p0 <../gtk+-2.24.22-modules-input-Makefile.in.patch; \
 	autoreconf -if; \
 	PKG_CONFIG_PATH='$(pkg_config_path)' \
