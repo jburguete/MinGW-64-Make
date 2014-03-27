@@ -228,7 +228,7 @@ cairotar = cairo-$(cairover).tar.xz
 cairomak = $(cairodir)/Makefile
 cairodll = $(bindir)/libcairo-2.dll
 
-atkurl = $(gnomeurl)/sources/atk/2.10
+atkurl = $(gnomeurl)/sources/atk/$(basename $(atkver))
 atkdir = atk-$(atkver)
 atktar = atk-$(atkver).tar.xz
 atkmak = $(atkdir)/Makefile

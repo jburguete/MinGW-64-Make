@@ -6,7 +6,7 @@ strip = 1
 host = x86_64-w64-mingw32
 prefix = /mingw
 unit = C
-installdir = /MinGW
+installdir = /MinGWTesting
 installpath = $(unit):$(installdir)
 windir = /c/Windows
 
@@ -74,7 +74,7 @@ pixmanver = 0.32.4
 cairover = 1.12.16
 atkver = 2.10.0
 pangover = 1.36.2
-gdk_pixbufver = 2.30.3
+gdk_pixbufver = 2.30.6
 hicolorver = 0.12
 gtk2ver = 2.24.22
 freeglutver = 2.8.1
@@ -647,6 +647,7 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	patch -p1 <0540-mingw-semicolon-DELIM.patch; \
 	patch -p1 <0550-mingw-regen-use-stddef_h.patch; \
 	patch -p1 <0560-mingw-use-posix-getpath.patch; \
+	patch -p1 <0565-mingw-add-ModuleFileName-dir-to-PATH.patch; \
 	patch -p1 <0570-mingw-add-BUILDIN_WIN32_MODULEs-time-msvcrt.patch; \
 	patch -p1 <0580-mingw32-test-REPARSE_DATA_BUFFER.patch; \
 	patch -p1 <0590-mingw-INSTALL_SHARED-LDLIBRARY-LIBPL.patch; \
@@ -674,6 +675,7 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	patch -p1 <1000-dont-link-with-gettext.patch; \
 	patch -p1 <1010-ctypes-python-dll.patch; \
 	patch -p1 <1020-gdbm-module-includes.patch; \
+	patch -p1 <1030-use-gnu_printf-in-format.patch; \
 	patch -p0 <../python-2.7.6-DBL_EPSILON.patch; \
 	patch -p0 <../python-2.7.6-empty-DESTDIR.patch; \
 	autoreconf -if; \
@@ -684,6 +686,8 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 		Tools/scripts/gprof2html.py; \
 	echo \"\" > Parser/pgen.stamp; \
 	rm -rf Modules/{expat,zlib,_ctypes/{darwin,libffi}*}; \
+	export ac_cv_working_tzset=no; \
+	MSYSTEM=MINGW \
 	LIBFFI_INCLUDEDIR=`pkg-config --cflags libffi | sed 's/-I//'` \
 	PKG_CONFIG_PATH=$(pkg_config_path) \
 	CC=$(cc) CXX=$(cxx) \
@@ -695,7 +699,6 @@ $(pythonmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(expatdll) \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
 		--build=mingw32 --with-threads --with-system-expat --with-system-ffi; \
-		ac_cv_working_tzset=no
 
 baddir = /$(unit)$(installdir)/msys/1.0$(installdir)
 
@@ -893,17 +896,6 @@ $(pangomak): $(gccexe) $(pkgconfigexe) $(glibdll) $(freetypedll) \
 	if test -d $(pangodir); then rm -rf $(pangodir); fi
 	tar xJf $(pangotar)
 	cd $(pangodir); \
-	unzip -j ../$(mingw_patches) \
-		MINGW-packages-master/mingw-w64-pango/*.patch -d .; \
-	patch -p1 -i 0001-no-unconditional-xft-please.all.patch; \
-	patch -p1 -i 0002-msvc-is-impotent-but-not.mingw.patch; \
-	patch -p1 -i 0005-fix-gtkdoc.all.patch; \
-	patch -p1 -i 0006-give-cc-to-gir-scanner.mingw.patch; \
-	patch -p1 -i 0007-include-freetype.mingw.patch; \
-	patch -p1 -i 0008-allow-backend-selection.mingw.patch; \
-	patch -p1 -i 0009-pango_enable_static_build.patch; \
-	patch -p1 -i 0010-pangocairo-gir-add-cairo.patch; \
-	autoreconf -if; \
 	sed -i 's/have_libthai=true/have_libthai=false/' configure; \
 	PKG_CONFIG_PATH='$(pkg_config_path)' \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
@@ -911,8 +903,19 @@ $(pangomak): $(gccexe) $(pkgconfigexe) $(glibdll) $(freetypedll) \
 	CXXFLAGS='$(cflags) -mms-bitfields' LDFLAGS='$(ldflags)' \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
-		--with-included-modules=yes --with-dynamic-modules=no \
-		#--enable-introspection
+#	unzip -j ../$(mingw_patches) \
+#		MINGW-packages-master/mingw-w64-pango/*.patch -d .; \
+#	patch -p1 -i 0001-no-unconditional-xft-please.all.patch; \
+#	patch -p1 -i 0002-msvc-is-impotent-but-not.mingw.patch; \
+#	patch -p1 -i 0005-fix-gtkdoc.all.patch; \
+#	patch -p1 -i 0006-give-cc-to-gir-scanner.mingw.patch; \
+#	patch -p1 -i 0007-include-freetype.mingw.patch; \
+#	patch -p1 -i 0008-allow-backend-selection.mingw.patch; \
+#	patch -p1 -i 0009-pango_enable_static_build.patch; \
+#	patch -p1 -i 0010-pangocairo-gir-add-cairo.patch; \
+#	autoreconf -if; \
+#		--with-included-modules=yes --with-dynamic-modules=no \
+#		--enable-introspection
 
 $(pangodll): $(pangomak)
 	cd $(pangodir); make && make $(install) && make clean
@@ -927,7 +930,21 @@ $(gdk_pixbufmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(glibdll) \
 	$(libpngdll) $(gdk_pixbuftar)
 	if test -d $(gdk_pixbufdir); then rm -rf $(gdk_pixbufdir); fi
 	tar xJf $(gdk_pixbuftar)
-	cd $(gdk_pixbufdir); autoreconf -if; $(configure)
+	cd $(gdk_pixbufdir); \
+	unzip -j ../$(mingw_patches) \
+		MINGW-packages-master/mingw-w64-gdk-pixbuf2/*.patch -d .; \
+	patch -p1 -i 0002-A-hack-to-fix-export-symbols.mingw.patch; \
+	patch -p1 -i 0003-use-free-software-libs-on.mingw.patch; \
+	patch -p1 -i 0004-give-cc-to-gir-scanner.all.patch; \
+	autoreconf -if; \
+	PKG_CONFIG_PATH='$(pkg_config_path)' \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags) -mms-bitfields' \
+	LDFLAGS='$(ldflags)' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static \
+		--without-libtiff --without-libjpeg
+		#--enable-introspection
 
 $(gdk_pixbufdll): $(gdk_pixbufmak)
 	cd $(gdk_pixbufdir); make && make $(install) && make clean
