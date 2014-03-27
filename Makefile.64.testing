@@ -974,9 +974,9 @@ $(gtk2mak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypedll) \
 	tar xJf $(gtk2tar)
 	cd $(gtk2dir); \
 	patch -p0 <../gtk+-2.24.22-modules-input-Makefile.in.patch; \
-	sed -i 's/gtk-update-icon-cache/guic/g' gtk/Makefile*; \
 	$(configure) --with-included-immodules=ime --with-gdktarget=win32; \
 	perl ../gtk+64.pl
+	#sed -i 's/gtk-update-icon-cache/guic/g' gtk/Makefile*; \
 
 $(gtk2dll): $(gtk2mak)
 	cd $(gtk2dir); make && make $(install) && make clean
