@@ -63,7 +63,7 @@ libxmlver = 2.9.1
 libffiver = 3.0.13
 termcapver = 1.3.1
 readlinever = 6.2
-sqlitever = 3080400
+sqlitever = 3080403
 pythonver = 2.7.6
 glibver = 2.38.2
 gettextver = 0.18.3.2
@@ -711,6 +711,8 @@ baddir = /$(unit)$(installdir)/msys/1.0$(installdir)
 $(pythondll): $(pythonmak)
 	cd $(pythondir); make && make install && make clean
 	mv $(baddir)/bin/* $(prefix)/bin
+	rmdir $(baddir)/bin
+	rm -rf $(prefix)/lib/python$(basename $(pythonver))/lib-dynload
 	mv -f $(baddir)/lib/python$(basename $(pythonver))/* \
 		$(prefix)/lib/python$(basename $(pythonver))
 	rm -rf $(baddir)
@@ -730,7 +732,11 @@ $(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(pkgconfigexe) $(libffidll) \
 	patch -Np1 -i "0004-glib-prefer-constructors-over-DllMain.patch"; \
 	patch -Np0 -i "0005-glib-send-log-messages-to-correct-stdout-and-stderr.patch"; \
 	$(configure) --with-threads=win32 --with-python=$(python)
+
+#	patch -Np1 -i "0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch"; \
 #	patch -Np1 -i "0003-g_abort.all.patch"; \
+#	patch -Np1 -i "0004-glib-prefer-constructors-over-DllMain.patch"; \
+#	patch -Np0 -i "0005-glib-send-log-messages-to-correct-stdout-and-stderr.patch"; \
 #	patch -Np1 -i "0015-fix-stat.all.patch"; \
 #	patch -Np1 -i "0016-fix-separators-in-compiled-resources.mingw.patch"; \
 #	patch -Np1 -i "0017-glib-use-gnu-print-scanf.patch"; \
@@ -824,7 +830,7 @@ $(freetypemak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypetar)
 		MINGW-packages-master/mingw-w64-freetype/*.patch -d .; \
 	patch -Np1 <freetype-2.2.1-enable-valid.patch; \
 	patch -Np1 <freetype-2.5.1-enable-spr.patch; \
-	$(configure) --with-zlib=$(prefix)
+	$(configure) --with-zlib=$(prefix) --with-png=$(prefix)
 
 $(freetypedll): $(freetypemak)
 	cd $(freetypedir); make && make install && make clean
