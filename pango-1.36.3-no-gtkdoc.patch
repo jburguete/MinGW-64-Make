@@ -1,0 +1,24 @@
+--- docs/Makefile.orig	2014-05-08 14:42:01 +0000
++++ docs/Makefile.in	2014-05-08 14:39:30 +0000
+@@ -1265,14 +1265,14 @@
+ #
+ # Require gtk-doc when making dist
+ #
+-@HAVE_GTK_DOC_TRUE@dist-check-gtkdoc: docs
+-@HAVE_GTK_DOC_FALSE@dist-check-gtkdoc:
+-@HAVE_GTK_DOC_FALSE@	@echo "*** gtk-doc is needed to run 'make dist'.         ***"
+-@HAVE_GTK_DOC_FALSE@	@echo "*** gtk-doc was not found when 'configure' ran.   ***"
+-@HAVE_GTK_DOC_FALSE@	@echo "*** please install gtk-doc and rerun 'configure'. ***"
+-@HAVE_GTK_DOC_FALSE@	@false
++#@HAVE_GTK_DOC_TRUE@dist-check-gtkdoc: docs
++#@HAVE_GTK_DOC_FALSE@dist-check-gtkdoc:
++#@HAVE_GTK_DOC_FALSE@	@echo "*** gtk-doc is needed to run 'make dist'.         ***"
++#@HAVE_GTK_DOC_FALSE@	@echo "*** gtk-doc was not found when 'configure' ran.   ***"
++#@HAVE_GTK_DOC_FALSE@	@echo "*** please install gtk-doc and rerun 'configure'. ***"
++#@HAVE_GTK_DOC_FALSE@	@false
+ 
+-dist-hook: dist-check-gtkdoc all-gtk-doc dist-hook-local
++dist-hook: all-gtk-doc dist-hook-local
+ 	@mkdir $(distdir)/html
+ 	@cp ./html/* $(distdir)/html
+ 	@-cp ./$(DOC_MODULE).pdf $(distdir)/

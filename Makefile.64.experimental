@@ -65,28 +65,32 @@ termcapver = 1.3.1
 readlinever = 6.2
 sqlitever = 3080403
 pythonver = 2.7.6
-glibver = 2.38.2
+glibver = 2.40.0
 gettextver = 0.18.3.2
+gslver = 1.16
 libpngver = 1.6.10
+freeglutver = 2.8.1
+icuver = 53.1
+harfbuzzver = 0.9.26
+bzipver = 1.0.6
 freetypever = 2.5.3
-fontconfigver = 2.11.0
+fontconfigver = 2.11.1
 pixmanver = 0.32.4
 cairover = 1.12.16
-atkver = 2.10.0
-pangover = 1.36.2
+atkver = 2.12.0
+pangover = 1.36.3
 gdk_pixbufver = 2.30.6
-hicolorver = 0.12
-gtk2ver = 2.24.22
-freeglutver = 2.8.1
-gslver = 1.16
-girver = 1.39.3
-gtk3ver = 3.11.8
+hicolorver = 0.13
+gtk2ver = 2.24.23
+girver = 1.40.0
+gtk3ver = 3.12.1
 
 # Some URLs
 
 gnuurl = http://ftp.gnu.org/pub/gnu
 sfurl = http://sourceforge.net/projects
 gnomeurl = http://ftp.gnome.org/pub/gnome
+freedesktopurl = http://freedesktop.org/software
 
 # Files
 
@@ -97,7 +101,7 @@ msys_patches = MSYS2-packages-master.zip
 mingw_patches = MINGW-packages-master.zip
 
 gccurl = $(sfurl)/mingw-w64/files/Toolchains targetting Win64/Personal Builds/mingw-builds/$(gccver)/threads-win32/seh
-gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev3.7z
+gcctar = x86_64-$(gccver)-release-win32-seh-rt_v3-rev4.7z
 gccexe = $(bindir)/gcc.exe
 
 libtoolurl = $(gnuurl)/libtool
@@ -191,6 +195,12 @@ gettexttar = gettext-$(gettextver).tar.gz
 gettextmak = $(gettextdir)/Makefile
 gettextdll = $(bindir)/libintl-8.dll
 
+gslurl = $(gnuurl)/gsl
+gsldir = gsl-$(gslver)
+gsltar = gsl-$(gslver).tar.gz
+gslmak = $(gsldir)/Makefile
+gsldll = $(bindir)/libgsl-0.dll
+
 libpngurl = $(sfurl)/libpng/files/libpng16
 libpngdir = libpng-$(libpngver)
 libpngtar = libpng-$(libpngver).tar.xz
@@ -199,13 +209,37 @@ libpngpatch = libpng-$(libpngver)-apng.patch
 libpngmak = $(libpngdir)/Makefile
 libpngdll = $(bindir)/libpng16-16.dll
 
+freegluturl = $(sfurl)/freeglut/files/freeglut/$(freeglutver)
+freeglutdir = freeglut-$(freeglutver)
+freegluttar = freeglut-$(freeglutver).tar.gz
+freeglutmak = $(freeglutdir)/Makefile
+freeglutdll = $(bindir)/libglut-0.dll
+
+icuurl = http://download.icu-project.org/files/icu4c/$(icuver)
+icudir = icu
+icutar = icu4c-53_1-src.tgz
+icumak = $(icudir)/source/Makefile
+icudll = $(bindir)/libicudt.dll
+
+harfbuzzurl = $(freedesktopurl)/harfbuzz/release
+harfbuzzdir = harfbuzz-$(harfbuzzver)
+harfbuzztar = $(harfbuzzdir).tar.bz2
+harfbuzzmak = $(harfbuzzdir)/Makefile
+harfbuzzdll = $(bindir)/libharfbuzz-0.dll
+
+bzipurl = http://www.bzip.org/$(bzipver)
+bzipdir = bzip2-$(bzipver)
+bziptar = $(bzipdir).tar.gz
+bzipmak = $(bzipdir)/Makefile
+bzipdll = $(bindir)/libbz2-1.dll
+
 freetypeurl = $(sfurl)/freetype/files/freetype2/$(freetypever)
 freetypedir = freetype-$(freetypever)
-freetypetar = freetype-$(freetypever).tar.bz2
+freetypetar = $(freetypedir).tar.bz2
 freetypemak = $(freetypedir)/config.mk
 freetypedll = $(bindir)/libfreetype-6.dll
 
-fontconfigurl = http://fontconfig.freedesktop.org/release
+fontconfigurl = $(freedesktopurl)/fontconfig/release
 fontconfigdir = fontconfig-$(fontconfigver)
 fontconfigtar = fontconfig-$(fontconfigver).tar.bz2
 fontconfigmak = $(fontconfigdir)/Makefile
@@ -253,18 +287,6 @@ gtk2tar = gtk+-$(gtk2ver).tar.xz
 gtk2mak = $(gtk2dir)/Makefile
 gtk2dll = $(bindir)/libgtk-win32-2.0-0.dll
 
-freegluturl = $(sfurl)/freeglut/files/freeglut/$(freeglutver)
-freeglutdir = freeglut-$(freeglutver)
-freegluttar = freeglut-$(freeglutver).tar.gz
-freeglutmak = $(freeglutdir)/Makefile
-freeglutdll = $(bindir)/libglut-0.dll
-
-gslurl = $(gnuurl)/gsl
-gsldir = gsl-$(gslver)
-gsltar = gsl-$(gslver).tar.gz
-gslmak = $(gsldir)/Makefile
-gsldll = $(bindir)/libgsl-0.dll
-
 girurl = $(gnomeurl)/sources/gobject-introspection/$(basename $(girver))
 girdir = gobject-introspection-$(girver)
 girtar = gobject-introspection-$(girver).tar.xz
@@ -299,7 +321,9 @@ all = \
 	$(pythondll) \
 	$(glibdll) \
 	$(gettextdll) \
+	$(gsldll) \
 	$(libpngdll) \
+	$(freeglutdll) \
 	$(freetypedll) \
 	$(fontconfigdll) \
 	$(pixmandll) \
@@ -309,8 +333,6 @@ all = \
 	$(gdk_pixbufdll) \
 	$(hicolordll) \
 	$(gtk2dll) \
-	$(freeglutdll) \
-	$(gsldll) \
 	$(gtk3dll) \
 	$(mpidll) \
 	$(girdll)
@@ -729,32 +751,33 @@ $(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(pkgconfigexe) $(libffidll) \
 	unzip -j ../$(mingw_patches) \
 		MINGW-packages-master/mingw-w64-glib2/*.patch -d .; \
 	patch -Np1 -i "0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch"; \
+	patch -Np1 -i "0003-g_abort.all.patch"; \
 	patch -Np1 -i "0004-glib-prefer-constructors-over-DllMain.patch"; \
 	patch -Np0 -i "0005-glib-send-log-messages-to-correct-stdout-and-stderr.patch"; \
-	$(configure) --with-threads=win32 --with-python=$(python)
+	patch -Np1 -i "0015-fix-stat.all.patch"; \
+	patch -Np1 -i "0016-fix-separators-in-compiled-resources.mingw.patch"; \
+	patch -Np1 -i "0017-glib-use-gnu-print-scanf.patch"; \
+	patch -Np1 -i "0018-fix-tests-to-compile.all.patch"; \
+	patch -Np1 -i "0020-fix-warnings.all.patch"; \
+	patch -Np1 -i "0021-use-64bit-stat-for-localfile-size-calc.all.patch"; \
+	patch -Np1 -i "0022-make-sure-errno-survives-gettext.all.patch"; \
+	patch -Np1 -i "0023-print-in-binary-more-for-testing.all.patch"; \
+	patch -Np1 -i "0024-support-pthread-cond-timewait-relative.all.patch"; \
+	NOCONFIGURE=1 sh autogen.sh; \
+	PKG_CONFIG_PATH=$(pkg_config_path) \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
+	CXXFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
+	LDFLAGS='$(ldflags)' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static \
+		--with-xml-catalog=$(prefix)/etc/xml/catalog
 
 #	patch -Np1 -i "0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch"; \
-#	patch -Np1 -i "0003-g_abort.all.patch"; \
 #	patch -Np1 -i "0004-glib-prefer-constructors-over-DllMain.patch"; \
 #	patch -Np0 -i "0005-glib-send-log-messages-to-correct-stdout-and-stderr.patch"; \
-#	patch -Np1 -i "0015-fix-stat.all.patch"; \
-#	patch -Np1 -i "0016-fix-separators-in-compiled-resources.mingw.patch"; \
-#	patch -Np1 -i "0017-glib-use-gnu-print-scanf.patch"; \
-#	patch -Np1 -i "0018-fix-tests-to-compile.all.patch"; \
-#	patch -Np1 -i "0020-fix-warnings.all.patch"; \
-#	patch -Np1 -i "0021-use-64bit-stat-for-localfile-size-calc.all.patch"; \
-#	patch -Np1 -i "0022-make-sure-errno-survives-gettext.all.patch"; \
-#	patch -Np1 -i "0023-print-in-binary-more-for-testing.all.patch"; \
-#	patch -Np1 -i "0024-support-pthread-cond-timewait-relative.all.patch"; \
-#	NOCONFIGURE=1 sh autogen.sh; \
-#	PKG_CONFIG_PATH=$(pkg_config_path) \
-#	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
-#	CFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
-#	CXXFLAGS='$(cflags) -fexceptions --param=ssp-buffer-size=4' \
-#	LDFLAGS='$(ldflags)' \
-#	configure --prefix=$(prefix) --disable-debug --host=$(host) \
-#		--enable-shared --disable-static \
-#		--with-xml-catalog=$(prefix)/etc/xml/catalog
+#	$(configure) --with-threads=win32 --with-python=$(python)
+
 
 $(glibdll): $(glibmak)
 	cd $(glibdir); make && make $(install) && make clean
@@ -797,6 +820,18 @@ $(gettextdll): $(gettextmak)
 	cd $(gettextdir); make && make $(install) && make clean
 	-rm $(prefix)/gettext*.zip
 
+$(gsltar):
+	wget -c -q $(gslurl)/$(gsltar)
+	touch $(gsltar)
+
+$(gslmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(gsltar)
+	if test -d $(gsldir); then rm -rf $(gsldir); fi
+	tar xzf $(gsltar)
+	cd $(gsldir); autoreconf -if; $(configure)
+
+$(gsldll): $(gslmak)
+	cd $(gsldir); make && make $(install) && make clean
+
 $(libpngtar):
 	-wget -c -q $(libpngurl)/older-releases/$(libpngver)/$(libpngtar)
 	-wget -c -q $(libpngurl)/$(libpngver)/$(libpngtar)
@@ -818,19 +853,96 @@ $(libpngmak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) \
 $(libpngdll): $(libpngmak)
 	cd $(libpngdir); make && make $(install) && make clean
 
+$(freegluttar):
+	wget -c -q $(freegluturl)/$(freegluttar)
+	touch $(freegluttar)
+
+$(freeglutmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(freegluttar)
+	if test -d $(freeglutdir); then rm -rf $(freeglutdir); fi
+	tar xzf $(freegluttar)
+	cd $(freeglutdir); autoreconf -if; $(configure) --without-x
+	
+$(freeglutdll): $(freeglutmak)
+	cd $(freeglutdir); make && make $(install) && make clean
+
+$(icutar):
+	wget -c -q $(icuurl)/$(icutar)
+	touch $(icutar)
+
+$(icumak): $(gccexe) $(automakeexe) $(icutar)
+	if test -d $(icudir); then rm -rf $(icudir); fi
+	tar xzf $(icutar)
+	cd $(icudir); \
+	unzip -j ../$(mingw_patches) \
+		MINGW-packages-master/mingw-w64-icu/*.patch -d .; \
+	patch -p1 -i 0004-move-to-bin.mingw.patch; \
+	patch -p1 -i 0007-actually-move-to-bin.mingw.patch; \
+	patch -p1 -i 0008-data-install-dir.mingw.patch; \
+	patch -p1 -i 0009-fix-bindir-in-config.mingw.patch; \
+	patch -p1 -i 0010-msys-rules-for-makefiles.mingw.patch; \
+	patch -p1 -i 0011-sbin-dir.mingw.patch; \
+	patch -p1 -i 0012-libprefix.mingw.patch; \
+	patch -p1 -i 0014-mingwize-pkgdata.mingw.patch; \
+	patch -p1 -i 0015-debug.mingw.patch; \
+	patch -p1 -i 0016-icu-pkgconfig.patch; \
+	cd source; \
+	autoreconf -if; \
+	$(configure) --disable-rpath --enable-release
+
+$(icudll): $(icumak)
+	cd $(icudir)/source; make && make install && make clean
+	mv $(libdir)/libicu*.dll $(bindir)
+
+$(harfbuzztar):
+	wget -c -q $(harfbuzzurl)/$(harfbuzztar)
+	touch $(harfbuzztar)
+
+$(harfbuzzmak): $(gccexe) $(pkgconfigexe) $(libicudll) $(harfbuzztar)
+	if test -d $(harfbuzzdir); then rm -rf $(harfbuzzdir); fi
+	-tar xjf $(harfbuzztar)
+	cd $(harfbuzzdir); \
+	$(configure)
+
+$(harfbuzzdll): $(harfbuzzmak)
+	cd $(harfbuzzdir); make && make $(install) && make clean
+
+$(bziptar):
+	wget -c -q $(bzipurl)/$(bziptar)
+	touch $(bziptar)
+
+$(bzipmak): $(gccexe) $(automakeexe) $(bziptar)
+	if test -d $(bzipdir); then rm -rf $(bzipdif); fi
+	tar xzf $(bziptar)
+	cd $(bzipdir); \
+	unzip -j ../$(mingw_patches) \
+		MINGW-packages-master/mingw-w64-bzip2/*.patch -d .; \
+	patch -p1 -i bzip2-1.0.4-bzip2recover.patch; \
+	patch -p1 -i bzip2-1.0.5-slash.patch; \
+	patch -p1 -i bzgrep-debian-1.0.5-6.all.patch; \
+	patch -p1 -i bzip2-cygming-1.0.6.src.all.patch; \
+	patch -p1 -i bzip2-buildsystem.all.patch; \
+	patch -p1 -i bzip2-1.0.6-progress.all.patch; \
+	autoreconf -if; \
+	$(configure)
+
+$(bzipdll): $(bzipmak)
+	cd $(bzipdir); make all-dll-shared && make install && make clean
+	
 $(freetypetar):
 	wget -c -q $(freetypeurl)/$(freetypetar)
 	touch $(freetypetar)
 
-$(freetypemak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypetar)
+$(freetypemak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(icudll) $(harfbuzzdll) \
+	$(bzipdll) $(freetypetar)
 	if test -d $(freetypedir); then rm -rf $(freetypedir); fi
 	tar xjf $(freetypetar)
 	cd $(freetypedir); \
 	unzip -j ../$(mingw_patches) \
 		MINGW-packages-master/mingw-w64-freetype/*.patch -d .; \
-	patch -Np1 <freetype-2.2.1-enable-valid.patch; \
-	patch -Np1 <freetype-2.5.1-enable-spr.patch; \
-	$(configure) --with-zlib=$(prefix) --with-png=$(prefix)
+	patch -p1 <freetype-2.2.1-enable-valid.patch; \
+	patch -p1 <freetype-2.5.1-enable-spr.patch; \
+	patch -p1 <mingw-config.patch; \
+	$(configure)
 
 $(freetypedll): $(freetypemak)
 	cd $(freetypedir); make && make install && make clean
@@ -847,7 +959,6 @@ $(fontconfigmak): $(gccexe) $(automakeexe) $(zlibdll) $(pkgconfigexe) \
 	unzip -j ../$(mingw_patches) \
 		MINGW-packages-master/mingw-w64-fontconfig/*.patch -d .; \
 	patch -p1 <fontconfig-2.11.0-symlinks-fix.patch; \
-	patch -p1 <../fontconfig-2.11.0-undefined-_mm_mfence.patch; \
 	autoreconf -if; \
 	$(configure) --enable-iconv --enable-libxml2 --disable-docs \
 		as_ln_s="cp -pR"; \
@@ -863,7 +974,7 @@ $(pixmantar):
 	wget -c -q $(pixmanurl)/$(pixmantar)
 	touch $(pixmantar)
 
-$(pixmanmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(pixmantar)
+$(pixmanmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libpngdll) $(pixmantar)
 	if test -d $(pixmandir); then rm -rf $(pixmandir); fi
 	tar xzf $(pixmantar)
 	cd $(pixmandir); autoreconf -if; $(configure) --disable-gtk
@@ -909,24 +1020,23 @@ $(atktar):
 $(atkmak): $(gccexe) $(pkgconfigexe) $(glibdll) $(atktar)
 	if test -d $(atkdir); then rm -rf $(atkdir); fi
 	tar xJf $(atktar)
-	cd $(atkdir); $(configure)
-#	cd $(atkdir); \
-#	unzip -j ../$(mingw_patches) \
-#		MINGW-packages-master/mingw-w64-atk/*.patch -d .; \
-#	patch -p1 -i 0001-create-libdir.mingw.patch; \
-#	patch -p1 -i 0002-fix-gtkdoc.all.patch; \
-#	patch -p1 -i 0003-give-cc-to-git-scanner.mingw.patch; \
-#	patch -p1 -i 0004-export-missing-symbol.all.patch; \
-#	patch -p1 -i 0005-export-by-regex.all.patch; \
-#	autoreconf -if; \
-#	PKG_CONFIG_PATH='$(pkg_config_path)' \
-#	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
-#	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags)' \
-#	LDFLAGS='$(ldflags)' \
-#	configure --prefix=$(prefix) --disable-debug --host=$(host) \
-#		--enable-shared --disable-static \
-#		--disable-glibtest \
-#		#--enable-introspection
+	cd $(atkdir); \
+	unzip -j ../$(mingw_patches) \
+		MINGW-packages-master/mingw-w64-atk/*.patch -d .; \
+	patch -p1 -i 0001-create-libdir.mingw.patch; \
+	patch -p1 -i 0003-give-cc-to-git-scanner.mingw.patch; \
+	patch -p1 -i 0004-export-missing-symbol.all.patch; \
+	patch -p1 -i 0005-export-by-regex.all.patch; \
+	autoreconf -if; \
+	sed -i 's,GNOME_COMPILE_WARNINGS(maximum),,g' configure; \
+	PKG_CONFIG_PATH='$(pkg_config_path)' \
+	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
+	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags)' \
+	LDFLAGS='$(ldflags)' \
+	configure --prefix=$(prefix) --disable-debug --host=$(host) \
+		--enable-shared --disable-static \
+		--disable-glibtest \
+		#--enable-introspection
 
 $(atkdll): $(atkmak)
 	cd $(atkdir); make && make $(install) && make clean
@@ -942,25 +1052,26 @@ $(pangomak): $(gccexe) $(pkgconfigexe) $(glibdll) $(freetypedll) \
 	if test -d $(pangodir); then rm -rf $(pangodir); fi
 	tar xJf $(pangotar)
 	cd $(pangodir); \
+	unzip -j ../$(mingw_patches) \
+		MINGW-packages-master/mingw-w64-pango/*.patch -d .; \
+	patch -p1 -i 0001-no-unconditional-xft-please.all.patch; \
+	patch -p1 -i 0002-msvc-is-impotent-but-not.mingw.patch; \
+	patch -p1 -i 0006-give-cc-to-gir-scanner.mingw.patch; \
+	patch -p1 -i 0007-include-freetype.mingw.patch; \
+	patch -p1 -i 0008-allow-backend-selection.mingw.patch; \
+	patch -p1 -i 0009-pango_enable_static_build.patch; \
+	patch -p1 -i 0010-pangocairo-gir-add-cairo.patch; \
+	patch -p0 <../pango-1.36.3-no-gtkdoc.patch; \
+	autoreconf -if; \
 	sed -i 's/have_libthai=true/have_libthai=false/' configure; \
+	sed -i 's/GTK_DOC_CHECK(1\.15, --flavour no-tmpl)//g' configure; \
 	PKG_CONFIG_PATH='$(pkg_config_path)' \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
 	CFLAGS='$(cflags) -mms-bitfields -I$(prefix)/include/cairo' \
 	CXXFLAGS='$(cflags) -mms-bitfields' LDFLAGS='$(ldflags)' \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
-#	unzip -j ../$(mingw_patches) \
-#		MINGW-packages-master/mingw-w64-pango/*.patch -d .; \
-#	patch -p1 -i 0001-no-unconditional-xft-please.all.patch; \
-#	patch -p1 -i 0002-msvc-is-impotent-but-not.mingw.patch; \
-#	patch -p1 -i 0005-fix-gtkdoc.all.patch; \
-#	patch -p1 -i 0006-give-cc-to-gir-scanner.mingw.patch; \
-#	patch -p1 -i 0007-include-freetype.mingw.patch; \
-#	patch -p1 -i 0008-allow-backend-selection.mingw.patch; \
-#	patch -p1 -i 0009-pango_enable_static_build.patch; \
-#	patch -p1 -i 0010-pangocairo-gir-add-cairo.patch; \
-#	autoreconf -if; \
-#		--with-included-modules=yes --with-dynamic-modules=no \
+		--with-included-modules=yes --with-dynamic-modules=no \
 #		--enable-introspection
 
 $(pangodll): $(pangomak)
@@ -1019,29 +1130,26 @@ $(gtk2mak): $(gccexe) $(zlibdll) $(pkgconfigexe) $(freetypedll) \
 	if test -d $(gtk2dir); then rm -rf $(gtk2dir); fi
 	tar xJf $(gtk2tar)
 	cd $(gtk2dir); \
-	patch -p0 <../gtk+-2.24.22-modules-input-Makefile.in.patch; \
+	unzip -j ../$(mingw_patches) \
+		MINGW-packages-master/mingw-w64-gtk2/*.patch -d .; \
+	patch -p1 -i 0001-fix-m4-location.mingw.patch; \
+	patch -p1 -i 0002-Fix-def-installation.all.patch; \
+	patch -p1 -i 0003-Fix-notebook-tab-state-change.mingw.patch; \
+	patch -p1 -i 0005-Fix-header-ref.all.patch; \
+	patch -p1 -i 0006-Fix-unix-symbols-in-docs.mingw.patch; \
+	patch -p1 -i 0009-give-cc-to-gir-scanner.mingw.patch; \
+	patch -p1 -i 0010-put-gtk-dll-into-path.mingw.patch; \
+	patch -p1 -i 0011-gir-for-gdkwin32.mingw.patch; \
+	patch -p1 -i 0012-embed-manifest.all.patch; \
+	autoreconf -if; \
 	PKG_CONFIG_PATH='$(pkg_config_path)' \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
 	CFLAGS='$(cflags) -mms-bitfields' CXXFLAGS='$(cflags) -mms-bitfields' \
 	LDFLAGS='$(ldflags)' \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
-		--with-included-immodules=ime --with-gdktarget=win32 \
+		--disable-modules --with-gdktarget=win32 \
 		--disable-cups --disable-papi --disable-glibtest; \
-	perl ../gtk+64.pl
-#	unzip -j ../$(mingw_patches) \
-#		MINGW-packages-master/mingw-w64-gtk2/*.patch -d .; \
-#	patch -p1 -i 0001-fix-m4-location.mingw.patch; \
-#	patch -p1 -i 0002-Fix-def-installation.all.patch; \
-#	patch -p1 -i 0003-Fix-notebook-tab-state-change.mingw.patch; \
-#	patch -p1 -i 0005-Fix-header-ref.all.patch; \
-#	patch -p1 -i 0006-Fix-unix-symbols-in-docs.mingw.patch; \
-#	patch -p1 -i 0008-fix-doc-building.all.patch; \
-#	patch -p1 -i 0009-give-cc-to-gir-scanner.mingw.patch; \
-#	patch -p1 -i 0010-put-gtk-dll-into-path.mingw.patch; \
-#	patch -p1 -i 0011-gir-for-gdkwin32.mingw.patch; \
-#	patch -p1 -i 0012-embed-manifest.all.patch; \
-#	autoreconf -if; \
 		#--enable-introspection;
 #	sed -i 's/gtk-update-icon-cache/guic/g' gtk/Makefile*; \
 
@@ -1051,30 +1159,6 @@ $(gtk2dll): $(gtk2mak)
 		$(libdir)/libgdk-win32-2.0.la $(libdir)/libgtk-win32-2.0.la
 	sed -i 's,-L=*$(unit):[^ '\'']*'\'','\'',g' $(libdir)/libgailutil.la \
 		$(libdir)/libgdk-win32-2.0.la $(libdir)/libgtk-win32-2.0.la
-
-$(freegluttar):
-	wget -c -q $(freegluturl)/$(freegluttar)
-	touch $(freegluttar)
-
-$(freeglutmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(freegluttar)
-	if test -d $(freeglutdir); then rm -rf $(freeglutdir); fi
-	tar xzf $(freegluttar)
-	cd $(freeglutdir); autoreconf -if; $(configure) --without-x
-	
-$(freeglutdll): $(freeglutmak)
-	cd $(freeglutdir); make && make $(install) && make clean
-
-$(gsltar):
-	wget -c -q $(gslurl)/$(gsltar)
-	touch $(gsltar)
-
-$(gslmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(gsltar)
-	if test -d $(gsldir); then rm -rf $(gsldir); fi
-	tar xzf $(gsltar)
-	cd $(gsldir); autoreconf -if; $(configure)
-
-$(gsldll): $(gslmak)
-	cd $(gsldir); make && make $(install) && make clean
 
 $(girtar):
 	wget -c -q $(girurl)/$(girtar)
@@ -1087,23 +1171,11 @@ $(girmak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(libffidll) $(pythondll) \
 	cd $(girdir); \
 	unzip -j ../$(mingw_patches) \
 		MINGW-packages-master/mingw-w64-gobject-introspection/*.patch -d .; \
-	patch -p1 <0003-fix-exeext.mingw.patch; \
-	patch -p1 <0005-quote-path.mingw.patch; \
-	patch -p1 <0006-w32-compat.mingw.patch; \
-	patch -p1 <0007-w32-subproc.mingw.patch; \
-	patch -p1 <0008-more.mingw.patch; \
-	patch -p1 <0009-make-libs.mingw.patch; \
-	patch -p1 <0010-fix-gcc-options.mingw.patch; \
-	patch -p1 <0011-exefix.mingw.patch; \
 	patch -p1 <0012-fix-runtime-prefix.mingw.patch; \
-	patch -p1 <0013-parallel-fix.mingw.patch; \
-	patch -p1 <0014-asm-volatile.mingw.patch; \
-	patch -p1 <0015-inline.mingw.patch; \
-	patch -p1 <0016-restrict.mingw.patch; \
-	patch -p1 <0017-correct-exeext.mingw.patch; \
-	patch -p1 <0020-DOS-paths-for-tools.all.patch; \
-	patch -p1 <dont-load-msvcrt.patch; \
-	patch -p1 <fix-python-detection.patch; \
+	patch -p1 <0018-debug-rmtree-errors.mingw.patch; \
+	patch -p1 <0021-tests-no-undefined.patch; \
+	patch -p1 <0050-dont-load-msvcrt.patch; \
+	patch -p1 <0055-fix-python-detection.patch; \
 	autoreconf -if; \
 	export PYTHON=$(prefix)/bin/python2 \
 	pushd $(prefix) > /dev/null; \
@@ -1131,11 +1203,10 @@ $(gtk3mak): $(gccexe) $(automakeexe) $(pkgconfigexe) $(cairodll) $(atkdll) \
 	unzip -j ../$(mingw_patches) \
 		MINGW-packages-master/mingw-w64-gtk3/*.patch -d .; \
 	patch -Np1 -i "0001-REBURN-THE-DEF-FILE.mingw.patch"; \
-	patch -Np1 -i "0009-give-cc-to-gir-scanner.mingw.patch"; \
 	patch -Np1 -i "0010-put-gtk-dll-into-path.mingw.patch"; \
-	patch -Np1 -i "0011-gir-for-gdkwin32.mingw.patch"; \
 	patch -Np1 -i "0012-embed-manifest.all.patch"; \
 	patch -Np1 -i "0014-fix-gnu-print-format.patch"; \
+	patch -Np1 -i "0015-Suppress-a-warning-from-SetWindowLongPtr.all.patch"; \
 	autoreconf -if; \
 	export MSYS2_ARG_CONV_EXCL="-//OASIS"; \
 	PKG_CONFIG_PATH='$(pkg_config_path)' \
