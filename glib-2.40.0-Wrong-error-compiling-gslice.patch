@@ -1,0 +1,26 @@
+--- glib-2.40.0/glib/gslice.c.orig	2014-05-12 15:18:02 +0000
++++ glib-2.40.0/glib/gslice.c	2014-05-12 15:18:19 +0000
+@@ -1487,17 +1487,20 @@
+   found_one = smc_tree_lookup (adress, &real_size);
+   if (!found_one)
+     {
+-      fprintf (stderr, "GSlice: MemChecker: attempt to release non-allocated block: %p size=%" G_GSIZE_FORMAT "\n", pointer, size);
++      //fprintf (stderr, "GSlice: MemChecker: attempt to release non-allocated block: %p size=%" G_GSIZE_FORMAT "\n", pointer, size);
++      fprintf (stderr, "GSlice: MemChecker: attempt to release non-allocated block: %p \n", pointer);
+       return 0;
+     }
+   if (real_size != size && (real_size || size))
+     {
+-      fprintf (stderr, "GSlice: MemChecker: attempt to release block with invalid size: %p size=%" G_GSIZE_FORMAT " invalid-size=%" G_GSIZE_FORMAT "\n", pointer, real_size, size);
++      //fprintf (stderr, "GSlice: MemChecker: attempt to release block with invalid size: %p size=%" G_GSIZE_FORMAT " invalid-size=%" G_GSIZE_FORMAT "\n", pointer, real_size, size);
++      fprintf (stderr, "GSlice: MemChecker: attempt to release block with invalid size: %p \n", pointer);
+       return 0;
+     }
+   if (!smc_tree_remove (adress))
+     {
+-      fprintf (stderr, "GSlice: MemChecker: attempt to release non-allocated block: %p size=%" G_GSIZE_FORMAT "\n", pointer, size);
++      //fprintf (stderr, "GSlice: MemChecker: attempt to release non-allocated block: %p size=%" G_GSIZE_FORMAT "\n", pointer, size);
++      fprintf (stderr, "GSlice: MemChecker: attempt to release non-allocated block: %p \n", pointer);
+       return 0;
+     }
+   return 1; /* all fine */

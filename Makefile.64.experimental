@@ -763,6 +763,7 @@ $(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(pkgconfigexe) $(libffidll) \
 	patch -Np1 -i "0022-make-sure-errno-survives-gettext.all.patch"; \
 	patch -Np1 -i "0023-print-in-binary-more-for-testing.all.patch"; \
 	patch -Np1 -i "0024-support-pthread-cond-timewait-relative.all.patch"; \
+	patch -p1 <../glib-2.40-0-Wrong-error-building-gslice.patch; \
 	NOCONFIGURE=1 sh autogen.sh; \
 	PKG_CONFIG_PATH=$(pkg_config_path) \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
@@ -772,12 +773,6 @@ $(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(pkgconfigexe) $(libffidll) \
 	configure --prefix=$(prefix) --disable-debug --host=$(host) \
 		--enable-shared --disable-static \
 		--with-xml-catalog=$(prefix)/etc/xml/catalog
-
-#	patch -Np1 -i "0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch"; \
-#	patch -Np1 -i "0004-glib-prefer-constructors-over-DllMain.patch"; \
-#	patch -Np0 -i "0005-glib-send-log-messages-to-correct-stdout-and-stderr.patch"; \
-#	$(configure) --with-threads=win32 --with-python=$(python)
-
 
 $(glibdll): $(glibmak)
 	cd $(glibdir); make && make $(install) && make clean
