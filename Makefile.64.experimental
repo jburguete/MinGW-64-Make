@@ -763,7 +763,7 @@ $(glibmak): $(gccexe) $(libiconvdll) $(zlibdll) $(pkgconfigexe) $(libffidll) \
 	patch -Np1 -i "0022-make-sure-errno-survives-gettext.all.patch"; \
 	patch -Np1 -i "0023-print-in-binary-more-for-testing.all.patch"; \
 	patch -Np1 -i "0024-support-pthread-cond-timewait-relative.all.patch"; \
-	patch -p1 <../glib-2.40-0-Wrong-error-building-gslice.patch; \
+	patch -p1 <../glib-2.40.0-Wrong-error-compiling-gslice.patch; \
 	NOCONFIGURE=1 sh autogen.sh; \
 	PKG_CONFIG_PATH=$(pkg_config_path) \
 	CC=$(cc) CXX=$(cxx) CPPFLAGS='$(cppflags)' \
