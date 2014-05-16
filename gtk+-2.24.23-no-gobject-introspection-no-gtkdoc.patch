@@ -1,0 +1,83 @@
+--- gdk/Makefile.orig	2014-05-15 14:10:09 +0000
++++ gdk/Makefile	2014-05-15 14:11:48 +0000
+@@ -85,10 +85,6 @@
+ DIST_COMMON = $(top_srcdir)/Makefile.decl $(srcdir)/Makefile.in \
+ 	$(srcdir)/Makefile.am $(top_srcdir)/depcomp \
+ 	$(gdkinclude_HEADERS) $(top_srcdir)/test-driver COPYING
+-@HAVE_INTROSPECTION_TRUE@am__append_1 = Gdk-2.0.gir
+-@HAVE_INTROSPECTION_TRUE@#am__append_2 = GdkX11-2.0.gir
+-@HAVE_INTROSPECTION_TRUE@#am__append_3 = $(filter-out x11/gdkx.h, $(x11_introspection_files))
+-@HAVE_INTROSPECTION_TRUE@am__append_4 = $(gir_DATA) $(typelibs_DATA)
+ subdir = gdk
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/m4/introspection.m4 \
+@@ -932,58 +928,6 @@
+ libgdk_win32_2_0_la_LIBADD = win32/libgdk-win32.la $(GDK_DEP_LIBS)
+ libgdk_win32_2_0_la_DEPENDENCIES = win32/libgdk-win32.la win32/rc/gdk-win32-res.o gdk.def
+ libgdk_win32_2_0_la_LDFLAGS = -Wl,win32/rc/gdk-win32-res.o -export-symbols $(srcdir)/gdk.def $(LDADD)
+-@HAVE_INTROSPECTION_TRUE@introspection_files = $(filter-out \
+-@HAVE_INTROSPECTION_TRUE@	gdkkeysyms-compat.h, \
+-@HAVE_INTROSPECTION_TRUE@	$(gdk_public_h_sources)) \
+-@HAVE_INTROSPECTION_TRUE@	$(gdk_c_sources) gdkkeynames.c \
+-@HAVE_INTROSPECTION_TRUE@	gdkenumtypes.c gdkenumtypes.h \
+-@HAVE_INTROSPECTION_TRUE@	$(am__append_3)
+-@HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_SCANNERFLAGS = --warn-all
+-@HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_INCLUDES = Gio-2.0 GdkPixbuf-2.0 Pango-1.0 cairo-1.0
+-@HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_LIBS = $(gdktargetlib)
+-@HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_FILES = $(introspection_files)
+-@HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_CFLAGS = $(INCLUDES)
+-@HAVE_INTROSPECTION_TRUE@#x11_introspection_files = \
+-@HAVE_INTROSPECTION_TRUE@#	x11/checksettings.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkapplaunchcontext-x11.c	\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkasync.c			\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkcolor-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkcursor-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkdisplay-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkdnd-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkdrawable-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkgc-x11.c			\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkgeometry-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkglobals-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkimage-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkim-x11.c			\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkinput.c			\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkkeys-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkmain-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkpixmap-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkproperty-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkscreen-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkselection-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdksettings.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkspawn-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdktestutils-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkvisual-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkwindow-x11.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkxftdefaults.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/gdkxid.c			\
+-@HAVE_INTROSPECTION_TRUE@#	x11/xsettings-client.c		\
+-@HAVE_INTROSPECTION_TRUE@#	x11/xsettings-common.c		\
+-@HAVE_INTROSPECTION_TRUE@#        x11/gdkx.h
+-
+-@HAVE_INTROSPECTION_TRUE@#GdkX11_2_0_gir_SCANNERFLAGS = --warn-all --strip-prefix=Gdk
+-@HAVE_INTROSPECTION_TRUE@#GdkX11_2_0_gir_INCLUDES = Gio-2.0 Gdk-2.0 GdkPixbuf-2.0 Pango-1.0 xlib-2.0
+-@HAVE_INTROSPECTION_TRUE@#GdkX11_2_0_gir_LIBS = $(gdktargetlib)
+-@HAVE_INTROSPECTION_TRUE@#GdkX11_2_0_gir_FILES = $(x11_introspection_files)
+-@HAVE_INTROSPECTION_TRUE@#GdkX11_2_0_gir_CFLAGS = $(INCLUDES) -L$(top_builddir)/gdk
+-@HAVE_INTROSPECTION_TRUE@girdir = $(datadir)/gir-1.0
+-@HAVE_INTROSPECTION_TRUE@gir_DATA = $(INTROSPECTION_GIRS)
+-@HAVE_INTROSPECTION_TRUE@typelibsdir = $(libdir)/girepository-1.0
+-@HAVE_INTROSPECTION_TRUE@typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+ #noinst_DATA = gdk-win32-$(GTK_API_VERSION).lib
+ #TESTS = abicheck.sh pltcheck.sh
+ lib_LTLIBRARIES = $(gdktargetlib)
+@@ -1750,10 +1694,6 @@
+ check-local: test-cwd
+ -include $(INTROSPECTION_MAKEFILE)
+ 
+-@HAVE_INTROSPECTION_TRUE@Gdk-2.0.gir: $(gdktargetlib) Makefile
+-
+-@HAVE_INTROSPECTION_TRUE@#GdkX11-2.0.gir: $(gdktargetlib) Gdk-2.0.gir Makefile
+-
+ install-def-file: gdk.def
+ 	$(INSTALL) $(srcdir)/gdk.def $(DESTDIR)$(libdir)/gdk-win32-2.0.def
+ uninstall-def-file:
